@@ -85,6 +85,29 @@ body {
   justify-items: center;
 }
 
+.app-container{
+  display: grid;
+  /* background-color: yellowgreen; */
+  row-gap: 100px;
+  padding: 10px;
+  margin-top: 100px;
+
+}
+.app-item{
+  display: grid;
+  background-color: white;
+}
+
+.image-container {
+  display: grid;
+  margin-bottom: 30px;
+}
+
+.image-container>img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
 
 
 

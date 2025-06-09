@@ -1,6 +1,7 @@
 import logo from '../assets/img/logo.png';
 import heroBackground from '../assets/img/heroBackground.png';
 import laptop from '../assets/img/laptop.png';
+import AppSection from '../components/AppSection';
 
 const LandingPage = () => {
     return (
@@ -42,6 +43,10 @@ const LandingPage = () => {
 
             </header>
             
+            <section>
+                <AppSection />
+            </section>
+
         </div>
     );
 };
