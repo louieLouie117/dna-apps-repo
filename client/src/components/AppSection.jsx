@@ -1,6 +1,6 @@
 // import React from 'react';
 
-import FlashcardsArt from "../assets/img/app-art/FlashcardArt.png";
+import FlashcardArt from "../assets/img/app-art/FlashcardArt.png";
 import TodoListArtImg from "../assets/img/app-art/TodoListArt.png";
 import LockPasswords from "../assets/img/app-art/LockPasswords.png";
 import BudgetArt from "../assets/img/app-art/BudgetArt.png";
@@ -9,7 +9,7 @@ import PenCal from "../assets/img/app-art/PenCal.png";
 
 const appItems = [
     {
-        src: FlashcardsArt,
+        src: FlashcardArt,
         alt: "Flashcards App",
         url: "https://apps.microsoft.com/detail/9wzdncrdsnzk?hl=en-US&gl=US",
     },
