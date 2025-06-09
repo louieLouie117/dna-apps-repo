@@ -1,6 +1,6 @@
 import './App.css'
-import Footer from './componets/Footer'
 import LandingPage from './views/LandingPage'
+import Footer from './components/Footer'
 
 
 function App() {

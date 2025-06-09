@@ -1,22 +1,115 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+body {
+  display: grid;
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  justify-content: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+
+.hidden {
+  display: none;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+.main-btn {
+  display: inline-block;
+  padding: 0.5em 1em;
+  background-color: #009FF5;
+  color: white;
+  text-decoration: none;
+  border-radius: 7px;
+  transition: background-color 0.3s ease;
+  font: 1.2em sans-serif;
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+
+.heroBanner{
+  display: block;
+  /* background-color: red; */
 }
+
+.heroBanner>img {
+  width: 100%;
+  height: 500px;
+  display: block;
+}
+
+.heroBanner>main{
+  /* background-color:  blue; */
+  padding: 2px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: -500px;
+}
+
+.heroBanner>main>aside{
+  /* background-color: yellow; */
+  display: grid;
+  justify-items: center;
+  align-items: center;
+}
+
+.heroBanner>main>aside>img, .heroBanner>main>aside>iframe {
+  grid-column: 1/2;
+  grid-row: 1/2;
+}
+
+
+.heroBanner>main>aside>iframe {
+  margin-top: -55px;
+  margin-left: -20px;
+}
+
+.sub-actions{
+  display: grid;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  height: 150px;
+  width: 350px;
+  justify-self: center;
+  align-self: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: -50px;
+}
+
+.sub-actions>h2 {
+  margin: 0;
+  font-size: 1.5em;
+  text-align: center;
+  padding: 20px;
+}
+.sub-actions>div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+}
+
+.app-container{
+  display: grid;
+  /* background-color: yellowgreen; */
+  row-gap: 100px;
+  padding: 10px;
+  margin-top: 100px;
+
+}
+.app-item{
+  display: grid;
+  background-color: white;
+}
+
+.image-container {
+  display: grid;
+  margin-bottom: 30px;
+}
+
+.image-container>img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+
 
 @keyframes logo-spin {
   from {
