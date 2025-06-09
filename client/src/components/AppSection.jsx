@@ -1,11 +1,11 @@
-import React from 'react';
+// import React from 'react';
 
 import FlashcardsArt from "../assets/img/app-art/FlashcardArt.png";
 import TodoListArtImg from "../assets/img/app-art/TodoListArt.png";
 import LockPasswords from "../assets/img/app-art/LockPasswords.png";
 import BudgetArt from "../assets/img/app-art/BudgetArt.png";
 import PenCal from "../assets/img/app-art/PenCal.png";
-import ReceitTracker from "../assets/img/app-art/ReceitTracker.png";
+// import ReceitTracker from "../assets/img/app-art/ReceitTracker.png";
 
 const appItems = [
     {

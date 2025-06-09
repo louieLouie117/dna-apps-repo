@@ -1,6 +1,6 @@
 import logo from '../assets/img/logo.png';
 import heroBackground from '../assets/img/heroBackground.png';
-import laptop from '../assets/img/laptop.png';
+import Laptop from '../assets/img/L.png';
 import AppSection from '../components/AppSection';
 
 const LandingPage = () => {
@@ -15,7 +15,7 @@ const LandingPage = () => {
                     <img src={heroBackground} alt="" />
                     <main>
                     <aside className='laptop'>
-                        <img src={laptop} alt="" />
+                        <img src={Laptop} alt="" />
                         <iframe
                             width="570"
                             height="370"
