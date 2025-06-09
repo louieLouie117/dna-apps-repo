@@ -28,8 +28,12 @@ const LandingPage = () => {
                 <div className="sub-actions">
                     <h2>All App Access</h2>
                     <div>
+                        <a href="/student-access-subscription">
                         <button className='main-btn'>Student</button>
+                        </a>
+                        <a href="/all-app-access-subscription">
                         <button className='main-btn'>Free Month</button>
+                        </a>
                         <p>Membership</p>
                         <p>Membership</p>
 
