@@ -1,6 +1,6 @@
 import logo from '../assets/img/logo.png';
 import heroBackground from '../assets/img/heroBackground.png';
-import Laptop from '../assets/img/L.png';
+import Laptop from '../assets/img/Laptop.png';
 import AppSection from '../components/AppSection';
 
 const LandingPage = () => {
