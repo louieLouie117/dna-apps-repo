@@ -1,6 +1,6 @@
 // import React from 'react';
 
-// import FlashcardArt from "../assets/img/app-art/FlashcardArt.png";
+import FlashCardsDesign from "../assets/img/app-art/FlashCardsDesign.png";
 import TodoListArtImg from "../assets/img/app-art/TodoListArt.png";
 import LockPasswords from "../assets/img/app-art/LockPasswords.png";
 import BudgetArt from "../assets/img/app-art/BudgetArt.png";
@@ -8,11 +8,11 @@ import PenCal from "../assets/img/app-art/PenCal.png";
 // import ReceitTracker from "../assets/img/app-art/ReceitTracker.png";
 
 const appItems = [
-    // {
-    //     src: FlashcardArt,
-    //     alt: "Flashcards App",
-    //     url: "https://apps.microsoft.com/detail/9wzdncrdsnzk?hl=en-US&gl=US",
-    // },
+    {
+        src: FlashCardsDesign,
+        alt: "Flashcards App",
+        url: "https://apps.microsoft.com/detail/9wzdncrdsnzk?hl=en-US&gl=US",
+    },
     {
         src: TodoListArtImg,
         alt: "Todo List App",
