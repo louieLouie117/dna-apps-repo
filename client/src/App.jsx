@@ -4,6 +4,8 @@ import LandingPage from './views/LandingPage'
 import Footer from './components/Footer'
 import StudentSub from './views/StudentSub'
 import AccessSubPage from './views/AccessSubPage'
+import Policy from './views/Policy'
+import Terms from './views/Terms'
 
 function App() {
   return (
@@ -12,6 +14,8 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/student-access-subscription" element={<StudentSub />} />
         <Route path="/all-app-access-subscription" element={<AccessSubPage />} />
+        <Route path="/privacy-policy" element={<Policy />} />
+        <Route path='/terms-of-service' element={<Terms />} />
       </Routes>
       <Footer />
     </Router>
