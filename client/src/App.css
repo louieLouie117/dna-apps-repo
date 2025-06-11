@@ -161,7 +161,7 @@ body {
   display: grid;
 }
 
-.access-sub-page>aside>div>img {
+.access-sub-page>aside>div>a>img {
   width: 185px;
   justify-self: center;
 }

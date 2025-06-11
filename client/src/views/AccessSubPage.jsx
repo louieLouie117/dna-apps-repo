@@ -31,8 +31,11 @@ const AccessSubPage = () => {
                       <a href="https://buy.stripe.com/test_dRmdRb7LE9D1eWEdNY1sQ00">
                 <button className='main-btn'>Subscribe</button>
                 </a>
-
+                
+                <a href="https://stripe.com/" target='_blank' rel="noopener noreferrer">
                 <img src={StripePaymentCard} alt="" />
+
+                </a>
                 <p>All Apps Access $5.99/month.</p>
 
 
