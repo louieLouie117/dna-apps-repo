@@ -2,13 +2,13 @@ import React from 'react';
 import Backgound from '../assets/img/AllAppAccess.png'; // Assuming this is the correct path to your image
 import PageHeader from '../components/PageHeader';
 import StripePaymentCard from '../assets/img/StripePaymentCard.png'; // Adjust the path as needed
-import AppLogo1 from '../assets/AppLogos/App1.png'; // Example app logo, adjust as needed
-import AppLogo2 from '../assets/AppLogos/App2.png'; // Example app logo, adjust as needed
-import AppLogo3 from '../assets/AppLogos/App3.png'; // Example app logo, adjust as needed
-import AppLogo4 from '../assets/AppLogos/App4.png'; // Example app logo, adjust as needed
-import AppLogo5 from '../assets/AppLogos/App5.png'; // Example app logo, adjust as needed   
-import AppLogo6 from '../assets/AppLogos/App6.png'; // Example app logo, adjust as needed
-import AppLogo7 from '../assets/AppLogos/App7.png'; // Example app logo, adjust as needed
+import AppLogo1 from '../assets/AppLogos/app1.png'; // Example app logo, adjust as needed
+import AppLogo2 from '../assets/AppLogos/app2.png'; // Example app logo, adjust as needed
+import AppLogo3 from '../assets/AppLogos/app3.png'; // Example app logo, adjust as needed
+import AppLogo4 from '../assets/AppLogos/app4.png'; // Example app logo, adjust as needed
+import AppLogo5 from '../assets/AppLogos/app5.png'; // Example app logo, adjust as needed   
+import AppLogo6 from '../assets/AppLogos/app6.png'; // Example app logo, adjust as needed
+import AppLogo7 from '../assets/AppLogos/app7.png'; // Example app logo, adjust as needed
 
 const AccessSubPage = () => {
     return (
