@@ -15,12 +15,13 @@ body {
 .main-btn {
   display: inline-block;
   padding: 0.5em 1em;
-  background-color: #009FF5;
+  background-color: #0074D4;
   color: white;
   text-decoration: none;
-  border-radius: 7px;
+  border-radius: 27px;
   transition: background-color 0.3s ease;
   font: 1.2em sans-serif;
+  width: 150px;
 }
 
 .heroBanner{
@@ -108,6 +109,86 @@ body {
   height: auto;
   border-radius: 10px;
 }
+
+.access-sub-page{
+  display: grid;
+  justify-items: center;
+}
+
+.access-sub-page > :first-child {
+  justify-self: start;
+}
+
+.access-sub-page>main {
+  display: grid;
+  justify-items: center;
+}
+
+.access-sub-page>main>img, .access-sub-page>main>div {
+  grid-column: 1/2;
+  grid-row: 1/2;
+
+}
+
+.access-sub-page>main>img{
+  width: 100vw;
+}
+
+.access-sub-page>main>div{
+  padding: 0 150px;
+
+}
+
+.access-sub-page>main>div>h2, .access-sub-page>main>div>p {
+  color: white;
+  font: 1.5em sans-serif;
+  text-align: center;
+  padding: 0px;
+}
+
+.access-sub-page>aside {
+  display: grid;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 330px;
+  text-align: center;
+  margin-top: -90px;
+  margin-bottom: 90px;
+}
+
+.access-sub-page>aside>div{
+  display: grid;
+}
+
+.access-sub-page>aside>div>img {
+  width: 185px;
+  justify-self: center;
+}
+
+.access-sub-page>aside>h3 {
+  background-color: red;
+  margin: 0;
+  padding: 5px;
+  background: linear-gradient(to right, #005fbf, #00bfbf);
+  color: white;
+  border-radius: 10px 10px 0 0;
+}
+.access-sub-page>aside>div{
+  display: grid;
+  padding: 20px;
+}
+
+.access-sub-page>footer{
+  display: flex;
+}
+
+.access-sub-page>footer>a>img{
+  height: 250px;
+}
+
+
+
 
 
 

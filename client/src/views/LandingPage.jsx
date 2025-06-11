@@ -1,16 +1,14 @@
-import logo from '../assets/img/logo.png';
 import heroBackground from '../assets/img/heroBackground.png';
 import Laptop from '../assets/img/Laptop.png';
 import AppSection from '../components/AppSection';
+import PageHeader from '../components/PageHeader';
 
 const LandingPage = () => {
     return (
         <div className="landing-page" >
             <header>
-                <div className="logo">
-                    <h1 className='hidden'>Project DNA Apps</h1>
-                    <img src={logo} alt="" />
-                </div>
+                <PageHeader />
+
                 <div className="heroBanner">
                     <img src={heroBackground} alt="" />
                     <main>
