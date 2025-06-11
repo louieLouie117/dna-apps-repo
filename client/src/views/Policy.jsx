@@ -1,7 +1,9 @@
 import React from "react";
+import PageHeader from "../components/PageHeader";
 
 const Policy = () => (
     <div style={{ maxWidth: 800, margin: "40px auto", padding: "24px", background: "#fff", borderRadius: 8, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
+        <PageHeader />
         <h1 style={{ textAlign: "center" }}>Privacy Policy</h1>
         <p>
             At <strong>Project DNA</strong>, we are committed to protecting your privacy. This policy explains how we collect, use, disclose, and safeguard user information across our website (<a href="http://www.projectdnaapps.com" target="_blank" rel="noopener noreferrer">www.projectdnaapps.com</a>), including all pages, services, apps, and products we offer.

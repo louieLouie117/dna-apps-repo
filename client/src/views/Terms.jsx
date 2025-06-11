@@ -1,7 +1,9 @@
 import React from "react";
+import PageHeader from "../components/PageHeader";
 
 const Terms = () => (
     <div style={{ maxWidth: 800, margin: "0 auto", padding: "2rem" }}>
+        <PageHeader />
         <h1>Terms of Service</h1>
         <p>
             By accessing and using this website (<a href="http://www.prjectdnaapps.com" target="_blank" rel="noopener noreferrer">www.prjectdnaapps.com</a>), its pages, and our applications (including NEON Radio, My Linggo, My Locked Passwords, My FlashCards, My To-do List, My Pen Calculator, My Receipts, and My FlashCards BETA), you (“the user”) agree to abide by these Terms of Service.
