@@ -21,6 +21,7 @@ body {
   border-radius: 27px;
   transition: background-color 0.3s ease;
   font: 1.2em sans-serif;
+  width: 150px;
 }
 
 .heroBanner{
@@ -114,6 +115,10 @@ body {
   justify-items: center;
 }
 
+.access-sub-page > :first-child {
+  justify-self: start;
+}
+
 .access-sub-page>main {
   display: grid;
   justify-items: center;
@@ -146,9 +151,10 @@ body {
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 290px;
+  width: 330px;
   text-align: center;
   margin-top: -90px;
+  margin-bottom: 90px;
 }
 
 .access-sub-page>aside>div{
@@ -156,8 +162,7 @@ body {
 }
 
 .access-sub-page>aside>div>img {
-  width: 120px;
-  height: auto;
+  width: 185px;
   justify-self: center;
 }
 
@@ -172,6 +177,14 @@ body {
 .access-sub-page>aside>div{
   display: grid;
   padding: 20px;
+}
+
+.access-sub-page>footer{
+  display: flex;
+}
+
+.access-sub-page>footer>a>img{
+  height: 250px;
 }
 
 
