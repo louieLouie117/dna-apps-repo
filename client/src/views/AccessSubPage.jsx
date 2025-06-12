@@ -28,7 +28,7 @@ const AccessSubPage = () => {
             <aside>
                 <h3>Start Your Free Month</h3>
                 <div>
-                      <a href="https://buy.stripe.com/test_dRmdRb7LE9D1eWEdNY1sQ00">
+                      <a href="https://buy.stripe.com/6oU6oG0I44ea6Tv4BSeIw00">
                 <button className='main-btn'>Subscribe</button>
                 </a>
                 
