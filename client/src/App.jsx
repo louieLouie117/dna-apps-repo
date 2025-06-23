@@ -6,9 +6,17 @@ import StudentSub from './views/StudentSub'
 import AccessSubPage from './views/AccessSubPage'
 import Policy from './views/Policy'
 import Terms from './views/Terms'
+import supabase from './config/SupaBaseClient';
+
 
 function App() {
+  // Check if Supabase is initialized
+  if (!supabase) {
+    console.error('Supabase is not initialized. Please check your configuration.');
+    return <div>Error: Supabase is not initialized.</div>;
+  }
   return (
+    
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
