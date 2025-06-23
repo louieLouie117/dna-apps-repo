@@ -161,7 +161,7 @@ body {
   display: grid;
 }
 
-.access-sub-page>aside>div>img {
+.access-sub-page>aside>div>a>img {
   width: 185px;
   justify-self: center;
 }
@@ -179,11 +179,11 @@ body {
   padding: 20px;
 }
 
-.access-sub-page>footer{
+.app-logos{
   display: flex;
 }
 
-.access-sub-page>footer>a>img{
+.app-logos>a>img{
   height: 250px;
 }
 

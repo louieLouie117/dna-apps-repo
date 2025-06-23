@@ -1,7 +1,10 @@
+import React, { Suspense, lazy } from 'react'; // Import Suspense and lazy
 import heroBackground from '../assets/img/heroBackground.png';
 import Laptop from '../assets/img/Laptop.png';
-import AppSection from '../components/AppSection';
+// import AppSection from '../components/AppSection'; // Comment out or remove direct import
 import PageHeader from '../components/PageHeader';
+
+const AppSection = lazy(() => import('../components/AppSection')); // Lazy load AppSection
 
 const LandingPage = () => {
     return (
@@ -10,10 +13,10 @@ const LandingPage = () => {
                 <PageHeader />
 
                 <div className="heroBanner">
-                    <img src={heroBackground} alt="" />
+                    <img src={heroBackground} alt="" /> {/* Consider adding a descriptive alt text */}
                     <main>
                     <aside className='laptop'>
-                        <img src={Laptop} alt="" />
+                        <img src={Laptop} alt="" /> {/* Consider adding a descriptive alt text */}
                         <iframe
                             width="570"
                             height="370"
@@ -46,7 +49,9 @@ const LandingPage = () => {
             </header>
             
             <section>
-                <AppSection />
+                <Suspense fallback={<div>Loading applications...</div>}> {/* Suspense wrapper */}
+                    <AppSection />
+                </Suspense>
             </section>
 
         </div>
