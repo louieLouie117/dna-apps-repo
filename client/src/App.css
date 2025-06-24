@@ -110,43 +110,49 @@ body {
   border-radius: 10px;
 }
 
-.access-sub-page{
+.access-sub-page,
+.student-sub-page {
   display: grid;
   justify-items: center;
 }
 
-.access-sub-page > :first-child {
+.access-sub-page > :first-child,
+.student-sub-page > :first-child {
   justify-self: start;
 }
 
-.access-sub-page>main {
+.access-sub-page > main,
+.student-sub-page > main {
   display: grid;
   justify-items: center;
 }
 
-.access-sub-page>main>img, .access-sub-page>main>div {
+.access-sub-page > main > img,
+.student-sub-page > main > img {
   grid-column: 1/2;
   grid-row: 1/2;
-
-}
-
-.access-sub-page>main>img{
   width: 100vw;
 }
 
-.access-sub-page>main>div{
+.access-sub-page > main > div,
+.student-sub-page > main > div {
+  grid-column: 1/2;
+  grid-row: 1/2;
   padding: 0 150px;
-
 }
 
-.access-sub-page>main>div>h2, .access-sub-page>main>div>p {
+.access-sub-page > main > div > h2,
+.student-sub-page > main > div > h2,
+.access-sub-page > main > div > p,
+.student-sub-page > main > div > p {
   color: white;
   font: 1.5em sans-serif;
   text-align: center;
   padding: 0px;
 }
 
-.access-sub-page>aside {
+.access-sub-page > aside,
+.student-sub-page > div > aside {
   display: grid;
   background-color: white;
   border-radius: 10px;
@@ -157,28 +163,61 @@ body {
   margin-bottom: 90px;
 }
 
-.access-sub-page>aside>div{
+/* student page styles start to change----------- */
+
+.student-sub-page>div  {
   display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 30px;
+  align-items: flex-start;
+  margin-top: -150px;
 }
 
-.access-sub-page>aside>div>a>img {
+.student-sub-page>div ul {
+  display: grid;
+  row-gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 40px;
+  align-items: flex-start;
+  align-content: flex-start;
+  height: 250px;
+}
+.access-sub-page > aside > div{
+  display: grid;
+  padding: 20px;
+}
+
+.student-sub-page > div > aside > div {
+  display: grid;
+  padding: 20px;
+  height: 500px;
+}
+
+.access-sub-page > aside > div > a > img,
+.student-sub-page > div > aside > div > footer > a > img {
   width: 185px;
   justify-self: center;
+  margin-top: 10px;
 }
 
-.access-sub-page>aside>h3 {
-  background-color: red;
+.access-sub-page > aside > h3,
+.mainSale {
   margin: 0;
   padding: 5px;
   background: linear-gradient(to right, #005fbf, #00bfbf);
   color: white;
   border-radius: 10px 10px 0 0;
 }
-.access-sub-page>aside>div{
-  display: grid;
-  padding: 20px;
-}
 
+.student-sub-page>div>aside> h3 {
+    margin: 0;
+  padding: 5px;
+  background-color: #005fbf;
+  color: white;
+  border-radius: 10px 10px 0 0;
+}
 .app-logos{
   display: flex;
 }
