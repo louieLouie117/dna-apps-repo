@@ -25,7 +25,7 @@ function App() {
         <Route path="/all-app-access-subscription" element={<AccessSubPage />} />
         <Route path="/privacy-policy" element={<Policy />} />
         <Route path='/terms-of-service' element={<Terms />} />
-        <Route path='/new-user-form' element={<NewUserForm />} />
+        <Route path='/all-app-access-account' element={<NewUserForm />} />
       </Routes>
       <Footer />
     </Router>
