@@ -42,7 +42,7 @@ const StudentSub = () => {
 
                 </a>
                 <p>$1.00/m Annually.</p>
-</footer>
+        </footer>
 
                 </div>
               
@@ -71,7 +71,7 @@ const StudentSub = () => {
 
                 </a>
                 <p>$2.99/month.</p>
-</footer>
+        </footer>
 
                 </div>
               
@@ -97,7 +97,7 @@ const StudentSub = () => {
                 </a>
                 <p>$1.30/month.</p>
 
-</footer>
+            </footer>
                 </div>
               
 

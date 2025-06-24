@@ -7,6 +7,7 @@ import AccessSubPage from './views/AccessSubPage'
 import Policy from './views/Policy'
 import Terms from './views/Terms'
 import supabase from './config/SupaBaseClient';
+import NewUserForm from './components/NewUserForm';
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/all-app-access-subscription" element={<AccessSubPage />} />
         <Route path="/privacy-policy" element={<Policy />} />
         <Route path='/terms-of-service' element={<Terms />} />
+        <Route path='/new-user-form' element={<NewUserForm />} />
       </Routes>
       <Footer />
     </Router>
