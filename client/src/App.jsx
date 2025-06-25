@@ -7,6 +7,7 @@ import AccessSubPage from './views/AccessSubPage'
 import Policy from './views/Policy'
 import Terms from './views/Terms'
 import supabase from './config/SupaBaseClient';
+import NewUserForm from './components/NewUserForm';
 
 
 function App() {
@@ -15,6 +16,17 @@ function App() {
     console.error('Supabase is not initialized. Please check your configuration.');
     return <div>Error: Supabase is not initialized.</div>;
   }
+
+  // Check if Stripe is working by attempting to load the Stripe publishable key from your config
+
+  if (!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY) {
+    console.error('Stripe is not configured. Please check your environment variables.');
+    return <div>Error: Stripe is not configured.</div>;
+  }else
+  {
+    console.log('Stripe Publishable Key: Are working!');
+  }
+  
   return (
     
     <Router>
@@ -24,6 +36,7 @@ function App() {
         <Route path="/all-app-access-subscription" element={<AccessSubPage />} />
         <Route path="/privacy-policy" element={<Policy />} />
         <Route path='/terms-of-service' element={<Terms />} />
+        <Route path='/all-app-access-account' element={<NewUserForm />} />
       </Routes>
       <Footer />
     </Router>
