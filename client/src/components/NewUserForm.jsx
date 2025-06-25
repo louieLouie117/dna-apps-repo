@@ -15,7 +15,6 @@ const NewUserForm = () => {
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -29,7 +28,16 @@ const NewUserForm = () => {
         });
 
         if (authError) {
-            setMessage(`Auth Error: ${authError.message} (${JSON.stringify(authError)})`);
+            if (
+                authError.message &&
+                (authError.message.toLowerCase().includes('user already registered') ||
+                 authError.message.toLowerCase().includes('user already exists') ||
+                 authError.message.toLowerCase().includes('account') && authError.message.toLowerCase().includes('exists'))
+            ) {
+                setMessage('Account already has been created. Please log in or contact support if you need assistance.');
+            } else {
+                setMessage(`Auth Error: ${authError.message} (${JSON.stringify(authError)})`);
+            }
             setLoading(false);
             return;
         }
