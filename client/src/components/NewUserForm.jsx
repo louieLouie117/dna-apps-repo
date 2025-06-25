@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import PageHeader from './PageHeader';
+import AppLogosFooter from './AppLogosFooter';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -48,37 +49,47 @@ const NewUserForm = () => {
     };
 
     return (
-        <div className="new-user-form">
+        <div >
             <header>
                 <PageHeader />
             </header>
+            <div className="new-user-form">
 
-            <form onSubmit={handleSubmit}>
+
+            <form className='reg-form' onSubmit={handleSubmit}>
+            <h2>Regisger for App Access</h2>
             <div>
-                <label>Email:</label>
+                <label className='hidden'>Email:</label>
                 <input
                     name="email"
                     type="email"
                     value={form.email}
+                    placeholder='email:'
                     onChange={handleChange}
                     required
                 />
             </div>
             <div>
-                <label>Password:</label>
+                <label className='hidden'>Password:</label>
                 <input
                     name="password"
                     type="password"
                     value={form.password}
+                    placeholder='password:'
                     onChange={handleChange}
                     required
                 />
             </div>
             <button type="submit" disabled={loading}>
-                {loading ? 'Submitting...' : 'Add User'}
+                {loading ? 'Submitting...' : 'Submit'}
             </button>
             {message && <p>{message}</p>}
         </form>
+            </div>
+
+        {/* <footer>
+            <AppLogosFooter />
+        </footer> */}
         </div>
     );
 };
