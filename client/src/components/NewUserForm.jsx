@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import PageHeader from './PageHeader';
-import AppLogosFooter from './AppLogosFooter';
+// import AppLogosFooter from './AppLogosFooter';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -11,6 +11,17 @@ const NewUserForm = () => {
     const [form, setForm] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
+
+    // Check for Stripe redirect
+    React.useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const stripeStatus = params.get('stripe');
+        if (stripeStatus === 'success') {
+            setMessage('Payment successful! You have been redirected from Stripe.');
+        } else if (stripeStatus === 'cancel') {
+            setMessage('Payment was cancelled. You have been redirected from Stripe.');
+        }
+    }, []);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });

@@ -16,6 +16,17 @@ function App() {
     console.error('Supabase is not initialized. Please check your configuration.');
     return <div>Error: Supabase is not initialized.</div>;
   }
+
+  // Check if Stripe is working by attempting to load the Stripe publishable key from your config
+
+  if (!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY) {
+    console.error('Stripe is not configured. Please check your environment variables.');
+    return <div>Error: Stripe is not configured.</div>;
+  }else
+  {
+    console.log('Stripe Publishable Key: Are working!');
+  }
+  
   return (
     
     <Router>
