@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useNavigate } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
+import PageHeader from './PageHeader';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -206,7 +207,12 @@ const SubcriptionForm = () => {
   };
 
   return (
-    <div className='strip-subcription-form'>
+    <div >
+
+      <header>
+        <PageHeader />
+      </header>
+      <div className='strip-subcription-form'>
       {error && <p>{error}</p>}
       {!showPasswordForm ? (
         <form onSubmit={handleSubscription}>
@@ -347,6 +353,7 @@ const SubcriptionForm = () => {
     <strong>Important:</strong> You must create your account before leaving or refreshing this page.
   </div>
 )}
+</div>
     </div>
   );
 };
