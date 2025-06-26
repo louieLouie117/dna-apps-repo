@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useNavigate } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
@@ -8,6 +8,10 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const SubcriptionForm = () => {
+
+
+
+
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const stripe = useStripe();
@@ -29,6 +33,18 @@ const SubcriptionForm = () => {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [form, setForm] = useState({ email: '', password: '' });
+
+    useEffect(() => {
+    if (showPasswordForm) {
+      const handleBeforeUnload = (e) => {
+        e.preventDefault();
+        e.returnValue = 'You must create your account before leaving this page, or you may lose access.';
+        return e.returnValue;
+      };
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    }
+  }, [showPasswordForm]);
 
   const handleCardChange = (event) => {
     setIsCardComplete(event.complete);
@@ -184,7 +200,7 @@ const SubcriptionForm = () => {
       setMessage('User added successfully!');
       setForm({ email: '', password: '' });
       // Optionally, navigate or reset state here
-      // navigate('/dashboard');
+      navigate('/dashboard');
     }
     setLoading(false);
   };
@@ -303,6 +319,7 @@ const SubcriptionForm = () => {
           </button>
         </form>
       ) : (
+        
         <form onSubmit={handleSupabaseSignup}>
           <h2>Create Your Account</h2>
           <input
@@ -325,6 +342,11 @@ const SubcriptionForm = () => {
           {message && <p>{message}</p>}
         </form>
       )}
+      {showPasswordForm && (
+  <div style={{ background: '#fff3cd', color: '#856404', padding: '10px', marginBottom: '16px', borderRadius: '4px', border: '1px solid #ffeeba' }}>
+    <strong>Important:</strong> You must create your account before leaving or refreshing this page.
+  </div>
+)}
     </div>
   );
 };
