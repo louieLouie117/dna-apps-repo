@@ -2,14 +2,9 @@ import { useState } from 'react';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useNavigate } from 'react-router-dom';
 
-
-
 const SubcriptionForm = () => {
-   
-  
   const navigate = useNavigate();
-    const [email, setEmail] = useState('');
-
+  const [email, setEmail] = useState('');
   const stripe = useStripe();
   const elements = useElements();
   const [fullName, setFullName] = useState('');
@@ -22,100 +17,119 @@ const SubcriptionForm = () => {
   const [subButton, setSubButton] = useState('Subscribe');
   const [error, setError] = useState(null);
   const [isCardComplete, setIsCardComplete] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const handleCardChange = (event) => {
     setIsCardComplete(event.complete);
   };
+
   const handleSubscription = async (e) => {
     e.preventDefault();
-    alert('Subscription handler was called');
-    if (!email || !fullName || !billingAddress.street || !billingAddress.city || !billingAddress.state || !billingAddress.zip) {
-      setError('Please fill in all fields.');
-      return;
-    }
-
-
+    if (loading) return; // Prevent double submission
+    setLoading(true);
     setSubButton('Processing Subscription...');
     setError(null);
 
-    if (!stripe || !elements) return;
+    if (
+      !email ||
+      !fullName ||
+      !billingAddress.street ||
+      !billingAddress.city ||
+      !billingAddress.state ||
+      !billingAddress.zip
+    ) {
+      setError('Please fill in all fields.');
+      setLoading(false);
+      setSubButton('Subscribe');
+      return;
+    }
+
+    if (!stripe || !elements) {
+      setError('Stripe is not loaded.');
+      setLoading(false);
+      setSubButton('Subscribe');
+      return;
+    }
     const cardElement = elements.getElement(CardElement);
 
     try {
       // Step 1: Create a Stripe Customer
       const customerResponse = await fetch('https://api.stripe.com/v1/customers', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: `Bearer ${import.meta.env.VITE_STRIPE_SECRET_KEY}`,
-      },
-      body: new URLSearchParams({ email: email }),
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Bearer ${import.meta.env.VITE_STRIPE_SECRET_KEY}`,
+        },
+        body: new URLSearchParams({ email: email }),
       });
 
       const customerData = await customerResponse.json();
       console.log('Customer Created:', customerData);
 
       if (customerData.error) {
-      throw new Error(customerData.error.message);
+        throw new Error(customerData.error.message);
       }
 
       const customerId = customerData.id;
 
       // Step 2: Create a PaymentMethod
       const { error: pmError, paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: cardElement,
-      billing_details: {
-        email: email,
-        name: fullName,
-        address: {
-        line1: billingAddress.street,
-        city: billingAddress.city,
-        state: billingAddress.state,
-        postal_code: billingAddress.zip,
-        country: 'US',
+        type: 'card',
+        card: cardElement,
+        billing_details: {
+          email: email,
+          name: fullName,
+          address: {
+            line1: billingAddress.street,
+            city: billingAddress.city,
+            state: billingAddress.state,
+            postal_code: billingAddress.zip,
+            country: 'US',
+          },
         },
-      },
       });
 
       if (pmError) {
-      throw new Error(pmError.message);
+        throw new Error(pmError.message);
       }
 
       console.log('PaymentMethod:', paymentMethod);
 
       // Step 3: Attach the PaymentMethod to the Customer
-      const attachResponse = await fetch(`https://api.stripe.com/v1/payment_methods/${paymentMethod.id}/attach`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: `Bearer ${import.meta.env.VITE_STRIPE_SECRET_KEY}`,
-      },
-      body: new URLSearchParams({
-        customer: customerId,
-      }),
-      });
+      const attachResponse = await fetch(
+        `https://api.stripe.com/v1/payment_methods/${paymentMethod.id}/attach`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Authorization: `Bearer ${import.meta.env.VITE_STRIPE_SECRET_KEY}`,
+          },
+          body: new URLSearchParams({
+            customer: customerId,
+          }),
+        }
+      );
 
       const attachData = await attachResponse.json();
       if (attachData.error) {
-      throw new Error(attachData.error.message);
+        throw new Error(attachData.error.message);
       }
 
       console.log('Payment Method Attached:', attachData);
 
       // Step 4: Create the Subscription
       const subscriptionResponse = await fetch('https://api.stripe.com/v1/subscriptions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: `Bearer ${import.meta.env.VITE_STRIPE_SECRET_KEY}`,
-      },
-      body: new URLSearchParams({
-        customer: customerId,
-        'items[0][price]': 'price_1RXhv2PkoLXDYzUahIq3DfZS',
-        'items[0][quantity]': '1',
-        default_payment_method: paymentMethod.id,
-      }),
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Bearer ${import.meta.env.VITE_STRIPE_SECRET_KEY}`,
+        },
+        body: new URLSearchParams({
+          customer: customerId,
+          'items[0][price]': 'price_1RXhv2PkoLXDYzUahIq3DfZS',
+          'items[0][quantity]': '1',
+          default_payment_method: paymentMethod.id,
+        }),
       });
 
       const subscriptionData = await subscriptionResponse.json();
@@ -133,29 +147,27 @@ const SubcriptionForm = () => {
       setError(error.message || 'An unexpected error occurred. Please try again.');
     } finally {
       setSubButton('Subscribe');
+      setLoading(false);
     }
   };
 
   return (
     <div className='strip-subcription-form'>
-        
       {error && <p>{error}</p>}
       <form onSubmit={handleSubscription}>
-         <input
-    type="email"
-    placeholder="Email"
-    value={email}
-    onChange={(e) => setEmail(e.target.value)}
-    required
-  />
-      
-      <h2>Payment Information</h2>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
-  <div className='border'>
-        <CardElement onChange={handleCardChange} />
-
+        <h2>Payment Information</h2>
+        <div className='border'>
+          <CardElement onChange={handleCardChange} />
         </div>
-         <input
+        <input
           type="text"
           placeholder="Full Name"
           value={fullName}
@@ -185,6 +197,7 @@ const SubcriptionForm = () => {
           <option value="" disabled>
             Select State
           </option>
+          {/* ...state options... */}
           <option value="AL">AL</option>
           <option value="AK">AK</option>
           <option value="AZ">AZ</option>
@@ -243,11 +256,15 @@ const SubcriptionForm = () => {
           onChange={(e) => setBillingAddress({ ...billingAddress, zip: e.target.value })}
           required
         />
-        <button className="mainBTN" type="submit" disabled={!stripe || !isCardComplete}>
+        <button
+          className="mainBTN"
+          type="submit"
+          disabled={!stripe || !isCardComplete || loading}
+        >
           {subButton}
         </button>
       </form>
-      </div>
+    </div>
   );
 };
 
