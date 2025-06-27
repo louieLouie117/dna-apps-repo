@@ -87,7 +87,7 @@ const SubcriptionForm = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Bearer ${import.meta.env.VITE_STRIPE_SECRET_KEY}`,
+          // Authorization: `Bearer ${import.meta.env.VITE_STRIPE_SECRET_KEY}`,
         },
         body: new URLSearchParams({ email: email }),
       });
@@ -121,7 +121,7 @@ const SubcriptionForm = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            Authorization: `Bearer ${import.meta.env.VITE_STRIPE_SECRET_KEY}`,
+            // Authorization: `Bearer ${import.meta.env.VITE_STRIPE_SECRET_KEY}`,
           },
           body: new URLSearchParams({
             customer: customerId,
@@ -136,7 +136,7 @@ const SubcriptionForm = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Bearer ${import.meta.env.VITE_STRIPE_SECRET_KEY}`,
+          // Authorization: `Bearer ${import.meta.env.VITE_STRIPE_SECRET_KEY}`,
         },
         body: new URLSearchParams({
           customer: customerId,
