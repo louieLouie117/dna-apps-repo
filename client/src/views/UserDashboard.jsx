@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import supabase from '../config/SupaBaseClient';
+import SignOut from '../components/SignOut';
 
 
 const UserDashboard = () => {
@@ -19,6 +20,9 @@ const UserDashboard = () => {
 
     return (
         <div>
+            <nav>
+                <SignOut />
+            </nav>
             <h1>Hello, welcome to dashboard</h1>
         </div>
     );
