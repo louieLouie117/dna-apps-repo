@@ -24,6 +24,20 @@ body {
   width: 150px;
 }
 
+.landing-page>header>nav {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  align-items: center;
+  padding: 20px;
+  color: white;
+}
+
+.landing-page>header>nav>a{
+  justify-self: end;
+  text-decoration: underline;
+}
+
+
 .heroBanner{
   display: block;
   /* background-color: red; */
@@ -305,6 +319,10 @@ body {
     width: 82vw;
     margin: 48px auto;
     position: relative;
+}
+.new-user-form > header {
+  text-align: center;
+  margin-bottom: 24px;
 }
 
 .new-user-form::before {

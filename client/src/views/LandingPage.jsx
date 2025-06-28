@@ -10,8 +10,15 @@ const LandingPage = () => {
     return (
         <div className="landing-page" >
             <header>
+                <nav>
                 <PageHeader />
 
+                    <a href="/sign-in">
+                    <button>Sign In</button>
+                </a>
+
+                </nav>
+                
                 <div className="heroBanner">
                     <img src={heroBackground} alt="" /> {/* Consider adding a descriptive alt text */}
                     <main>

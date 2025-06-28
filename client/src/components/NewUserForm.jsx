@@ -11,6 +11,7 @@ const NewUserForm = () => {
     const [form, setForm] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
+    
 
     // Check for Stripe redirect
     React.useEffect(() => {
@@ -65,6 +66,12 @@ const NewUserForm = () => {
             setForm({ email: '', password: '' });
         }
         setLoading(false);
+        // 3. Redirect to user dashboard and set user to supabase session
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+            // User is logged in, redirect to dashboard
+            window.location.href = '/user-dashboard';
+        }
     };
 
     return (
@@ -72,11 +79,18 @@ const NewUserForm = () => {
             <header>
                 <PageHeader />
             </header>
+
             <div className="new-user-form">
+                <header>
+  <h2>Thank you for your payment! </h2>
+                <p>Final step: Create your account to access the apps.</p>
+                </header>
+               
 
 
             <form className='reg-form' onSubmit={handleSubmit}>
-            <h2>Regisger for App Access</h2>
+            <h2>Create an Account</h2>
+
             <div>
                 <label className='hidden'>Email:</label>
                 <input
@@ -103,8 +117,13 @@ const NewUserForm = () => {
                 {loading ? 'Submitting...' : 'Submit'}
             </button>
             {message && <p>{message}</p>}
+            
+             <div style={{ background: '#fff3cd', color: '#856404', padding: '10px', marginBottom: '16px', borderRadius: '4px', border: '1px solid #ffeeba' }}>
+    <strong>Important:</strong> You must must use the <span style={{ color: '#1976d2' }}>same email</span> you used during your subscription process.
+  </div>
         </form>
             </div>
+            
 
         {/* <footer>
             <AppLogosFooter />
