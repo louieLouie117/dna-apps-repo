@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import supabase from '../config/SupaBaseClient';
 import SignOut from '../components/SignOut';
+import AppLogosFooter from '../components/AppLogosFooter';
 
 
 const UserDashboard = () => {
@@ -24,10 +25,11 @@ const UserDashboard = () => {
     }
 
     return (
-        <div>
+        <div >
             <nav>
                 <SignOut />
             </nav>
+
             <h1>Welcome to your dashboard</h1>
             <div
                 style={{
@@ -75,6 +77,10 @@ const UserDashboard = () => {
                     </div>
                 </div>
             </div>
+            <footer>
+                <h2>Download Apps</h2>
+                <AppLogosFooter />
+            </footer>
         </div>
     );
 };
