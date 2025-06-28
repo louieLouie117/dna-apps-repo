@@ -13,7 +13,7 @@ const SignOut = () => {
     };
 
     return (
-        <button onClick={handleSignOut} disabled={loading}>
+        <button className='main-btn' onClick={handleSignOut} disabled={loading}>
             {loading ? 'Signing out...' : 'Sign Out'}
         </button>
     );
