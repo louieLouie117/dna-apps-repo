@@ -8,6 +8,9 @@ import Policy from './views/Policy'
 import Terms from './views/Terms'
 import supabase from './config/SupaBaseClient';
 import NewUserForm from './components/NewUserForm';
+import SubcriptionForm from './components/SubcriptionForm';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 
 
 function App() {
@@ -17,18 +20,10 @@ function App() {
     return <div>Error: Supabase is not initialized.</div>;
   }
 
-  // Check if Stripe is working by attempting to load the Stripe publishable key from your config
 
-  if (!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY) {
-    console.error('Stripe is not configured. Please check your environment variables.');
-    return <div>Error: Stripe is not configured.</div>;
-  }else
-  {
-    console.log('Stripe Publishable Key: Are working!');
-  }
-  
+  const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+
   return (
-    
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
@@ -37,10 +32,18 @@ function App() {
         <Route path="/privacy-policy" element={<Policy />} />
         <Route path='/terms-of-service' element={<Terms />} />
         <Route path='/all-app-access-account' element={<NewUserForm />} />
+        <Route
+          path="/subcription-all-app-access"
+          element={
+            <Elements stripe={stripePromise}>
+              <SubcriptionForm />
+            </Elements>
+          }
+        />
       </Routes>
       <Footer />
     </Router>
-  )
+  );
 }
 
 export default App
