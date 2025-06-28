@@ -15,7 +15,12 @@ const UserDashboard = () => {
     }, []);
 
     if (!user) {
-        return <div>Please log in to access the dashboard.</div>;
+        return (
+            <div>
+            Please log in to access the dashboard.{' '}
+            <a href="/sign-in">Go to Sign In</a>
+            </div>
+        );
     }
 
     return (
