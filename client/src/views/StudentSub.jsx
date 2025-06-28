@@ -41,7 +41,7 @@ const StudentSub = () => {
                 <img src={StripePaymentCard} alt="" />
 
                 </a>
-                <p>$1.00/m Annually.</p>
+                <p>$1.00/m billed annually.</p>
         </footer>
 
                 </div>
@@ -95,7 +95,7 @@ const StudentSub = () => {
                 <img src={StripePaymentCard} alt="" />
 
                 </a>
-                <p>$1.30/month.</p>
+                <p>$1.30/m billed annually.</p>
 
             </footer>
                 </div>

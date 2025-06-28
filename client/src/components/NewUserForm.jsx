@@ -57,7 +57,7 @@ const NewUserForm = () => {
         // 2. Insert into Users table
         const { error: tableError } = await supabase
             .from('Users')
-            .insert([{ email, password }]);
+            .insert([{ email, password, status: 'Active' }]);
 
         if (tableError) {
             setMessage(`Table Error: ${tableError.message}`);
