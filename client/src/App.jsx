@@ -11,6 +11,7 @@ import NewUserForm from './components/NewUserForm';
 import SubcriptionForm from './components/SubcriptionForm';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import UserDashboard from './views/UserDashboard';
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
         <Route path="/privacy-policy" element={<Policy />} />
         <Route path='/terms-of-service' element={<Terms />} />
         <Route path='/all-app-access-account' element={<NewUserForm />} />
+        <Route path='/user-dashboard' element={<UserDashboard />} />
         <Route
           path="/subcription-all-app-access"
           element={
