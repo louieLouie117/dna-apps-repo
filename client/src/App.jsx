@@ -20,14 +20,7 @@ function App() {
     return <div>Error: Supabase is not initialized.</div>;
   }
 
-  // Check if Stripe is working by attempting to load the Stripe publishable key from your config
-  if (!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY) {
-    console.error('Stripe is not configured. Please check your environment variables.');
-    return <div>Error: Stripe is not configured.</div>;
-  }
 
-  console.log('Stripe Publishable Key: Are working!');
-  // Initialize Stripe outside the render to avoid recreating on every render
   const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
   return (
