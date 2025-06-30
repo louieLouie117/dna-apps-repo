@@ -87,7 +87,7 @@ const NewUserForm = () => {
             .insert([{ 
                 email, 
                 password, 
-                status: 'Active', 
+                status: 'Pending Verification', 
                 auth_uid: userId,
                 temp_login: { temp_user: tempName, temp_pass: tempPass }
              }]);
