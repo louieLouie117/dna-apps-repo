@@ -7,6 +7,8 @@ const UserDashboard = () => {
     const [user, setUser] = useState(null);
     const [userLoggedIn, setUserLoggedIn] = useState(false);
     const [accountStatus, setAccountStatus] = useState('Pending Verification not set'); // Default status
+    const [tempName, setTempName] = useState('temp_login');
+    const [tempPass, setTempPass] = useState('temp_pass');  
 
     useEffect(() => {
         const getUser = async () => {
@@ -30,6 +32,15 @@ const UserDashboard = () => {
             } else {
                 setUser(data[0]);
                 setAccountStatus(data[0]?.status || 'Pending Verification Error');
+                console.log('User data:', data[0].temp_login);
+                if (data[0].temp_login) {
+                    setTempName(data[0].temp_login.temp_name || 'temp_name_error');
+                    setTempPass(data[0].temp_login.temp_pass || 'temp_pass_error');
+                } else {
+                    setTempName('temp_name_error');
+                    setTempPass('temp_pass_error');
+                }
+
             }
         };
         fetchUserInfo();
@@ -43,6 +54,18 @@ const UserDashboard = () => {
             </div>
         );
     }
+
+    // Utility function to copy text to clipboard
+    const handleCopy = (text) => {
+        if (!text) return;
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                alert('Copied to clipboard!');
+            })
+            .catch(() => {
+                alert('Failed to copy.');
+            });
+    };
 
     return (
         <div>
@@ -72,7 +95,7 @@ const UserDashboard = () => {
                     </strong>
                     <div style={{ marginBottom: 12 }}>
                         We're sorry for the wait! Our team is working on verifying your account.
-                        Use the <b style={{ color: '#d39e00' }}>temporary password</b> below to log in to the apps.
+                        Use the <b style={{ color: '#d39e00' }}>temporary user name and password</b> below to log in to the apps.
                     </div>
                     <div
                         style={{
@@ -84,17 +107,50 @@ const UserDashboard = () => {
                             border: '1px dashed #ffe066',
                         }}
                     >
-                        <div>
-                            <strong>Temporary Username:</strong>{' '}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+
+                            <strong>Username:</strong>{' '}
                             <span style={{ fontWeight: 'bold', background: '#fff3cd', padding: '2px 8px', borderRadius: '3px', color: '#856404' }}>
-                                dnapass
+                                {tempName ? tempName : 'temp_name_error'}
                             </span>
+                            <button
+                                style={{
+                                    marginLeft: 4,
+                                    padding: '2px 8px',
+                                    fontSize: '0.9rem',
+                                    borderRadius: '3px',
+                                    border: '1px solid #ffe066',
+                                    background: '#fffbe6',
+                                    color: '#856404',
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => handleCopy(tempName)}
+                                title="Copy Username"
+                            >
+                                Copy
+                            </button>
                         </div>
-                        <div style={{ marginTop: '6px' }}>
-                            <strong>Temporary Password:</strong>{' '}
+                        <div style={{ marginTop: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                            <strong>Password:</strong>{' '}
                             <span style={{ fontWeight: 'bold', background: '#fff3cd', padding: '2px 8px', borderRadius: '3px', color: '#856404' }}>
-                                Fv123c
+                                {tempPass ? tempPass : 'temp_pass_error'}
                             </span>
+                            <button
+                                style={{
+                                    marginLeft: 4,
+                                    padding: '2px 8px',
+                                    fontSize: '0.9rem',
+                                    borderRadius: '3px',
+                                    border: '1px solid #ffe066',
+                                    background: '#fffbe6',
+                                    color: '#856404',
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => handleCopy(tempPass)}
+                                title="Copy Password"
+                            >
+                                Copy
+                            </button>
                         </div>
                     </div>
                     <button

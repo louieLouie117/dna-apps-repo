@@ -2,17 +2,21 @@ const Footer = () => (
     <footer style={{ padding: '1rem', background: '#f5f5f5', textAlign: 'center' }}>
         <nav>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'inline-flex', gap: '1.5rem' }}>
+                {/* home page */}
                 <li>
-                    <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+                    <a href="/" rel="noopener noreferrer">Home</a>
                 </li>
                 <li>
-                    <a href="/terms-of-service" target="_blank" rel="noopener noreferrer">Terms of Service</a>
+                    <a href="/privacy-policy"  rel="noopener noreferrer">Privacy Policy</a>
                 </li>
                 <li>
-                    <a href="/contact-us" target="_blank" rel="noopener noreferrer">Contact Us</a>
+                    <a href="/terms-of-service"  rel="noopener noreferrer">Terms of Service</a>
                 </li>
                 <li>
-                    <a href="/unsubscribe" target="_blank" rel="noopener noreferrer">Unsubscribe</a>
+                    <a href="/contact-us-1.html"  rel="noopener noreferrer">Contact Us</a>
+                </li>
+                <li>
+                    <a href="/unsubscribe"  rel="noopener noreferrer">Unsubscribe</a>
                 </li>
             </ul>
         </nav>

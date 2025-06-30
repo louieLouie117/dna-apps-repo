@@ -35,6 +35,7 @@ body {
 .landing-page>header>nav>a{
   justify-self: end;
   text-decoration: underline;
+
 }
 
 
@@ -211,7 +212,7 @@ body {
 
 .access-sub-page > aside > div > a > img,
 .student-sub-page > div > aside > div > footer > a > img {
-  width: 185px;
+  width: 150px;
   justify-self: center;
   margin-top: 10px;
 }
