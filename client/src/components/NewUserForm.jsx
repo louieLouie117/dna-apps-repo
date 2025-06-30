@@ -33,7 +33,7 @@ const NewUserForm = () => {
             if (error) {
             console.error('Error fetching temp_login:', error);
             } else {
-            console.log('Temp login table:', data);
+            // console.log('Temp login table:', data);
             setTempName(data[0]?.temp_name || 'temp_name_error');
             setTempPass(data[0]?.temp_pass || 'temp_pass_error');
 
@@ -89,7 +89,7 @@ const NewUserForm = () => {
                 password, 
                 status: 'Pending Verification', 
                 auth_uid: userId,
-                temp_login: { temp_user: tempName, temp_pass: tempPass }
+                temp_login: { temp_name: tempName, temp_pass: tempPass }
              }]);
 
         if (tableError) {

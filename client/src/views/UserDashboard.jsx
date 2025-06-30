@@ -7,6 +7,8 @@ const UserDashboard = () => {
     const [user, setUser] = useState(null);
     const [userLoggedIn, setUserLoggedIn] = useState(false);
     const [accountStatus, setAccountStatus] = useState('Pending Verification not set'); // Default status
+    const [tempName, setTempName] = useState('temp_login');
+    const [tempPass, setTempPass] = useState('temp_pass');  
 
     useEffect(() => {
         const getUser = async () => {
@@ -30,6 +32,15 @@ const UserDashboard = () => {
             } else {
                 setUser(data[0]);
                 setAccountStatus(data[0]?.status || 'Pending Verification Error');
+                console.log('User data:', data[0].temp_login);
+                if (data[0].temp_login) {
+                    setTempName(data[0].temp_login.temp_name || 'temp_name_error');
+                    setTempPass(data[0].temp_login.temp_pass || 'temp_pass_error');
+                } else {
+                    setTempName('temp_name_error');
+                    setTempPass('temp_pass_error');
+                }
+
             }
         };
         fetchUserInfo();
@@ -87,13 +98,13 @@ const UserDashboard = () => {
                         <div>
                             <strong>Temporary Username:</strong>{' '}
                             <span style={{ fontWeight: 'bold', background: '#fff3cd', padding: '2px 8px', borderRadius: '3px', color: '#856404' }}>
-                                dnapass
+                                {tempName ? tempName : 'temp_name_error'}
                             </span>
                         </div>
                         <div style={{ marginTop: '6px' }}>
                             <strong>Temporary Password:</strong>{' '}
                             <span style={{ fontWeight: 'bold', background: '#fff3cd', padding: '2px 8px', borderRadius: '3px', color: '#856404' }}>
-                                Fv123c
+                                {tempPass ? tempPass : 'temp_pass_error'}
                             </span>
                         </div>
                     </div>
