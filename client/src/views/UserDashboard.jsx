@@ -150,6 +150,95 @@ const UserDashboard = () => {
                         Refresh Status
                     </button>
                 </div>
+                // check if account is Request to Active
+            ) : accountStatus === 'Request to Active' ? (
+                <div
+                    style={{
+                        background: '#fffbe6',
+                        color: '#856404',
+                        padding: '20px',
+                        marginBottom: '24px',
+                        borderRadius: '8px',
+                        border: '2px solid #ffe066',
+                        boxShadow: '0 2px 8px rgba(255, 224, 102, 0.2)',
+                        maxWidth: '420px',
+                        margin: '0 auto',
+                        textAlign: 'center',
+                        fontSize: '1.1rem',
+                    }}
+                >
+                    <strong style={{ fontSize: '1.2rem', display: 'block', marginBottom: '8px' }}>
+                        Account Status: <span style={{ fontWeight: 'bold', color: '#d39e00' }}>Pending Activation</span>
+                    </strong>
+                    <div>
+                        Your request to reactivate your account is being processed. You will receive an email once your account is active.
+                    </div>
+                    <button
+                        onClick={() => window.location.reload()}
+                        style={{
+                            fontWeight: 'bold',
+                            background: '#856404',
+                            padding: '10px',
+                            marginTop: '16px',
+                            borderRadius: '3px',
+                            color: '#fff3cd'
+                        }}
+                    >
+                        Refresh Status
+                    </button>
+                </div>
+            ) : accountStatus === 'Unsubscribed' ? (
+                <div
+                    style={{
+                        background: '#f8d7da',
+                        color: '#721c24',
+                        padding: '20px',
+                        marginBottom: '24px',
+                        borderRadius: '8px',
+                        border: '2px solid #f5c6cb',
+                        boxShadow: '0 2px 8px rgba(245, 198, 203, 0.2)',
+                        maxWidth: '420px',
+                        margin: '0 auto',
+                        textAlign: 'center',
+                        fontSize: '1.1rem',
+                    }}
+                >
+                    <strong style={{ fontSize: '1.2rem', display: 'block', marginBottom: '8px' }}>
+                        Account Status: <span style={{ fontWeight: 'bold', color: '#c82333' }}>Unsubscribed</span>
+                    </strong>
+                    <div>
+                        Your account has been unsubscribed. You can reactivate it by clicking the button below.
+                    </div>
+                    <button
+                        style={{
+                            fontWeight: 'bold',
+                            background: '#28a745',
+                            padding: '10px 20px',
+                            marginTop: '16px',
+                            borderRadius: '3px',
+                            color: '#fff',
+                            border: 'none',
+                            cursor: 'pointer'
+                        }}
+                        onClick={async () => {
+                            if (!userLoggedIn) return;
+                            const { error } = await supabase
+                                .from('Users')
+                                .update({ status: 'Request to Active' })
+                                .eq('auth_uid', userLoggedIn);
+                            if (!error) {
+                                alert('Your account reactivation request has been submitted.');
+                                window.location.reload();
+                            } else {
+                                alert('Error reactivating account. Please try again.');
+                            }
+                        }}
+                    >
+                        Reactivate Account
+                    </button>
+                    <br />
+                  
+                </div>
             ) : (
                 <div
                     style={{
