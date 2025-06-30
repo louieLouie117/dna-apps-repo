@@ -13,6 +13,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import UserDashboard from './views/UserDashboard';
 import SignIn from './components/SignIn';
+import ContactUs from './components/ContactUs';
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
         <Route path='/all-app-access-account' element={<NewUserForm />} />
         <Route path='/user-dashboard' element={<UserDashboard />} />
         <Route path='/sign-in' element={<SignIn />} />
+        <Route path='/contact-us-1.html' element={<ContactUs />} />
         <Route
           path="/subcription-all-app-access"
           element={
