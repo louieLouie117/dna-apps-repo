@@ -11,6 +11,8 @@ const NewUserForm = () => {
     const [form, setForm] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
+    const [tempName, setTempName] = useState('temp_login');
+    const [tempPass, setTempPass] = useState('temp_pass');
     
 
     // Check for Stripe redirect
@@ -22,6 +24,30 @@ const NewUserForm = () => {
         } else if (stripeStatus === 'cancel') {
             setMessage('Payment was cancelled. You have been redirected from Stripe.');
         }
+        // get table form subpabase name temp_login
+        // Fetch temp_login table from Supabase
+        const fetchTempLogin = async () => {
+            const { data, error } = await supabase
+            .from('TempLogin')
+            .select('*');
+            if (error) {
+            console.error('Error fetching temp_login:', error);
+            } else {
+            console.log('Temp login table:', data);
+            setTempName(data[0]?.temp_name || 'temp_name_error');
+            setTempPass(data[0]?.temp_pass || 'temp_pass_error');
+
+            // You can set this data to state if needed
+            }
+        };
+        fetchTempLogin();
+
+        // Render any errors from URL params
+        const error = params.get('error');
+        if (error) {
+            setMessage(`Error: ${decodeURIComponent(error)}`);
+        }
+
     }, []);
 
     const handleChange = (e) => {
@@ -36,7 +62,7 @@ const NewUserForm = () => {
         // 1. Sign up user with Supabase Auth
         const { data: authData, error: authError } = await supabase.auth.signUp({
             email,
-            password
+            password,
         });
 
         if (authError) {
@@ -55,9 +81,16 @@ const NewUserForm = () => {
         }
 
         // 2. Insert into Users table
+        const userId = authData?.user?.id;
         const { error: tableError } = await supabase
             .from('Users')
-            .insert([{ email, password, status: 'Active' }]);
+            .insert([{ 
+                email, 
+                password, 
+                status: 'Pending Verification', 
+                auth_uid: userId,
+                temp_login: { temp_user: tempName, temp_pass: tempPass }
+             }]);
 
         if (tableError) {
             setMessage(`Table Error: ${tableError.message}`);

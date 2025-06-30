@@ -3,17 +3,37 @@ import supabase from '../config/SupaBaseClient';
 import SignOut from '../components/SignOut';
 import AppLogosFooter from '../components/AppLogosFooter';
 
-
 const UserDashboard = () => {
     const [user, setUser] = useState(null);
+    const [userLoggedIn, setUserLoggedIn] = useState(false);
+    const [accountStatus, setAccountStatus] = useState('Pending Verification not set'); // Default status
 
     useEffect(() => {
         const getUser = async () => {
             const { data: { session } } = await supabase.auth.getSession();
             setUser(session?.user || null);
+            setUserLoggedIn(session?.user?.id || null);
         };
         getUser();
     }, []);
+
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            if (!userLoggedIn) return;
+            const { data, error } = await supabase
+                .from('Users')
+                .select('*')
+                .eq('auth_uid', userLoggedIn);
+
+            if (error) {
+                console.error('Error fetching user uuid:', error);
+            } else {
+                setUser(data[0]);
+                setAccountStatus(data[0]?.status || 'Pending Verification Error');
+            }
+        };
+        fetchUserInfo();
+    }, [userLoggedIn]);
 
     if (!user) {
         return (
@@ -25,58 +45,251 @@ const UserDashboard = () => {
     }
 
     return (
-        <div >
+        <div>
             <nav>
                 <SignOut />
             </nav>
 
             <h1>Welcome to your dashboard</h1>
-            <div
-                style={{
-                    background: '#fffbe6',
-                    color: '#856404',
-                    padding: '20px',
-                    marginBottom: '24px',
-                    borderRadius: '8px',
-                    border: '2px solid #ffe066',
-                    boxShadow: '0 2px 8px rgba(255, 224, 102, 0.2)',
-                    maxWidth: '420px',
-                    margin: '0 auto',
-                    textAlign: 'center',
-                    fontSize: '1.1rem',
-                }}
-            >
-                <strong style={{ fontSize: '1.2rem', display: 'block', marginBottom: '8px' }}>
-                    Account Status: <span style={{ fontWeight: 'bold', color: '#d39e00' }}>Pending Verification</span>
-                </strong>
-                <div style={{ marginBottom: '12px' }}>
-                    Please use this <span style={{ fontWeight: 'bold', color: '#d39e00' }}>temporary password</span> to log in to the app while your account is being verified.<br />
-                    You will receive an email notification once your verification is complete.
-                </div>
+            {accountStatus === 'Pending Verification' || accountStatus === 'Pending Verification not set' ? (
                 <div
                     style={{
-                        background: '#ffeeba',
-                        padding: '12px',
-                        borderRadius: '6px',
-                        display: 'inline-block',
-                        marginTop: '8px',
-                        border: '1px dashed #ffe066',
+                        background: '#fffbe6',
+                        color: '#856404',
+                        padding: '20px',
+                        marginBottom: '24px',
+                        borderRadius: '8px',
+                        border: '2px solid #ffe066',
+                        boxShadow: '0 2px 8px rgba(255, 224, 102, 0.2)',
+                        maxWidth: '420px',
+                        margin: '0 auto',
+                        textAlign: 'center',
+                        fontSize: '1.1rem',
                     }}
                 >
-                    <div>
-                        <strong>Temporary Username:</strong>{' '}
-                        <span style={{ fontWeight: 'bold', background: '#fff3cd', padding: '2px 8px', borderRadius: '3px', color: '#856404' }}>
-                            dnapass
-                        </span>
+                    <strong style={{ fontSize: '1.2rem', display: 'block', marginBottom: '8px' }}>
+                        Account Status: <span style={{ fontWeight: 'bold', color: '#d39e00' }}>Pending Verification</span>
+                    </strong>
+                    <div style={{ marginBottom: 12 }}>
+                        We're sorry for the wait! Our team is working on verifying your account.
+                        Use the <b style={{ color: '#d39e00' }}>temporary password</b> below to log in to the apps.
                     </div>
-                    <div style={{ marginTop: '6px' }}>
-                        <strong>Temporary Password:</strong>{' '}
-                        <span style={{ fontWeight: 'bold', background: '#fff3cd', padding: '2px 8px', borderRadius: '3px', color: '#856404' }}>
-                            Fv123c
-                        </span>
+                    <div
+                        style={{
+                            background: '#ffeeba',
+                            padding: '12px',
+                            borderRadius: '6px',
+                            display: 'inline-block',
+                            marginTop: '8px',
+                            border: '1px dashed #ffe066',
+                        }}
+                    >
+                        <div>
+                            <strong>Temporary Username:</strong>{' '}
+                            <span style={{ fontWeight: 'bold', background: '#fff3cd', padding: '2px 8px', borderRadius: '3px', color: '#856404' }}>
+                                dnapass
+                            </span>
+                        </div>
+                        <div style={{ marginTop: '6px' }}>
+                            <strong>Temporary Password:</strong>{' '}
+                            <span style={{ fontWeight: 'bold', background: '#fff3cd', padding: '2px 8px', borderRadius: '3px', color: '#856404' }}>
+                                Fv123c
+                            </span>
+                        </div>
                     </div>
+                    <button
+                        onClick={() => window.location.reload()}
+                        style={{
+                            fontWeight: 'bold',
+                            background: '#856404',
+                            padding: '10px',
+                            marginTop: '16px',
+                            borderRadius: '3px',
+                            color: '#fff3cd'
+                        }}
+                    >
+                        Check Status
+                    </button>
+                    <br />
+                    You'll receive an email when verification is complete or click check status to refresh.
                 </div>
-            </div>
+            ) : accountStatus === 'Request to Unsubscribed' ? (
+                <div
+                    style={{
+                        background: '#fff3cd',
+                        color: '#856404',
+                        padding: '20px',
+                        marginBottom: '24px',
+                        borderRadius: '8px',
+                        border: '2px solid #ffe066',
+                        boxShadow: '0 2px 8px rgba(255, 224, 102, 0.2)',
+                        maxWidth: '420px',
+                        margin: '0 auto',
+                        textAlign: 'center',
+                        fontSize: '1.1rem',
+                    }}
+                >
+                    <strong style={{ fontSize: '1.2rem', display: 'block', marginBottom: '8px' }}>
+                        Account Status: <span style={{ fontWeight: 'bold', color: '#d39e00' }}>Pending Unsubscribe</span>
+                    </strong>
+                    <div>
+                        Your request to unsubscribe is being processed. You will receive an email confirmation once your account has been unsubscribed.
+                    </div>
+                    <br />
+                    <button
+                        onClick={() => window.location.reload()}
+                        style={{
+                            fontWeight: 'bold',
+                            background: '#856404',
+                            padding: '10px',
+                            marginTop: '16px',
+                            borderRadius: '3px',
+                            color: '#fff3cd'
+                        }}
+                    >
+                        Refresh Status
+                    </button>
+                </div>
+                // check if account is Request to Active
+            ) : accountStatus === 'Request to Active' ? (
+                <div
+                    style={{
+                        background: '#fffbe6',
+                        color: '#856404',
+                        padding: '20px',
+                        marginBottom: '24px',
+                        borderRadius: '8px',
+                        border: '2px solid #ffe066',
+                        boxShadow: '0 2px 8px rgba(255, 224, 102, 0.2)',
+                        maxWidth: '420px',
+                        margin: '0 auto',
+                        textAlign: 'center',
+                        fontSize: '1.1rem',
+                    }}
+                >
+                    <strong style={{ fontSize: '1.2rem', display: 'block', marginBottom: '8px' }}>
+                        Account Status: <span style={{ fontWeight: 'bold', color: '#d39e00' }}>Pending Activation</span>
+                    </strong>
+                    <div>
+                        Your request to reactivate your account is being processed. You will receive an email once your account is active.
+                    </div>
+                    <button
+                        onClick={() => window.location.reload()}
+                        style={{
+                            fontWeight: 'bold',
+                            background: '#856404',
+                            padding: '10px',
+                            marginTop: '16px',
+                            borderRadius: '3px',
+                            color: '#fff3cd'
+                        }}
+                    >
+                        Refresh Status
+                    </button>
+                </div>
+            ) : accountStatus === 'Unsubscribed' ? (
+                <div
+                    style={{
+                        background: '#f8d7da',
+                        color: '#721c24',
+                        padding: '20px',
+                        marginBottom: '24px',
+                        borderRadius: '8px',
+                        border: '2px solid #f5c6cb',
+                        boxShadow: '0 2px 8px rgba(245, 198, 203, 0.2)',
+                        maxWidth: '420px',
+                        margin: '0 auto',
+                        textAlign: 'center',
+                        fontSize: '1.1rem',
+                    }}
+                >
+                    <strong style={{ fontSize: '1.2rem', display: 'block', marginBottom: '8px' }}>
+                        Account Status: <span style={{ fontWeight: 'bold', color: '#c82333' }}>Unsubscribed</span>
+                    </strong>
+                    <div>
+                        Your account has been unsubscribed. You can reactivate it by clicking the button below.
+                    </div>
+                    <button
+                        style={{
+                            fontWeight: 'bold',
+                            background: '#28a745',
+                            padding: '10px 20px',
+                            marginTop: '16px',
+                            borderRadius: '3px',
+                            color: '#fff',
+                            border: 'none',
+                            cursor: 'pointer'
+                        }}
+                        onClick={async () => {
+                            if (!userLoggedIn) return;
+                            const { error } = await supabase
+                                .from('Users')
+                                .update({ status: 'Request to Active' })
+                                .eq('auth_uid', userLoggedIn);
+                            if (!error) {
+                                alert('Your account reactivation request has been submitted.');
+                                window.location.reload();
+                            } else {
+                                alert('Error reactivating account. Please try again.');
+                            }
+                        }}
+                    >
+                        Reactivate Account
+                    </button>
+                    <br />
+                  
+                </div>
+            ) : (
+                <div
+                    style={{
+                        background: '#e6ffed',
+                        color: '#155724',
+                        padding: '20px',
+                        marginBottom: '24px',
+                        borderRadius: '8px',
+                        border: '2px solid #b7eb8f',
+                        boxShadow: '0 2px 8px rgba(183, 235, 143, 0.2)',
+                        maxWidth: '420px',
+                        margin: '0 auto',
+                        textAlign: 'center',
+                        fontSize: '1.1rem',
+                    }}
+                >
+                    <strong style={{ fontSize: '1.2rem', display: 'block', marginBottom: '8px' }}>
+                        Account Status: <span style={{ fontWeight: 'bold', color: '#389e0d' }}>Active</span>
+                    </strong>
+                    <div>
+                        Your account is now active! You can sign in using the email and password you set during registration.
+                    </div>
+                    <br />
+                    <button
+                        style={{
+                            fontWeight: 'bold',
+                            background: '#d9534f',
+                            padding: '10px 20px',
+                            borderRadius: '3px',
+                            color: '#fff',
+                            border: 'none',
+                            cursor: 'pointer'
+                        }}
+                        onClick={async () => {
+                            if (!userLoggedIn) return;
+                            const { error } = await supabase
+                                .from('Users')
+                                .update({ status: 'Request to Unsubscribed' })
+                                .eq('auth_uid', userLoggedIn);
+                            if (!error) {
+                                alert('Unsubscribe request has been submitted.');
+                                window.location.reload();
+                            } else {
+                                alert('Error unsubscribing. Please try again.');
+                            }
+                        }}
+                    >
+                        Request to Unsubscribe
+                    </button>
+                </div>
+            )}
             <footer>
                 <h2>Download Apps</h2>
                 <AppLogosFooter />
