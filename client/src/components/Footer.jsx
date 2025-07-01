@@ -7,14 +7,15 @@ const Footer = () => (
                     <a href="/" rel="noopener noreferrer">Home</a>
                 </li>
                 <li>
+                    <a href="/contact-us-1.html"  rel="noopener noreferrer">Contact Us</a>
+                </li>
+                <li>
                     <a href="/privacy-policy"  rel="noopener noreferrer">Privacy Policy</a>
                 </li>
                 <li>
                     <a href="/terms-of-service"  rel="noopener noreferrer">Terms of Service</a>
                 </li>
-                <li>
-                    <a href="/contact-us-1.html"  rel="noopener noreferrer">Contact Us</a>
-                </li>
+                
                 <li>
                     <a href="/unsubscribe"  rel="noopener noreferrer">Unsubscribe</a>
                 </li>
