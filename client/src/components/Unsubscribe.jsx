@@ -13,6 +13,7 @@ const Unsubscribe = () => {
         email: '',
         subject: '',
         message: '',
+        payment_method: '',
     });
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState('');
@@ -27,9 +28,9 @@ const Unsubscribe = () => {
         setLoading(true);
         setSuccess('');
         setError('');
-        const { name, email, subject, message } = form;
+        const { name, email, subject, message, payment_method } = form;
 
-        if (!name || !email || !subject || !message) {
+        if (!name || !email || !subject || !payment_method) {
             setError('Please fill in all fields.');
             setLoading(false);
             return;
@@ -37,15 +38,23 @@ const Unsubscribe = () => {
 
         const { error } = await supabase
             .from('CustomerContact')
-            .insert([{ name, email, subject, message }]);
+            .insert([{ name, email, subject, message, payment_method }]);
 
         if (error) {
             setError('Failed to send message. Please try again.');
         } else {
             setSuccess('Your request to unsubscribe has been sent! You will receive a confirmation email once your unsubscription has been processed.');
-            setForm({ name: '', email: '', subject: '', message: '' });
+            setForm({ name: '', email: '', subject: '', message: '', payment_method: '' });
         }
         setLoading(false);
+    };
+
+    const [showFields, setShowFields] = useState(false);
+
+    // Update showFields when subject changes
+    const handleSelectChange = (e) => {
+        handleChange(e);
+        setShowFields(!!e.target.value);
     };
 
     return (
@@ -64,10 +73,10 @@ const Unsubscribe = () => {
                 <h2 style={{ textAlign: 'center', marginBottom: 24 }}>Unsubscribe</h2>
                 <p>We're sorry to see you go! Please let us know why you're unsubscribing.</p>
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                     <select
+                    <select
                         name="subject"
                         value={form.subject}
-                        onChange={handleChange}
+                        onChange={handleSelectChange}
                         style={inputStyle}
                         required
                     >
@@ -81,32 +90,64 @@ const Unsubscribe = () => {
                         <option value="Customer support issues">Customer support issues</option>
                         <option value="Other">Other</option>
                     </select>
-                    <input
-                        type="text"
-                        name="name"
-                        placeholder="Your Name"
-                        value={form.name}
-                        onChange={handleChange}
-                        style={inputStyle}
-                        required
-                    />
-                   
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="Your Email"
-                        value={form.email}
-                        onChange={handleChange}
-                        style={inputStyle}
-                        required
-                    />
-                    <textarea
-                        name="message"
-                        placeholder="Additional comments (optional)"
-                        value={form.message}
-                        onChange={handleChange}
-                        style={{ ...inputStyle, minHeight: 100, resize: 'vertical' }}
-                    />
+
+                    {showFields && (
+                        <>
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Your Name"
+                                value={form.name}
+                                onChange={handleChange}
+                                style={inputStyle}
+                                required
+                            />
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Your Email"
+                                value={form.email}
+                                onChange={handleChange}
+                                style={inputStyle}
+                                required
+                            />
+                            <p>What payment method did you use?</p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        name="payment_method"
+                                        value="PayPal"
+                                        checked={form.payment_method === 'PayPal'}
+                                        onChange={handleChange}
+                                        style={{ marginRight: 8 }}
+                                    />
+                                    PayPal
+                                </label>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        name="payment_method"
+                                        value="Stripe"
+                                        checked={form.payment_method === 'Stripe'}
+                                        onChange={handleChange}
+                                        style={{ marginRight: 8 }}
+                                    />
+                                    Stripe
+                                </label>
+                            </div>
+                            {form.subject === 'Other' && (
+                                <textarea
+                                    name="message"
+                                    placeholder="Additional comments (optional)"
+                                    value={form.message}
+                                    onChange={handleChange}
+                                    style={{ ...inputStyle, minHeight: 100, resize: 'vertical' }}
+                                />
+                            )}
+                        </>
+                    )}
+
                     <button
                         type="submit"
                         disabled={loading}
