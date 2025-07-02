@@ -33,8 +33,8 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/student-access-subscription" element={<StudentSub />} />
         <Route path="/all-app-access-subscription" element={<AccessSubPage />} />
-        <Route path="/privacy-policy" element={<Policy />} />
-        <Route path='/terms-of-service' element={<Terms />} />
+        <Route path="/privacy-policy.html" element={<Policy />} />
+        <Route path='/terms-of-service.html' element={<Terms />} />
         <Route path='/all-app-access-account' element={<NewUserForm />} />
         <Route path='/user-dashboard' element={<UserDashboard />} />
         <Route path='/sign-in' element={<SignIn />} />

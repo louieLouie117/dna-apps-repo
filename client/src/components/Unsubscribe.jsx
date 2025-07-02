@@ -111,7 +111,17 @@ const Unsubscribe = () => {
                                 style={inputStyle}
                                 required
                             />
-                            <p>What payment method did you use?</p>
+                           
+                            {form.subject === 'Other' && (
+                                <textarea
+                                    name="message"
+                                    placeholder="Additional comments (optional)"
+                                    value={form.message}
+                                    onChange={handleChange}
+                                    style={{ ...inputStyle, minHeight: 100, resize: 'vertical' }}
+                                />
+                            )}
+                             <p>What payment method did you use?</p>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                                 <label>
                                     <input
@@ -136,15 +146,6 @@ const Unsubscribe = () => {
                                     Stripe
                                 </label>
                             </div>
-                            {form.subject === 'Other' && (
-                                <textarea
-                                    name="message"
-                                    placeholder="Additional comments (optional)"
-                                    value={form.message}
-                                    onChange={handleChange}
-                                    style={{ ...inputStyle, minHeight: 100, resize: 'vertical' }}
-                                />
-                            )}
                         </>
                     )}
 

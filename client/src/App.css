@@ -179,7 +179,7 @@ p {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 330px;
   text-align: center;
-  margin-top: -90px;
+  margin-top: -160px;
   margin-bottom: 90px;
 }
 
@@ -217,7 +217,7 @@ p {
 
 .access-sub-page > aside > div > a > img,
 .student-sub-page > div > aside > div > footer > a > img {
-  width: 150px;
+  width: 190px;
   justify-self: center;
   margin-top: 10px;
 }

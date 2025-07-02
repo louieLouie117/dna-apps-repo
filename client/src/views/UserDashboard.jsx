@@ -158,7 +158,6 @@ const UserDashboard = () => {
                         style={{
                             fontWeight: 'bold',
                             background: '#856404',
-                            padding: '10px',
                             marginTop: '16px',
                             borderRadius: '3px',
                             color: '#fff3cd'
