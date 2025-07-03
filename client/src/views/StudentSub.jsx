@@ -172,7 +172,13 @@ const [isOn, setIsOn] = useState(true);
 
             </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '-100px', columnGap: '10px', marginBottom: '20px' }}>
-                <p>{isOn ? "Use PayPal Payment" : "Use Stripe Payment"}</p>
+                   <p>
+  {isOn
+    ? "Current payment method: Stripe — switch to PayPal"
+    : "Current payment method: PayPal — switch to Stripe"}
+</p>
+
+
                 <button
                     onClick={handleToggle}
                     style={{
