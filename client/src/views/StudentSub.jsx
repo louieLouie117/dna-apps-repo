@@ -7,7 +7,7 @@ import PayPalLog from '../assets/img/sPayPal.png'; // Assuming you have a PayPal
 
 
 const StudentSub = () => {
-const [isOn, setIsOn] = useState(false);
+const [isOn, setIsOn] = useState(true);
 
     const handleToggle = () => {
         setIsOn(prev => {
