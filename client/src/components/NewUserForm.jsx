@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import PageHeader from './PageHeader';
 // import AppLogosFooter from './AppLogosFooter';
+import emailjs from '@emailjs/browser';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
 const NewUserForm = () => {
     const [form, setForm] = useState({ email: '', password: '' });
@@ -13,7 +18,6 @@ const NewUserForm = () => {
     const [message, setMessage] = useState('');
     const [tempName, setTempName] = useState('temp_login');
     const [tempPass, setTempPass] = useState('temp_pass');
-    
 
     // Check for Stripe redirect
     React.useEffect(() => {
@@ -24,20 +28,16 @@ const NewUserForm = () => {
         } else if (stripeStatus === 'cancel') {
             setMessage('Payment was cancelled. You have been redirected from Stripe.');
         }
-        // get table form subpabase name temp_login
         // Fetch temp_login table from Supabase
         const fetchTempLogin = async () => {
             const { data, error } = await supabase
-            .from('TempLogin')
-            .select('*');
+                .from('TempLogin')
+                .select('*');
             if (error) {
-            console.error('Error fetching temp_login:', error);
+                console.error('Error fetching temp_login:', error);
             } else {
-            // console.log('Temp login table:', data);
-            setTempName(data[0]?.temp_name || 'temp_name_error');
-            setTempPass(data[0]?.temp_pass || 'temp_pass_error');
-
-            // You can set this data to state if needed
+                setTempName(data[0]?.temp_name || 'temp_name_error');
+                setTempPass(data[0]?.temp_pass || 'temp_pass_error');
             }
         };
         fetchTempLogin();
@@ -47,12 +47,12 @@ const NewUserForm = () => {
         if (error) {
             setMessage(`Error: ${decodeURIComponent(error)}`);
         }
-
     }, []);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -70,7 +70,7 @@ const NewUserForm = () => {
                 authError.message &&
                 (authError.message.toLowerCase().includes('user already registered') ||
                  authError.message.toLowerCase().includes('user already exists') ||
-                 authError.message.toLowerCase().includes('account') && authError.message.toLowerCase().includes('exists'))
+                 (authError.message.toLowerCase().includes('account') && authError.message.toLowerCase().includes('exists')))
             ) {
                 setMessage('Account already has been created. Please log in or contact support if you need assistance.');
             } else {
@@ -94,73 +94,88 @@ const NewUserForm = () => {
 
         if (tableError) {
             setMessage(`Table Error: ${tableError.message}`);
+            setLoading(false);
+            return;
         } else {
-            setMessage('User added successfully!');
+            setMessage('Redirecting to the dashboard.');
             setForm({ email: '', password: '' });
         }
+
+    // 3. Send notification email to support
+        try {
+            const currentUrl = window.location.href;
+            await emailjs.send(
+                serviceId,
+                templateId,
+                {
+                    to_email: 'customersupport@projectdnaapps.com',
+                    subject: 'A new subscriber just subscribed',
+                    message: `A new user has subscribed with the email: ${email}\nSignup URL: ${currentUrl}`,
+                },
+                publicKey
+            );
+        } catch (emailError) {
+            console.error('Failed to send notification email:', emailError);
+            alert('Failed to send notification email. Please contact support if you need assistance.');
+        }
+
+
+
         setLoading(false);
-        // 3. Redirect to user dashboard and set user to supabase session
+
+        // 4. Redirect to user dashboard and set user to supabase session
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
-            // User is logged in, redirect to dashboard
             window.location.href = '/user-dashboard';
         }
     };
 
     return (
-        <div >
+        <div>
             <header>
                 <PageHeader />
             </header>
-
             <div className="new-user-form">
                 <header>
-  <h2>Thank you for your payment! </h2>
-                <p>Final step: Create your account to access the apps.</p>
+                    <h2>Thank you for your payment! </h2>
+                    <p>Final step: Create your account to access the apps.</p>
                 </header>
-               
-
-
-            <form className='reg-form' onSubmit={handleSubmit}>
-            <h2>Create an Account</h2>
-
-            <div>
-                <label className='hidden'>Email:</label>
-                <input
-                    name="email"
-                    type="email"
-                    value={form.email}
-                    placeholder='email:'
-                    onChange={handleChange}
-                    required
-                />
+                <form className='reg-form' onSubmit={handleSubmit}>
+                    <h2>Create an Account</h2>
+                    <div>
+                        <label className='hidden'>Email:</label>
+                        <input
+                            name="email"
+                            type="email"
+                            value={form.email}
+                            placeholder='email:'
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className='hidden'>Password:</label>
+                        <input
+                            name="password"
+                            type="password"
+                            value={form.password}
+                            placeholder='password:'
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <button type="submit" disabled={loading}>
+                        {loading ? 'Submitting...' : 'Submit'}
+                    </button>
+                    {message && <p>{message}</p>}
+                    <div style={{ background: '#fff3cd', color: '#856404', padding: '10px', marginBottom: '16px', borderRadius: '4px', border: '1px solid #ffeeba' }}>
+                        <strong>Important:</strong> You must must use the <span style={{ color: '#1976d2' }}>same email</span> you used during your subscription process.
+                    </div>
+                </form>
             </div>
-            <div>
-                <label className='hidden'>Password:</label>
-                <input
-                    name="password"
-                    type="password"
-                    value={form.password}
-                    placeholder='password:'
-                    onChange={handleChange}
-                    required
-                />
-            </div>
-            <button type="submit" disabled={loading}>
-                {loading ? 'Submitting...' : 'Submit'}
-            </button>
-            {message && <p>{message}</p>}
-            
-             <div style={{ background: '#fff3cd', color: '#856404', padding: '10px', marginBottom: '16px', borderRadius: '4px', border: '1px solid #ffeeba' }}>
-    <strong>Important:</strong> You must must use the <span style={{ color: '#1976d2' }}>same email</span> you used during your subscription process.
-  </div>
-        </form>
-            </div>
-            
-
-        {/* <footer>
-            <AppLogosFooter />
-        </footer> */}
+            {/* <footer>
+                <AppLogosFooter />
+            </footer> */}
         </div>
     );
 };
