@@ -12,12 +12,28 @@ const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
+
+
 const NewUserForm = () => {
     const [form, setForm] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
     const [tempName, setTempName] = useState('temp_login');
     const [tempPass, setTempPass] = useState('temp_pass');
+
+    const currentUrl = window.location.href;
+    const [paymentMethod, setPaymentMethod] = useState(''); // Track payment method
+
+    React.useEffect(() => {
+        if (currentUrl.includes('/stripe-all-app-access-account')) {
+            setPaymentMethod('stripe');
+        } else if (currentUrl.includes('/paypal-all-app-access-account')) {
+            setPaymentMethod('paypal');
+        }
+        // console.log('Current URL:', currentUrl);
+    }, [currentUrl]);
+    // console.log('Payment Method:', paymentMethod);
+
 
     // Check for Stripe redirect
     React.useEffect(() => {
@@ -89,7 +105,8 @@ const NewUserForm = () => {
                 password, 
                 status: 'Pending Verification', 
                 auth_uid: userId,
-                temp_login: { temp_name: tempName, temp_pass: tempPass }
+                temp_login: { temp_name: tempName, temp_pass: tempPass },
+                payment_method: paymentMethod,
              }]);
 
         if (tableError) {
@@ -103,14 +120,13 @@ const NewUserForm = () => {
 
     // 3. Send notification email to support
         try {
-            const currentUrl = window.location.href;
             await emailjs.send(
                 serviceId,
                 templateId,
                 {
                     to_email: 'customersupport@projectdnaapps.com',
                     subject: 'A new subscriber just subscribed',
-                    message: `A new user has subscribed with the email: ${email}\nSignup URL: ${currentUrl}`,
+                    message: `A new user has subscribed with the email: ${email}\nPayment Method: ${paymentMethod}`,
                 },
                 publicKey
             );
