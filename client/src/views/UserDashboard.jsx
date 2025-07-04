@@ -32,7 +32,7 @@ const UserDashboard = () => {
             } else {
                 setUser(data[0]);
                 setAccountStatus(data[0]?.status || 'Pending Verification Error');
-                console.log('User data:', data[0].temp_login);
+                // console.log('User data:', data[0].temp_login);
                 if (data[0].temp_login) {
                     setTempName(data[0].temp_login.temp_name || 'temp_name_error');
                     setTempPass(data[0].temp_login.temp_pass || 'temp_pass_error');
