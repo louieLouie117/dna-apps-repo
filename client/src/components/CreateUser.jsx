@@ -28,7 +28,7 @@ const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    subscriptionType: '',
+    subscriptionType: '1234567',
     expired: ''
   });
   const [loading, setLoading] = useState(false);
@@ -211,7 +211,6 @@ const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
               borderRadius: '4px'
             }}
           >
-            <option value="">Select a subscription type</option>
             <option value="1234567">All App Access</option>
             <option value="135">Student Access</option>
           </select>
