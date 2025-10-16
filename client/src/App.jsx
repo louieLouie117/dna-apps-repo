@@ -16,6 +16,7 @@ import SignIn from './components/SignIn';
 import ContactUs from './components/ContactUs';
 import Unsubscribe from './components/Unsubscribe';
 import GetUsers from './components/GetUsers';
+import Wrapper from './views/Wrapper';
 
 
 function App() {
@@ -38,10 +39,20 @@ function App() {
         <Route path='/terms-of-service.html' element={<Terms />} />
         <Route path='/stripe-all-app-access-account' element={<NewUserForm />} />
         <Route path='/paypal-all-app-access-account' element={<NewUserForm />} />
-        <Route path='/user-dashboard' element={<UserDashboard />} />
+
+        <Route path='/user-dashboard' element={
+          <Wrapper>
+            <UserDashboard />
+          </Wrapper>
+        } />
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/contact-us-1.html' element={<ContactUs />} />
-        <Route path='/get-users' element={<GetUsers />} />
+       
+        <Route path='/get-users' element={
+          <Wrapper>
+            <GetUsers />
+          </Wrapper>
+        } />
         <Route path='/unsubscribe' element={<Unsubscribe />} />
         <Route
           path="/subcription-all-app-access"
