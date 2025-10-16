@@ -1,0 +1,172 @@
+import React, { useState } from 'react';
+
+const CreateUser = () => {
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+    subscriptionType: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage('');
+    setError('');
+
+    // Debug logging
+    console.log('Form data being sent:', formData);
+
+    try {
+      const response = await fetch('http://localhost:5000/api/create-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+
+      let data;
+      try {
+        data = await response.json();
+        console.log('Response data:', data);
+      } catch (jsonError) {
+        console.error('Failed to parse JSON response:', jsonError);
+        const textResponse = await response.text();
+        console.log('Raw response:', textResponse);
+        setError(`Server error: ${response.status} - ${textResponse}`);
+        return;
+      }
+
+      if (response.ok) {
+        setMessage('User created successfully!');
+        setFormData({
+          username: '',
+          password: '',
+          subscriptionType: ''
+        });
+      } else {
+        setError(data.message || data.error || `Server error: ${response.status} - ${JSON.stringify(data)}`);
+      }
+    } catch (err) {
+      console.error('Network error:', err);
+      setError('Network error: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px' }}>
+      <h2>Create New User</h2>
+      
+      {message && (
+        <div style={{ color: 'green', marginBottom: '10px' }}>
+          {message}
+        </div>
+      )}
+      
+      {error && (
+        <div style={{ color: 'red', marginBottom: '10px' }}>
+          {error}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: '15px' }}>
+          <label htmlFor="username" style={{ display: 'block', marginBottom: '5px' }}>
+            Username:
+          </label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+            style={{
+              width: '100%',
+              padding: '8px',
+              border: '1px solid #ccc',
+              borderRadius: '4px'
+            }}
+          />
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label htmlFor="password" style={{ display: 'block', marginBottom: '5px' }}>
+            Password:
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            style={{
+              width: '100%',
+              padding: '8px',
+              border: '1px solid #ccc',
+              borderRadius: '4px'
+            }}
+          />
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label htmlFor="subscriptionType" style={{ display: 'block', marginBottom: '5px' }}>
+            Subscription Type:
+          </label>
+          <select
+            id="subscriptionType"
+            name="subscriptionType"
+            value={formData.subscriptionType}
+            onChange={handleChange}
+            required
+            style={{
+              width: '100%',
+              padding: '8px',
+              border: '1px solid #ccc',
+              borderRadius: '4px'
+            }}
+          >
+            <option value="">Select a subscription type</option>
+            <option value="1234567">All App Access</option>
+            <option value="135">Student Access</option>
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          style={{
+            width: '100%',
+            padding: '10px',
+            backgroundColor: loading ? '#ccc' : '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: loading ? 'not-allowed' : 'pointer'
+          }}
+        >
+          {loading ? 'Creating User...' : 'Create User'}
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default CreateUser;

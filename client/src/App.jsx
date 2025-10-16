@@ -18,7 +18,7 @@ import Unsubscribe from './components/Unsubscribe';
 import GetUsers from './components/GetUsers';
 import Wrapper from './views/Wrapper';
 import AdminWrapper from './views/AdminWrapper';
-
+import CreateUser from './components/CreateUser';
 
 function App() {
   // Check if Supabase is initialized
@@ -40,21 +40,28 @@ function App() {
         <Route path='/terms-of-service.html' element={<Terms />} />
         <Route path='/stripe-all-app-access-account' element={<NewUserForm />} />
         <Route path='/paypal-all-app-access-account' element={<NewUserForm />} />
+        <Route path='/sign-in' element={<SignIn />} />
+        <Route path='/contact-us-1.html' element={<ContactUs />} />
+        <Route path='/unsubscribe' element={<Unsubscribe />} />
 
         <Route path='/user-dashboard' element={
           <Wrapper>
             <UserDashboard />
           </Wrapper>
         } />
-        <Route path='/sign-in' element={<SignIn />} />
-        <Route path='/contact-us-1.html' element={<ContactUs />} />
-       
-        <Route path='/get-users' element={
+
+         <Route path='/get-users' element={
           <AdminWrapper>
             <GetUsers />
           </AdminWrapper>
         } />
-        <Route path='/unsubscribe' element={<Unsubscribe />} />
+
+          <Route path='/create-user' element={
+          <AdminWrapper>
+            <CreateUser />
+          </AdminWrapper>
+        } />
+    
         <Route
           path="/subcription-all-app-access"
           element={
