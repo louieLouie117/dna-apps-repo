@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import supabase from '../config/SupaBaseClient';
 
 const CreateUser = () => {
   const [userList, setUserList] = useState([]);
@@ -63,6 +64,22 @@ const CreateUser = () => {
         data = await response.json();
         console.log('Response data:', data.data);
         setUserList(data.data || []);
+
+        // update Supabase table Users filter by email
+        const { data: updateData, error: updateError } = await supabase
+          .from('Users')
+          .update({
+            status: 'Active',
+          })
+          .eq('email', formData.username);
+          console.log('Supabase update complete:');
+
+        if (updateError) {
+          console.error('Error updating user in Supabase:', updateError);
+          setError(`Error updating user: ${updateError.message}`);
+        } else {
+          console.log('User updated successfully in Supabase:', updateData);
+        }
       } catch (jsonError) {
         console.error('Failed to parse JSON response:', jsonError);
         const textResponse = await response.text();
