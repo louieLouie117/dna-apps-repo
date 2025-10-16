@@ -17,6 +17,7 @@ import ContactUs from './components/ContactUs';
 import Unsubscribe from './components/Unsubscribe';
 import GetUsers from './components/GetUsers';
 import Wrapper from './views/Wrapper';
+import AdminWrapper from './views/AdminWrapper';
 
 
 function App() {
@@ -49,9 +50,9 @@ function App() {
         <Route path='/contact-us-1.html' element={<ContactUs />} />
        
         <Route path='/get-users' element={
-          <Wrapper>
+          <AdminWrapper>
             <GetUsers />
-          </Wrapper>
+          </AdminWrapper>
         } />
         <Route path='/unsubscribe' element={<Unsubscribe />} />
         <Route
