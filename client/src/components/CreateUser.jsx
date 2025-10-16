@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import supabase from '../config/SupaBaseClient';
+import emailjs from '@emailjs/browser';
 
 const CreateUser = () => {
   const [userList, setUserList] = useState([]);
+
+  const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
   // useeffect to fetch existing users can be added here if needed
   React.useEffect(() => {
@@ -73,6 +78,31 @@ const CreateUser = () => {
           })
           .eq('email', formData.username);
           console.log('Supabase update complete:');
+          // email js notification your account is active
+            emailjs.send(
+            serviceId,
+            templateId,
+            {
+              to_email: formData.username,
+              subject: 'Your account is now active',
+              message: `Welcome!
+
+                Thank you for joining us. Your account has been successfully activated.
+
+                🎉 You can now enjoy All App Access services!
+
+                Need help? If you have any questions, feel free to reach out to our support team.
+
+                Best regards,
+                The Support Team`,
+              status: 'Active'
+            },
+            
+            publicKey
+
+            );
+            console.log('EmailJS notification sent.')
+
 
         if (updateError) {
           console.error('Error updating user in Supabase:', updateError);
