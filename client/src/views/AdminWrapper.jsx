@@ -28,7 +28,6 @@ function AdminWrapper({ children }) {
                     alert('Access Denied: Admins Only Error fetching user data');
                     setIsAdmin(false);
                 } else if (userData && userData.account_type === 'Admin') {
-                    alert(`Welcome Admin ${userData.email}`);
                     setIsAdmin(true);
                 } else {
                     alert('Access Denied: Admins Only - You do not have the required permissions.');

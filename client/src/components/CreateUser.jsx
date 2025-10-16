@@ -1,6 +1,24 @@
 import React, { useState } from 'react';
 
 const CreateUser = () => {
+  const [userList, setUserList] = useState([]);
+
+  // useeffect to fetch existing users can be added here if needed
+  React.useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/users');
+        const data = await response.json();
+        setUserList(data.data || []);
+        console.log('Fetched users:', data.data);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -43,7 +61,8 @@ const CreateUser = () => {
       let data;
       try {
         data = await response.json();
-        console.log('Response data:', data);
+        console.log('Response data:', data.data);
+        setUserList(data.data || []);
       } catch (jsonError) {
         console.error('Failed to parse JSON response:', jsonError);
         const textResponse = await response.text();
@@ -167,6 +186,18 @@ const CreateUser = () => {
           {loading ? 'Creating User...' : 'Create User'}
         </button>
       </form>
+      {/* loading indicator */}
+      {loading && <div>Loading...</div>}
+      <ul style={{ display: "grid", rowGap: "10px", marginTop: "20px" }}>
+        {userList.map(user => (
+          <li key={user.id}>
+             <strong>Username:</strong> {user.username} <br />
+            <strong>Subscription:</strong> {user.subscriptiontype} <br />
+            <strong>Created:</strong> {user.__createdAt}
+
+          </li>
+        ))}
+      </ul>   
     </div>
   );
 };
