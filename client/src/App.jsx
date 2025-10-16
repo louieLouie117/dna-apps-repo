@@ -15,6 +15,7 @@ import UserDashboard from './views/UserDashboard';
 import SignIn from './components/SignIn';
 import ContactUs from './components/ContactUs';
 import Unsubscribe from './components/Unsubscribe';
+import GetUsers from './components/GetUsers';
 
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
         <Route path='/user-dashboard' element={<UserDashboard />} />
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/contact-us-1.html' element={<ContactUs />} />
+        <Route path='/get-users' element={<GetUsers />} />
         <Route path='/unsubscribe' element={<Unsubscribe />} />
         <Route
           path="/subcription-all-app-access"
