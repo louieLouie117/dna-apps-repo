@@ -4,7 +4,8 @@ const CreateUser = () => {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    subscriptionType: ''
+    subscriptionType: '',
+    expired: ''
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -56,7 +57,8 @@ const CreateUser = () => {
         setFormData({
           username: '',
           password: '',
-          subscriptionType: ''
+          subscriptionType: '',
+          expired: ''
         });
       } else {
         setError(data.message || data.error || `Server error: ${response.status} - ${JSON.stringify(data)}`);
