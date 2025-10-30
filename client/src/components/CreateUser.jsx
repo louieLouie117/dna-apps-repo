@@ -136,6 +136,52 @@ const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
       setLoading(false);
     }
   };
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this user?')) {
+      return;
+    }
+    
+    try {
+      console.log('Attempting to delete user with ID:', id);
+      const response = await fetch(`http://localhost:5000/api/delete-user/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      
+      console.log('Delete response status:', response.status);
+      console.log('Delete response headers:', response.headers);
+      
+      // Check if response is ok before trying to parse JSON
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Delete failed with status:', response.status, 'Error:', errorText);
+        setError(`Failed to delete user: ${response.status} - ${errorText}`);
+        return;
+      }
+      
+      // Check if response is JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const textResponse = await response.text();
+        console.error('Expected JSON but got:', contentType, 'Response:', textResponse);
+        setError('Server returned unexpected response format');
+        return;
+      }
+      
+      const data = await response.json();
+      console.log('Delete response data:', data);
+      
+      // Refresh user list after successful deletion
+      setUserList(prevList => prevList.filter(user => user.id !== id));
+      setMessage('User deleted successfully!');
+      
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      setError(`Error deleting user: ${error.message}`);
+    }
+  };
 
   return (
     <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px' }}>
@@ -240,8 +286,9 @@ const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
              <strong>Username:</strong> {user.username} <br />
             <strong>Subscription:</strong> {user.subscriptiontype} <br />
             <strong>Created:</strong> {user.__createdAt}
-
+            <button onClick={() => handleDelete(user.id)}>delete</button>
           </li>
+         
         ))}
       </ul>   
     </div>
