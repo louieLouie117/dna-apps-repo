@@ -1,6 +1,7 @@
 import React, { Suspense, lazy, useState } from 'react'; // Import Suspense and lazy
 import heroBackground from '../assets/img/heroBackground.png';
 import Laptop from '../assets/img/Laptop.png';
+import videoScreenshot from '../assets/img/videoScreenshot.png';
 // import AppSection from '../components/AppSection'; // Comment out or remove direct import
 import PageHeader from '../components/PageHeader';
 
@@ -42,35 +43,46 @@ const LandingPage = () => {
                                 onError={handleVideoError}
                             ></iframe>
                         ) : (
-                            <div style={{
-                                width: '570px', 
-                                height: '370px', 
-                                backgroundColor: '#f0f0f0', 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                justifyContent: 'center',
-                                border: '1px solid #ddd',
-                                borderRadius: '8px'
-                            }}>
-                                <div style={{ textAlign: 'center' }}>
-                                    <p>Video temporarily unavailable</p>
-                                    <a 
-                                        href="https://www.youtube.com/watch?v=5F1kflY5V4s" 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        style={{
-                                            display: 'inline-block',
-                                            padding: '10px 20px',
-                                            backgroundColor: '#ff0000',
-                                            color: 'white',
-                                            textDecoration: 'none',
-                                            borderRadius: '4px'
-                                        }}
-                                    >
-                                        Watch on YouTube
-                                    </a>
+                            <a 
+                                href="https://www.youtube.com/watch?v=5F1kflY5V4s" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                style={{
+                                    display: 'block',
+                                    position: 'relative',
+                                    width: '570px',
+                                    height: '370px'
+                                }}
+                            >
+                                <img 
+                                    src={videoScreenshot} 
+                                    alt="Video thumbnail - Click to watch on YouTube"
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        borderRadius: '8px',
+                                        cursor: 'pointer'
+                                    }}
+                                />
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                    borderRadius: '50%',
+                                    width: '60px',
+                                    height: '60px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    color: 'white',
+                                    fontSize: '24px'
+                                }}>
+                                    ▶
                                 </div>
-                            </div>
+                            </a>
                         )}
                     </aside>
                 <div className="sub-actions">
