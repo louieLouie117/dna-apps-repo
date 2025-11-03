@@ -5,15 +5,18 @@ import emailjs from '@emailjs/browser';
 const CreateUser = () => {
   const [userList, setUserList] = useState([]);
 
-  const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   // useeffect to fetch existing users can be added here if needed
   React.useEffect(() => {
+    console.log('API Base URL:', API_BASE_URL);
+    
     const fetchUsers = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/users');
+        const response = await fetch(`${API_BASE_URL}api/users`);
         const data = await response.json();
         setUserList(data.data || []);
         console.log('Fetched users:', data.data);
@@ -53,7 +56,7 @@ const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
     console.log('Form data being sent:', formData);
 
     try {
-      const response = await fetch('http://localhost:5000/api/create-user', {
+      const response = await fetch(`${API_BASE_URL}api/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -143,7 +146,7 @@ const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
     
     try {
       console.log('Attempting to delete user with ID:', id);
-      const response = await fetch(`http://localhost:5000/api/delete-user/${id}`, {
+      const response = await fetch(`${API_BASE_URL}api/delete-user/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -181,7 +184,7 @@ const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
       console.error('Error deleting user:', error);
       setError(`Error deleting user: ${error.message}`);
     }
-  };
+  } ;
 
   return (
     <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px' }}>
