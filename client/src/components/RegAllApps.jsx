@@ -11,6 +11,18 @@ const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+  const currentUrl = window.location.href;
+    const [paymentMethod, setPaymentMethod] = useState(''); // Track payment method
+
+    React.useEffect(() => {
+        if (currentUrl.includes('/stripe-all-app-access-account')) {
+            setPaymentMethod('stripe');
+        } else if (currentUrl.includes('/paypal-all-app-access-account')) {
+            setPaymentMethod('paypal');
+        }
+        // console.log('Current URL:', currentUrl);
+    }, [currentUrl]);
+
   // useeffect to fetch existing users can be added here if needed
   React.useEffect(() => {
     console.log('API Base URL:', API_BASE_URL);
@@ -71,7 +83,8 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
       let data;
       let responseText;
       
-
+      // Clone the response to read it multiple times if needed
+      const responseClone = response.clone();
       
       try {
         data = await response.json();
@@ -132,7 +145,72 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
       }
 
       if (response.ok) {
-        setMessage('Account created successfully! Navigating to dashboard please wait...');
+        // 1. Sign up user with Supabase Auth
+        try {
+          const { data: authData, error: authError } = await supabase.auth.signUp({
+            email: formData.username,
+            password: formData.password,
+          });
+
+          if (authError) {
+            if (
+              authError.message &&
+              (authError.message.toLowerCase().includes('user already registered') ||
+               authError.message.toLowerCase().includes('user already exists') ||
+               (authError.message.toLowerCase().includes('account') && authError.message.toLowerCase().includes('exists')))
+            ) {
+              setMessage('Account already has been created. Please log in or contact support if you need assistance.');
+            } else {
+              setError(`Auth Error: ${authError.message}`);
+            }
+            return;
+          }
+
+          // 2. Insert into Users table
+          const userId = authData?.user?.id;
+          const { error: tableError } = await supabase
+            .from('Users')
+            .insert([{ 
+              email: formData.username, 
+              password: formData.password, 
+              status: 'Active', 
+              auth_uid: userId,
+              payment_method: paymentMethod,
+            }]);
+
+          if (tableError) {
+            setError(`Table Error: ${tableError.message}`);
+            return;
+          }
+
+          // 3. Send notification email to support
+          try {
+            await emailjs.send(
+              serviceId,
+              templateId,
+              {
+                to_email: 'customersupport@projectdnaapps.com',
+                subject: 'A new subscriber just subscribed',
+                message: `A new user has subscribed with the email: ${formData.username}\nPayment Method: ${paymentMethod}`,
+              },
+              publicKey
+            );
+          } catch (emailError) {
+            console.error('Failed to send notification email:', emailError);
+          }
+
+          setMessage('Account created successfully! Redirecting to dashboard...');
+          
+          // 4. Redirect to user dashboard
+          setTimeout(() => {
+            window.location.href = '/user-dashboard';
+          }, 2000);
+
+        } catch (supabaseError) {
+          console.error('Supabase error:', supabaseError);
+          setError(`Account creation error: ${supabaseError.message}`);
+        }
+
         setFormData({
           username: '',
           password: '',
@@ -223,7 +301,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
             )}
         <div style={{ marginBottom: '15px' }}>
           <label htmlFor="username" style={{ display: 'block', marginBottom: '5px' }}>
-            email:
+            email :
           </label>
           <input
             type="text"
