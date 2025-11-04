@@ -199,8 +199,8 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
             console.error('Failed to send notification email:', emailError);
           }
 
-          setMessage('Account created successfully! Redirecting to dashboard...');
-          
+          setMessage('Please wait. You are being redirected to the dashboard...');
+
           // 4. Redirect to user dashboard
           setTimeout(() => {
             window.location.href = '/user-dashboard';
@@ -211,12 +211,6 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
           setError(`Account creation error: ${supabaseError.message}`);
         }
 
-        setFormData({
-          username: '',
-          password: '',
-          subscriptionType: '',
-          expired: ''
-        });
       } else {
         setError(data.message || data.error || `Server error: ${response.status} - ${JSON.stringify(data)}`);
       }
@@ -295,7 +289,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
                 </header>
         <form  className='reg-form' onSubmit={handleSubmit}>
                {message && (
-                <div style={{ color: 'green', marginBottom: '10px' }}>
+                <div style={{ color: 'green', marginBottom: '10px', fontSize: '20px', fontWeight: 'bold' }}>
                 {message}
                 </div>
             )}
