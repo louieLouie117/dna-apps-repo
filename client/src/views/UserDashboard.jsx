@@ -73,7 +73,12 @@ const UserDashboard = () => {
                 <SignOut />
             </nav>
 
+
             <h1>Welcome to your dashboard</h1>
+             <header>
+                <h2>Download Apps From Microsoft Store.</h2>
+                <AppLogosFooter />
+            </header>
             {accountStatus === 'Pending Verification' || accountStatus === 'Pending Verification not set' ? (
                 <div
                     style={{
@@ -314,7 +319,7 @@ const UserDashboard = () => {
                         Account Status: <span style={{ fontWeight: 'bold', color: '#389e0d' }}>Active</span>
                     </strong>
                     <div>
-                        Your account is now active! You can sign in using the email and password you set during registration.
+                        Your account is now active! You can sign in to all apps using the email and password you set during registration.
                     </div>
                     <br />
                     <button
@@ -345,10 +350,7 @@ const UserDashboard = () => {
                     </button>
                 </div>
             )}
-            <footer>
-                <h2>Download Apps</h2>
-                <AppLogosFooter />
-            </footer>
+           
         </div>
     );
 };
