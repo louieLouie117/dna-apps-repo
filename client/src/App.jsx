@@ -19,6 +19,7 @@ import GetUsers from './components/GetUsers';
 import Wrapper from './views/Wrapper';
 import AdminWrapper from './views/AdminWrapper';
 import CreateUser from './components/CreateUser';
+import RegAllApps from './components/RegAllApps';
 
 function App() {
   // Check if Supabase is initialized
@@ -35,6 +36,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/student-access-subscription" element={<StudentSub />} />
+        <Route path="/register-all-apps" element={<RegAllApps />} />
         <Route path="/all-app-access-subscription" element={<AccessSubPage />} />
         <Route path="/privacy-policy.html" element={<Policy />} />
         <Route path='/terms-of-service.html' element={<Terms />} />
