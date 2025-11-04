@@ -1,14 +1,27 @@
 import React, { useState } from 'react';
 import supabase from '../config/SupaBaseClient';
 import emailjs from '@emailjs/browser';
+import PageHeader from './PageHeader';
 
-const CreateUser = () => {
+const RegAllApps = () => {
   const [userList, setUserList] = useState([]);
 
 const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+  const currentUrl = window.location.href;
+    const [paymentMethod, setPaymentMethod] = useState(''); // Track payment method
+
+    React.useEffect(() => {
+        if (currentUrl.includes('/stripe-all-app-access-account')) {
+            setPaymentMethod('stripe');
+        } else if (currentUrl.includes('/paypal-all-app-access-account')) {
+            setPaymentMethod('paypal');
+        }
+        // console.log('Current URL:', currentUrl);
+    }, [currentUrl]);
 
   // useeffect to fetch existing users can be added here if needed
   React.useEffect(() => {
@@ -68,6 +81,11 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
       console.log('Response headers:', response.headers);
 
       let data;
+      let responseText;
+      
+      // Clone the response to read it multiple times if needed
+      const responseClone = response.clone();
+      
       try {
         data = await response.json();
         console.log('Response data:', data.data);
@@ -115,20 +133,84 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
         }
       } catch (jsonError) {
         console.error('Failed to parse JSON response:', jsonError);
-        const textResponse = await response.text();
-        console.log('Raw response:', textResponse);
-        setError(`Server error: ${response.status} - ${textResponse}`);
+        try {
+          responseText = await responseClone.text();
+          console.log('Raw response:', responseText);
+          setError(`Server error: ${response.status} - ${responseText}`);
+        } catch (textError) {
+          console.error('Failed to read response as text:', textError);
+          setError(`Server error: ${response.status} - Unable to read response`);
+        }
         return;
       }
 
       if (response.ok) {
-        setMessage('User created successfully!');
-        setFormData({
-          username: '',
-          password: '',
-          subscriptionType: '',
-          expired: ''
-        });
+        // 1. Sign up user with Supabase Auth
+        try {
+          const { data: authData, error: authError } = await supabase.auth.signUp({
+            email: formData.username,
+            password: formData.password,
+          });
+
+          if (authError) {
+            if (
+              authError.message &&
+              (authError.message.toLowerCase().includes('user already registered') ||
+               authError.message.toLowerCase().includes('user already exists') ||
+               (authError.message.toLowerCase().includes('account') && authError.message.toLowerCase().includes('exists')))
+            ) {
+              setMessage('Account already has been created. Please log in or contact support if you need assistance.');
+            } else {
+              setError(`Auth Error: ${authError.message}`);
+            }
+            return;
+          }
+
+          // 2. Insert into Users table
+          const userId = authData?.user?.id;
+          const { error: tableError } = await supabase
+            .from('Users')
+            .insert([{ 
+              email: formData.username, 
+              password: formData.password, 
+              status: 'Active', 
+              auth_uid: userId,
+              payment_method: paymentMethod,
+            }]);
+
+          if (tableError) {
+            setError(`Table Error: ${tableError.message}`);
+            return;
+          }
+
+          // 3. Send notification email to support
+          try {
+            await emailjs.send(
+              serviceId,
+              templateId,
+              {
+                to_email: 'customersupport@projectdnaapps.com',
+                subject: 'A new subscriber just subscribed',
+                message: `A new user has subscribed with the email: ${formData.username}\nPayment Method: ${paymentMethod}`,
+              },
+              publicKey
+            );
+          } catch (emailError) {
+            console.error('Failed to send notification email:', emailError);
+          }
+
+          setMessage('Please wait. You are being redirected to the dashboard...');
+
+          // 4. Redirect to user dashboard
+          setTimeout(() => {
+            window.location.href = '/user-dashboard';
+          }, 2000);
+
+        } catch (supabaseError) {
+          console.error('Supabase error:', supabaseError);
+          setError(`Account creation error: ${supabaseError.message}`);
+        }
+
       } else {
         setError(data.message || data.error || `Server error: ${response.status} - ${JSON.stringify(data)}`);
       }
@@ -187,14 +269,12 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   } ;
 
   return (
-    <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px' }}>
-      <h2>Create New User</h2>
+    <div style={{ margin: '0 auto', padding: '20px' }}>
+        <header>
+            <PageHeader />
+        </header>
       
-      {message && (
-        <div style={{ color: 'green', marginBottom: '10px' }}>
-          {message}
-        </div>
-      )}
+   
       
       {error && (
         <div style={{ color: 'red', marginBottom: '10px' }}>
@@ -202,10 +282,20 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
         </div>
       )}
 
-      <form onSubmit={handleSubmit}>
+      <div className='new-user-form'>
+         <header>
+                    <h2>Thank you for your payment! </h2>
+                    <p>Final step: Create your account to access the apps.</p>
+                </header>
+        <form  className='reg-form' onSubmit={handleSubmit}>
+               {message && (
+                <div style={{ color: 'green', marginBottom: '10px', fontSize: '20px', fontWeight: 'bold' }}>
+                {message}
+                </div>
+            )}
         <div style={{ marginBottom: '15px' }}>
           <label htmlFor="username" style={{ display: 'block', marginBottom: '5px' }}>
-            Username:
+            email :
           </label>
           <input
             type="text"
@@ -243,11 +333,32 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
           />
         </div>
 
-        <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="subscriptionType" style={{ display: 'block', marginBottom: '5px' }}>
-            Subscription Type:
-          </label>
-          <select
+      
+
+        <button
+          type="submit"
+          disabled={loading}
+          style={{
+            width: '100%',
+            padding: '10px',
+            backgroundColor: loading ? '#ccc' : '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: loading ? 'not-allowed' : 'pointer'
+          }}
+        >
+          {loading ? 'Submitting...' : 'Submit'}
+        </button>
+
+         <div style={{ background: '#fff3cd', color: '#856404', padding: '10px', marginBottom: '16px', borderRadius: '4px', border: '1px solid #ffeeba' }}>
+                        <strong>Important:</strong> <br /> You must must use the <span style={{ color: '#1976d2' }}>same email</span> that was used during your subscription process.
+                    </div>
+
+                      <div>
+         
+          <select 
+            className='hidden'
             id="subscriptionType"
             name="subscriptionType"
             value={formData.subscriptionType}
@@ -264,38 +375,15 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
             <option value="135">Student Access</option>
           </select>
         </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            width: '100%',
-            padding: '10px',
-            backgroundColor: loading ? '#ccc' : '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: loading ? 'not-allowed' : 'pointer'
-          }}
-        >
-          {loading ? 'Creating User...' : 'Create User'}
-        </button>
       </form>
       {/* loading indicator */}
-      {loading && <div>Loading...</div>}
-      <ul style={{ display: "grid", rowGap: "10px", marginTop: "20px" }}>
-        {userList.map(user => (
-          <li key={user.id}>
-             <strong>Username:</strong> {user.username} <br />
-            <strong>Subscription:</strong> {user.subscriptiontype} <br />
-            <strong>Created:</strong> {user.__createdAt}
-            <button onClick={() => handleDelete(user.id)}>delete</button>
-          </li>
-         
-        ))}
-      </ul>   
+                   
+      </div>
+
+      
+     
     </div>
   );
 };
 
-export default CreateUser;
+export default RegAllApps;

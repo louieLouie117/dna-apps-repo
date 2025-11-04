@@ -7,7 +7,7 @@ import AccessSubPage from './views/AccessSubPage'
 import Policy from './views/Policy'
 import Terms from './views/Terms'
 import supabase from './config/SupaBaseClient';
-import NewUserForm from './components/NewUserForm';
+// import NewUserForm from './components/NewUserForm';
 import SubcriptionForm from './components/SubcriptionForm';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -19,6 +19,7 @@ import GetUsers from './components/GetUsers';
 import Wrapper from './views/Wrapper';
 import AdminWrapper from './views/AdminWrapper';
 import CreateUser from './components/CreateUser';
+import RegAllApps from './components/RegAllApps';
 
 function App() {
   // Check if Supabase is initialized
@@ -38,8 +39,11 @@ function App() {
         <Route path="/all-app-access-subscription" element={<AccessSubPage />} />
         <Route path="/privacy-policy.html" element={<Policy />} />
         <Route path='/terms-of-service.html' element={<Terms />} />
-        <Route path='/stripe-all-app-access-account' element={<NewUserForm />} />
-        <Route path='/paypal-all-app-access-account' element={<NewUserForm />} />
+
+        {/* <Route path="/register-all-apps" element={<RegAllApps />} /> */}
+        <Route path='/stripe-all-app-access-account' element={<RegAllApps />} />
+        <Route path='/paypal-all-app-access-account' element={<RegAllApps />} />
+
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/contact-us-1.html' element={<ContactUs />} />
         <Route path='/unsubscribe' element={<Unsubscribe />} />

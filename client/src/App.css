@@ -248,7 +248,7 @@ p {
 
 .reg-form {
   display: grid;
-  gap: 24px;
+  gap: 10px;
   background: #fff;
   padding: 40px 32px;
   border-radius: 16px;
