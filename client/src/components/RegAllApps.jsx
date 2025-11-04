@@ -71,8 +71,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
       let data;
       let responseText;
       
-      // Clone the response to read it multiple times if needed
-      const responseClone = response.clone();
+
       
       try {
         data = await response.json();
@@ -133,7 +132,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
       }
 
       if (response.ok) {
-        setMessage('User created successfully!');
+        setMessage('Account created successfully! Navigating to dashboard please wait...');
         setFormData({
           username: '',
           password: '',
@@ -203,11 +202,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
             <PageHeader />
         </header>
       
-      {message && (
-        <div style={{ color: 'green', marginBottom: '10px' }}>
-          {message}
-        </div>
-      )}
+   
       
       {error && (
         <div style={{ color: 'red', marginBottom: '10px' }}>
@@ -221,9 +216,14 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
                     <p>Final step: Create your account to access the apps.</p>
                 </header>
         <form  className='reg-form' onSubmit={handleSubmit}>
+               {message && (
+                <div style={{ color: 'green', marginBottom: '10px' }}>
+                {message}
+                </div>
+            )}
         <div style={{ marginBottom: '15px' }}>
           <label htmlFor="username" style={{ display: 'block', marginBottom: '5px' }}>
-            Username:
+            email:
           </label>
           <input
             type="text"
