@@ -36,12 +36,14 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/student-access-subscription" element={<StudentSub />} />
-        <Route path="/register-all-apps" element={<RegAllApps />} />
         <Route path="/all-app-access-subscription" element={<AccessSubPage />} />
         <Route path="/privacy-policy.html" element={<Policy />} />
         <Route path='/terms-of-service.html' element={<Terms />} />
+
+        <Route path="/register-all-apps" element={<RegAllApps />} />
         <Route path='/stripe-all-app-access-account' element={<NewUserForm />} />
         <Route path='/paypal-all-app-access-account' element={<NewUserForm />} />
+        
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/contact-us-1.html' element={<ContactUs />} />
         <Route path='/unsubscribe' element={<Unsubscribe />} />
