@@ -358,7 +358,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
         </button>
 
          <div style={{ background: '#fff3cd', color: '#856404', padding: '10px', marginBottom: '16px', borderRadius: '4px', border: '1px solid #ffeeba' }}>
-                        <strong>Important:</strong> You must must use the <span style={{ color: '#1976d2' }}>same email</span> you used during your subscription process.
+                        <strong>Important:</strong> <br /> You must must use the <span style={{ color: '#1976d2' }}>same email</span> that was used during your subscription process.
                     </div>
 
                       <div>
