@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase client
@@ -7,12 +7,23 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const Unsubscribe = () => {
+        // get user email from supabase auth
+    const [userEmail, setUserEmail] = useState('');
+
+    useEffect(() => {
+        const fetchUserEmail = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUserEmail(user?.email || '');
+        };
+        fetchUserEmail();
+    }, []);
+
     const [form, setForm] = useState({
         name: '',
-        email: '',
+        email: userEmail,
         subject: '',
         message: '',
-        payment_method: '',
+        payment_method: 'Stripe',
     });
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState('');
@@ -101,8 +112,8 @@ const Unsubscribe = () => {
                             <input
                                 type="email"
                                 name="email"
-                                placeholder="Your Email"
-                                value={form.email}
+                                placeholder={`Your Email`}
+                                value={userEmail || form.email}
                                 onChange={handleChange}
                                 style={inputStyle}
                                 required
@@ -119,17 +130,7 @@ const Unsubscribe = () => {
                             )}
                              <p>What payment method did you use?</p>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        name="payment_method"
-                                        value="PayPal"
-                                        checked={form.payment_method === 'PayPal'}
-                                        onChange={handleChange}
-                                        style={{ marginRight: 8 }}
-                                    />
-                                    PayPal
-                                </label>
+                                
                                 <label>
                                     <input
                                         type="checkbox"
@@ -140,6 +141,17 @@ const Unsubscribe = () => {
                                         style={{ marginRight: 8 }}
                                     />
                                     Stripe
+                                </label>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        name="payment_method"
+                                        value="PayPal"
+                                        checked={form.payment_method === 'PayPal'}
+                                        onChange={handleChange}
+                                        style={{ marginRight: 8 }}
+                                    />
+                                    PayPal
                                 </label>
                             </div>
                         </>
