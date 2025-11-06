@@ -75,9 +75,7 @@ const UserDashboard = () => {
 
 
             <h1>Welcome to your dashboard</h1>
-             <header>
-                <AppLogosFooter />
-            </header>
+          
             {accountStatus === 'Pending Verification' || accountStatus === 'Pending Verification not set' ? (
                 <div
                     style={{
@@ -321,13 +319,19 @@ const UserDashboard = () => {
                         Your account is now active! You can sign in to all apps using the email and password you set during registration.
                     </div>
                     <br />
-                    <button
+                  
+                </div>
+            )}
+
+               <header>
+                <AppLogosFooter />
+            </header>
+              <button
                         style={{
-                            fontWeight: 'bold',
-                            background: '#d9534f',
+                            background: 'whitesmoke',
                             padding: '10px 20px',
                             borderRadius: '3px',
-                            color: '#fff',
+                            color: 'blue',
                             border: 'none',
                             cursor: 'pointer'
                         }}
@@ -347,8 +351,6 @@ const UserDashboard = () => {
                     >
                         Request to Unsubscribe
                     </button>
-                </div>
-            )}
            
         </div>
     );

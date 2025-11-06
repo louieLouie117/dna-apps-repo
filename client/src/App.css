@@ -241,7 +241,7 @@ p {
 .app-logos{
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  margin-top: 60px;
+  margin-bottom: 60px;
 }
 
 .app-logos>a>img{
