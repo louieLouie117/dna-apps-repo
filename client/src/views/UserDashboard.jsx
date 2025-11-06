@@ -76,7 +76,6 @@ const UserDashboard = () => {
 
             <h1>Welcome to your dashboard</h1>
              <header>
-                <h2>Download Apps From Microsoft Store.</h2>
                 <AppLogosFooter />
             </header>
             {accountStatus === 'Pending Verification' || accountStatus === 'Pending Verification not set' ? (
