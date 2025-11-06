@@ -321,7 +321,7 @@ const UserDashboard = () => {
                         Account Status: <span style={{ fontWeight: 'bold', color: '#389e0d' }}>Active</span>
                     </strong>
                     <div>
-                        Your account is now active! You can sign in to all apps using the email and password you set during registration.
+                        Your account is active! You can sign in to all apps using the email and password you set during registration.
                     </div>
                     <br />
                   
@@ -331,7 +331,42 @@ const UserDashboard = () => {
                <header>
                 <AppLogosFooter />
             </header>
-           
+
+              {accountStatus === 'Request to Unsubscribed' ? (
+                        <>
+                        <Unsubscribe />
+
+                         <button
+                        style={{
+                            background: 'whitesmoke',
+                            padding: '10px 20px',
+                            borderRadius: '3px',
+                            color: '#646cff',
+                            border: 'none',
+                            cursor: 'pointer'
+                        }}
+                        onClick={async () => {
+                            alert('Great news! 🎉\n\nWe\'re so happy you want to keep your account active! 😊');
+                            if (!userLoggedIn) return;
+                            const { error } = await supabase
+                                .from('Users')
+                                .update({ status: 'Active' })
+                                    .eq('auth_uid', userLoggedIn);
+                                if (!error) {
+                                    alert('Your account has been reactivated.');
+                                    window.location.reload();
+                                } else {
+                                    alert('Error unsubscribing. Please try again.');
+                                }
+                        }}
+                    >
+                        Cancel Request
+                    </button>
+                        
+                        </>
+
+                    ) : null}
+           {accountStatus === 'Active' ? (
               <button
                         style={{
                             background: 'whitesmoke',
@@ -351,7 +386,7 @@ const UserDashboard = () => {
                                     .update({ status: 'Request to Unsubscribed' })
                                     .eq('auth_uid', userLoggedIn);
                                 if (!error) {
-                                    alert('Unsubscribe request has been submitted.');
+                                    alert('Please send us your feedback.');
                                     window.location.reload();
                                 } else {
                                     alert('Error unsubscribing. Please try again.');
@@ -361,10 +396,10 @@ const UserDashboard = () => {
                     >
                         Request to Unsubscribe
                     </button>
+              ) : null}
+                      
 
-                     {accountStatus === 'Request to Unsubscribed' ? (
-                        <Unsubscribe />
-                    ) : null}
+                   
 
         </div>
     );
