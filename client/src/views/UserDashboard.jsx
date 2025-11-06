@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import supabase from '../config/SupaBaseClient';
 import SignOut from '../components/SignOut';
 import AppLogosFooter from '../components/AppLogosFooter';
+import Unsubscribe from '../components/Unsubscribe';
+import PageHeader from '../components/PageHeader';
 
 const UserDashboard = () => {
     const [user, setUser] = useState(null);
@@ -69,16 +71,16 @@ const UserDashboard = () => {
 
     return (
         <div>
+            <header>
+                <PageHeader/>
+            </header>
             <nav>
                 <SignOut />
             </nav>
 
 
             <h1>Welcome to your dashboard</h1>
-             <header>
-                <h2>Download Apps From Microsoft Store.</h2>
-                <AppLogosFooter />
-            </header>
+          
             {accountStatus === 'Pending Verification' || accountStatus === 'Pending Verification not set' ? (
                 <div
                     style={{
@@ -319,38 +321,86 @@ const UserDashboard = () => {
                         Account Status: <span style={{ fontWeight: 'bold', color: '#389e0d' }}>Active</span>
                     </strong>
                     <div>
-                        Your account is now active! You can sign in to all apps using the email and password you set during registration.
+                        Your account is active! You can sign in to all apps using the email and password you set during registration.
                     </div>
                     <br />
-                    <button
+                  
+                </div>
+            )}
+
+               <header>
+                <AppLogosFooter />
+            </header>
+
+              {accountStatus === 'Request to Unsubscribed' ? (
+                        <>
+                        <Unsubscribe />
+
+                         <button
                         style={{
-                            fontWeight: 'bold',
-                            background: '#d9534f',
+                            background: 'whitesmoke',
                             padding: '10px 20px',
                             borderRadius: '3px',
-                            color: '#fff',
+                            color: '#646cff',
                             border: 'none',
                             cursor: 'pointer'
                         }}
                         onClick={async () => {
+                            alert('Great news! 🎉\n\nWe\'re so happy you want to keep your account active! 😊');
                             if (!userLoggedIn) return;
                             const { error } = await supabase
                                 .from('Users')
-                                .update({ status: 'Request to Unsubscribed' })
-                                .eq('auth_uid', userLoggedIn);
-                            if (!error) {
-                                alert('Unsubscribe request has been submitted.');
-                                window.location.reload();
-                            } else {
-                                alert('Error unsubscribing. Please try again.');
+                                .update({ status: 'Active' })
+                                    .eq('auth_uid', userLoggedIn);
+                                if (!error) {
+                                    alert('Your account has been reactivated.');
+                                    window.location.reload();
+                                } else {
+                                    alert('Error unsubscribing. Please try again.');
+                                }
+                        }}
+                    >
+                        Cancel Request
+                    </button>
+                        
+                        </>
+
+                    ) : null}
+           {accountStatus === 'Active' ? (
+              <button
+                        style={{
+                            background: 'whitesmoke',
+                            padding: '10px 20px',
+                            borderRadius: '3px',
+                            color: '#646cff',
+                            border: 'none',
+                            cursor: 'pointer'
+                        }}
+                        onClick={async () => {
+                            const confirmed = window.confirm('Oops! Did you click this by accident? 😅\n\nIf you really want to request to unsubscribe and deactivate your account, click OK.\n\nOtherwise, click Cancel and pretend this never happened! 😉');
+                            
+                            if (confirmed) {
+                                if (!userLoggedIn) return;
+                                const { error } = await supabase
+                                    .from('Users')
+                                    .update({ status: 'Request to Unsubscribed' })
+                                    .eq('auth_uid', userLoggedIn);
+                                if (!error) {
+                                    alert('Please send us your feedback.');
+                                    window.location.reload();
+                                } else {
+                                    alert('Error unsubscribing. Please try again.');
+                                }
                             }
                         }}
                     >
                         Request to Unsubscribe
                     </button>
-                </div>
-            )}
-           
+              ) : null}
+                      
+
+                   
+
         </div>
     );
 };

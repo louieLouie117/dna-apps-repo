@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import PageHeader from './PageHeader';
 
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -8,12 +7,26 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const Unsubscribe = () => {
+        // get user email from supabase auth
+    const [userEmail, setUserEmail] = useState('');
+
+    useEffect(() => {
+        const fetchUserEmail = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            const email = user?.email || '';
+            setUserEmail(email);
+            // Update form state with the fetched email
+            setForm(prevForm => ({ ...prevForm, email: email }));
+        };
+        fetchUserEmail();
+    }, []);
+
     const [form, setForm] = useState({
         name: '',
         email: '',
         subject: '',
         message: '',
-        payment_method: '',
+        payment_method: 'Stripe',
     });
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState('');
@@ -59,9 +72,7 @@ const Unsubscribe = () => {
 
     return (
         <div>
-            <header>
-                <PageHeader />
-            </header>
+         
             <div style={{
                 maxWidth: 500,
                 margin: '40px auto',
@@ -70,7 +81,7 @@ const Unsubscribe = () => {
                 boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
                 background: '#fff'
             }}>
-                <h2 style={{ textAlign: 'center', marginBottom: 24 }}>Unsubscribe</h2>
+                <h2>Waiting for your feedback</h2>
                 <p>We're sorry to see you go! Please let us know why you're unsubscribing.</p>
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                     <select
@@ -123,17 +134,7 @@ const Unsubscribe = () => {
                             )}
                              <p>What payment method did you use?</p>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        name="payment_method"
-                                        value="PayPal"
-                                        checked={form.payment_method === 'PayPal'}
-                                        onChange={handleChange}
-                                        style={{ marginRight: 8 }}
-                                    />
-                                    PayPal
-                                </label>
+                                
                                 <label>
                                     <input
                                         type="checkbox"
@@ -144,6 +145,17 @@ const Unsubscribe = () => {
                                         style={{ marginRight: 8 }}
                                     />
                                     Stripe
+                                </label>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        name="payment_method"
+                                        value="PayPal"
+                                        checked={form.payment_method === 'PayPal'}
+                                        onChange={handleChange}
+                                        style={{ marginRight: 8 }}
+                                    />
+                                    PayPal
                                 </label>
                             </div>
                         </>

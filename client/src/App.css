@@ -239,7 +239,9 @@ p {
   border-radius: 10px 10px 0 0;
 }
 .app-logos{
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  margin-bottom: 60px;
 }
 
 .app-logos>a>img{
