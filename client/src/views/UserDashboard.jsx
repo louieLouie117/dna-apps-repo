@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import supabase from '../config/SupaBaseClient';
 import SignOut from '../components/SignOut';
 import AppLogosFooter from '../components/AppLogosFooter';
+import Unsubscribe from '../components/Unsubscribe';
+import PageHeader from '../components/PageHeader';
 
 const UserDashboard = () => {
     const [user, setUser] = useState(null);
@@ -69,6 +71,9 @@ const UserDashboard = () => {
 
     return (
         <div>
+            <header>
+                <PageHeader/>
+            </header>
             <nav>
                 <SignOut />
             </nav>
@@ -326,6 +331,7 @@ const UserDashboard = () => {
                <header>
                 <AppLogosFooter />
             </header>
+           
               <button
                         style={{
                             background: 'whitesmoke',
@@ -355,7 +361,11 @@ const UserDashboard = () => {
                     >
                         Request to Unsubscribe
                     </button>
-           
+
+                     {accountStatus === 'Request to Unsubscribed' ? (
+                        <Unsubscribe />
+                    ) : null}
+
         </div>
     );
 };

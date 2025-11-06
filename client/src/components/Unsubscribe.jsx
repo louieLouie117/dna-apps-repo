@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import PageHeader from './PageHeader';
 
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -59,9 +58,7 @@ const Unsubscribe = () => {
 
     return (
         <div>
-            <header>
-                <PageHeader />
-            </header>
+         
             <div style={{
                 maxWidth: 500,
                 margin: '40px auto',
@@ -70,7 +67,6 @@ const Unsubscribe = () => {
                 boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
                 background: '#fff'
             }}>
-                <h2 style={{ textAlign: 'center', marginBottom: 24 }}>Unsubscribe</h2>
                 <p>We're sorry to see you go! Please let us know why you're unsubscribing.</p>
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                     <select

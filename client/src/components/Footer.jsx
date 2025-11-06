@@ -16,9 +16,9 @@ const Footer = () => (
                     <a href="/terms-of-service.html"  rel="noopener noreferrer">Terms of Service</a>
                 </li>
                 
-                <li>
+                {/* <li>
                     <a href="/unsubscribe"  rel="noopener noreferrer">Unsubscribe</a>
-                </li>
+                </li> */}
             </ul>
         </nav>
         <div style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#888' }}>
