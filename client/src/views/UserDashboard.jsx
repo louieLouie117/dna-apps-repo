@@ -331,21 +331,25 @@ const UserDashboard = () => {
                             background: 'whitesmoke',
                             padding: '10px 20px',
                             borderRadius: '3px',
-                            color: 'blue',
+                            color: '#646cff',
                             border: 'none',
                             cursor: 'pointer'
                         }}
                         onClick={async () => {
-                            if (!userLoggedIn) return;
-                            const { error } = await supabase
-                                .from('Users')
-                                .update({ status: 'Request to Unsubscribed' })
-                                .eq('auth_uid', userLoggedIn);
-                            if (!error) {
-                                alert('Unsubscribe request has been submitted.');
-                                window.location.reload();
-                            } else {
-                                alert('Error unsubscribing. Please try again.');
+                            const confirmed = window.confirm('Oops! Did you click this by accident? 😅\n\nIf you really want to request to unsubscribe and deactivate your account, click OK.\n\nOtherwise, click Cancel and pretend this never happened! 😉');
+                            
+                            if (confirmed) {
+                                if (!userLoggedIn) return;
+                                const { error } = await supabase
+                                    .from('Users')
+                                    .update({ status: 'Request to Unsubscribed' })
+                                    .eq('auth_uid', userLoggedIn);
+                                if (!error) {
+                                    alert('Unsubscribe request has been submitted.');
+                                    window.location.reload();
+                                } else {
+                                    alert('Error unsubscribing. Please try again.');
+                                }
                             }
                         }}
                     >
