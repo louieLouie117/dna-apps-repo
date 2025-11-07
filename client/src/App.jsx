@@ -18,8 +18,8 @@ import Unsubscribe from './components/Unsubscribe';
 import GetUsers from './components/GetUsers';
 import Wrapper from './views/Wrapper';
 import AdminWrapper from './views/AdminWrapper';
-import CreateUser from './components/CreateUser';
 import RegAllApps from './components/RegAllApps';
+import DashboardAdmin from './views/DashboardAdmin'
 
 function App() {
   // Check if Supabase is initialized
@@ -60,9 +60,9 @@ function App() {
           </AdminWrapper>
         } />
 
-          <Route path='/create-user' element={
+          <Route path='/dashboard-admin-25' element={
           <AdminWrapper>
-            <CreateUser />
+            <DashboardAdmin />
           </AdminWrapper>
         } />
     

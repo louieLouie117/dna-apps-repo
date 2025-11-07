@@ -283,6 +283,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
       </form>
       {/* loading indicator */}
       {loading && <div>Loading...</div>}
+      <h2>New Users</h2>
       <ul style={{ display: "grid", rowGap: "10px", marginTop: "20px" }}>
         {userList.map(user => (
           <li key={user.id}>
