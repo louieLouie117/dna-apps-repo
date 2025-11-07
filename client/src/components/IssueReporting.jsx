@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import emailjs from '@emailjs/browser';
 
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const IssueReporting = () => {
     // Get user email from supabase auth
@@ -84,8 +90,34 @@ const IssueReporting = () => {
                 throw insertError;
             }
 
+            // Send email notification to support team
+            try {
+                await emailjs.send(
+                    serviceId,
+                    templateId,
+                    {
+                        to_email: 'customersupport@projectdnaapps.com',
+                        subject: 'New Issue Report Submitted',
+                        message: `A new issue report has been submitted:
+                        
+Email: ${email}
+Known Issue: ${known_issue}
+Description: ${known_issue === 'Other' ? description : 'N/A'}
+Apps Affected: ${apps_affected.length > 0 ? apps_affected.join(', ') : 'None selected'}
+Submitted: ${new Date().toLocaleString()}`,
+                    },
+                    publicKey
+                );
+                console.log('Support email sent successfully');
+            } catch (emailError) {
+                console.error('Failed to send support email:', emailError);
+                // Don't throw error here - we still want to show success to user
+            }
+
             setSuccess('Your issue report has been submitted successfully! We will review it and get back to you soon.');
             setForm({ email: userEmail, issue_type: '', known_issue: '', description: '', apps_affected: [] });
+                  
+                    
         } catch (error) {
             console.error('Error submitting issue report:', error);
             setError('Failed to submit issue report. Please try again.');
