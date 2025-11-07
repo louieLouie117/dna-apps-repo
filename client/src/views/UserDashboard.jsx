@@ -4,6 +4,7 @@ import SignOut from '../components/SignOut';
 import AppLogosFooter from '../components/AppLogosFooter';
 import Unsubscribe from '../components/Unsubscribe';
 import PageHeader from '../components/PageHeader';
+import IssueReporting from '../components/IssueReporting';
 
 const UserDashboard = () => {
     const [user, setUser] = useState(null);
@@ -331,6 +332,10 @@ const UserDashboard = () => {
                <header>
                 <AppLogosFooter />
             </header>
+            <aside>
+                Error reporting
+                <IssueReporting />
+            </aside>
 
               {accountStatus === 'Request to Unsubscribed' ? (
                         <>

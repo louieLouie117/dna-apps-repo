@@ -1,13 +1,13 @@
 import React from 'react';
 import CreateUser from '../components/CreateUser';
-import GetAllAccount from '../components/GetAllAccount';
+import GetSupabaseData from '../components/GetSupabaseData';
 
 const DashboardAdmin = () => {
     return (
         <div>
             <h1>Hello from Dashboard Admin!</h1>
             <CreateUser />
-            <GetAllAccount />
+            <GetSupabaseData />
         </div>
     );
 };
