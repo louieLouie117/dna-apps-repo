@@ -12,6 +12,7 @@ const UserDashboard = () => {
     const [accountStatus, setAccountStatus] = useState('Pending Verification not set'); // Default status
     const [tempName, setTempName] = useState('temp_login');
     const [tempPass, setTempPass] = useState('temp_pass');  
+    const [reportContainer, setReportContainer] = useState(false);
 
     useEffect(() => {
         const getUser = async () => {
@@ -75,11 +76,93 @@ const UserDashboard = () => {
             <header>
                 <PageHeader/>
             </header>
+            
             <nav>
                 <SignOut />
             </nav>
 
-
+    <aside>
+                <div style={{
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    color: '#ffffff',
+                    padding: '24px',
+                    borderRadius: '16px',
+                    boxShadow: '0 8px 32px rgba(102, 126, 234, 0.2)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    marginBottom: '32px',
+                    marginTop: '16px',
+                    position: 'relative',
+                    overflow: 'hidden',
+                }}>
+                    {/* Background decoration */}
+                    <div style={{
+                        position: 'absolute',
+                        top: '-50%',
+                        right: '-50%',
+                        width: '200%',
+                        height: '200%',
+                        background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
+                        pointerEvents: 'none'
+                    }}></div>
+                    
+                    <div style={{ position: 'relative', zIndex: 2 }}>
+                        <h2 style={{
+                            margin: '0 0 16px 0',
+                            fontSize: '1.5rem',
+                            fontWeight: '700',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px'
+                        }}>
+                            <span style={{
+                                display: 'inline-block',
+                                width: '8px',
+                                height: '8px',
+                                background: '#fbbf24',
+                                borderRadius: '50%',
+                                animation: 'pulse 2s infinite'
+                            }}></span>
+                            Important Notice
+                        </h2>
+                        <p style={{
+                            margin: '0 0 20px 0',
+                            lineHeight: '1.6',
+                            fontSize: '1rem',
+                            opacity: '0.95'
+                        }}>
+                            <strong>New User Alert:</strong> Some new users registered in November 2025 are experiencing sign-in difficulties with one or more applications. If you're encountering login issues, please report them using the form below so our team can assist you promptly.
+                        </p>
+                        <div>
+                            <button  style={{
+                            background: 'rgba(255, 255, 255, 0.15)',
+                            padding: '12px 16px',
+                            borderRadius: '8px',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            fontSize: '0.9rem',
+                            fontWeight: '500',
+                            color: '#ffffff',
+                            cursor: 'pointer'   
+                        }}
+                        onClick={() => setReportContainer(!reportContainer)}
+                        
+                        
+                        >Report Issue</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style={{
+                    display: `${reportContainer ? "block" : "none"}`,
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    borderRadius: '16px',
+                    boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08)',
+                    border: '1px solid #e5e7eb',
+                    overflow: 'hidden'
+                }}>
+                    <IssueReporting />
+                </div>
+            </aside>
+            <main style={{maxWidth: '35em', margin: '0 auto'}}>
             <h1>Welcome to your dashboard</h1>
           
             {accountStatus === 'Pending Verification' || accountStatus === 'Pending Verification not set' ? (
@@ -92,7 +175,6 @@ const UserDashboard = () => {
                         borderRadius: '8px',
                         border: '2px solid #ffe066',
                         boxShadow: '0 2px 8px rgba(255, 224, 102, 0.2)',
-                        maxWidth: '420px',
                         margin: '0 auto',
                         textAlign: 'center',
                         fontSize: '1.1rem',
@@ -329,13 +411,13 @@ const UserDashboard = () => {
                 </div>
             )}
 
+
                <header>
                 <AppLogosFooter />
             </header>
-            <aside>
-                Error reporting
-                <IssueReporting />
-            </aside>
+
+            </main>
+        
 
               {accountStatus === 'Request to Unsubscribed' ? (
                         <>
@@ -407,6 +489,8 @@ const UserDashboard = () => {
                    
 
         </div>
+
+        
     );
 };
 
