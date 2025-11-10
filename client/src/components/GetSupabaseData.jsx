@@ -25,10 +25,12 @@ const GetSupabaseData = () => {
                     .limit(50),
                 supabase
                     .from('CustomerContact')
-                    .select('email, created_at, subject'),
+                    .select('email, created_at, subject, message, payment_method, status')
+                    .order('created_at', { ascending: false }),
                 supabase
                     .from('IssueReporting')
-                    .select('email, created_at, known_issue')
+                    .select('email, created_at, known_issue, description, apps_affected')
+                    .order('created_at', { ascending: false })
             ]);
 
             if (usersResult.error) throw usersResult.error;
@@ -185,6 +187,63 @@ const GetSupabaseData = () => {
                                         </div>
                                     )}
                                 </div>
+
+                                {/* Render Individual Contacts */}
+                                {activity.hasContacts && (
+                                    <div style={styles.detailsSection}>
+                                        <h4 style={styles.detailsTitle}>
+                                            📞 Customer Contacts ({activity.contactCount})
+                                        </h4>
+                                        <div style={styles.itemsList}>
+                                            {getUserContacts(account.email).map((contact, index) => (
+                                                <div key={`contact-${index}`} style={styles.activityItem}>
+                                                    <div style={styles.itemHeader}>
+                                                        <span style={styles.itemType}>Contact</span>
+                                                        <span style={styles.itemDate}>
+                                                            {new Date(contact.created_at).toLocaleDateString()}
+                                                        </span>
+                                                    </div>
+                                                    <div style={styles.itemContent}>
+                                                        <strong style={styles.itemSubject}>
+                                                            Subject: {contact.subject}
+                                                        </strong>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Render Individual Issue Reports */}
+                                {activity.hasIssues && (
+                                    <div style={styles.detailsSection}>
+                                        <h4 style={styles.detailsTitle}>
+                                            🐛 Issue Reports ({activity.issueCount})
+                                        </h4>
+                                        <div style={styles.itemsList}>
+                                            {getUserIssueReports(account.email).map((issue, index) => (
+                                                <div key={`issue-${index}`} style={styles.activityItem}>
+                                                    <div style={styles.itemHeader}>
+                                                        <span style={styles.itemType}>Issue</span>
+                                                        <span style={styles.itemDate}>
+                                                            {new Date(issue.created_at).toLocaleDateString()}
+                                                        </span>
+                                                    </div>
+                                                    <div style={styles.itemContent}>
+                                                        <strong style={styles.itemSubject}>
+                                                            Issue: {issue.known_issue}
+                                                        </strong>
+                                                        {issue.description && (
+                                                            <p style={styles.itemDescription}>
+                                                                Description: {issue.description}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         );
                     })}
@@ -362,6 +421,70 @@ const styles = {
     noActivityText: {
         color: '#991b1b',
         fontSize: '0.9rem',
+        fontStyle: 'italic'
+    },
+    detailsSection: {
+        marginTop: '20px',
+        padding: '16px',
+        backgroundColor: '#f8fafc',
+        borderRadius: '8px',
+        border: '1px solid #e2e8f0'
+    },
+    detailsTitle: {
+        margin: '0 0 12px 0',
+        color: '#374151',
+        fontSize: '1rem',
+        fontWeight: '600',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px'
+    },
+    itemsList: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px'
+    },
+    activityItem: {
+        backgroundColor: 'white',
+        padding: '12px',
+        borderRadius: '6px',
+        border: '1px solid #e5e7eb',
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+    },
+    itemHeader: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '8px'
+    },
+    itemType: {
+        padding: '2px 8px',
+        backgroundColor: '#3b82f6',
+        color: 'white',
+        borderRadius: '12px',
+        fontSize: '0.75rem',
+        fontWeight: '600'
+    },
+    itemDate: {
+        color: '#6b7280',
+        fontSize: '0.8rem',
+        fontWeight: '500'
+    },
+    itemContent: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '4px'
+    },
+    itemSubject: {
+        color: '#1f2937',
+        fontSize: '0.9rem',
+        lineHeight: '1.4'
+    },
+    itemDescription: {
+        margin: '4px 0 0 0',
+        color: '#6b7280',
+        fontSize: '0.8rem',
+        lineHeight: '1.4',
         fontStyle: 'italic'
     },
     loadingContainer: {
