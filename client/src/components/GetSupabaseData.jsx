@@ -37,7 +37,16 @@ const GetSupabaseData = () => {
             if (contactsResult.error) throw contactsResult.error;
             if (issuesResult.error) throw issuesResult.error;
 
-            setAccounts(usersResult.data || []);
+            // Sort users to show "Request to Unsubscribed" first
+            const sortedUsers = (usersResult.data || []).sort((a, b) => {
+                // Prioritize "Request to Unsubscribed" status
+                if (a.status === 'Request to Unsubscribed' && b.status !== 'Request to Unsubscribed') return -1;
+                if (b.status === 'Request to Unsubscribed' && a.status !== 'Request to Unsubscribed') return 1;
+                // Then sort by created_at (newest first)
+                return new Date(b.created_at) - new Date(a.created_at);
+            });
+
+            setAccounts(sortedUsers);
             setCustomerContacts(contactsResult.data || []);
             setIssueReports(issuesResult.data || []);
         } catch (error) {
@@ -98,6 +107,14 @@ const GetSupabaseData = () => {
                 <h2 style={styles.title}>Users with Activity Status</h2>
                 <div style={styles.stats}>
                     <span style={styles.statItem}>Total Users: {accounts.length}</span>
+                    <span style={{
+                        ...styles.statItem,
+                        backgroundColor: accounts.filter(acc => acc.status === 'Request to Unsubscribed').length > 0 ? '#fef3c7' : styles.statItem.backgroundColor,
+                        color: accounts.filter(acc => acc.status === 'Request to Unsubscribed').length > 0 ? '#92400e' : styles.statItem.color,
+                        fontWeight: '700'
+                    }}>
+                        🚨 Unsubscribe Requests: {accounts.filter(acc => acc.status === 'Request to Unsubscribed').length}
+                    </span>
                     <span style={styles.statItem}>
                         Active Users: {accounts.filter(acc => getUserActivitySummary(acc.email).totalActivity > 0).length}
                     </span>
