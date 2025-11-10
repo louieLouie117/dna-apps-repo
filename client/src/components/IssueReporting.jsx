@@ -159,6 +159,7 @@ Submitted: ${new Date().toLocaleString()}`,
                     >
                         <option value="">Select</option>
                         <option value="A connection to the internet is temporarily need. Please connect and refresh.">A connection to the internet is temporarily need. Please connect and refresh.</option>
+                        <option value="Invalid Account">Invalid Account</option>
                         <option value="Other">Other</option>
                     </select>
                 </div>
@@ -188,7 +189,7 @@ Submitted: ${new Date().toLocaleString()}`,
                 {/* Apps Affected Checkboxes */}
                 <div>
                     <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, color: '#374151' }}>
-                        Apps Affected (Optional)
+                        Affected Apps (Optional)
                     </label>
                     <div style={{ 
                         display: 'grid', 
@@ -198,7 +199,7 @@ Submitted: ${new Date().toLocaleString()}`,
                         borderRadius: 8,
                         background: '#f9fafb'
                     }}>
-                        {['My Monthly Budget', 'My To-Do List', 'My Locked Password', 'My Flashcards', 'My Pen Calculator'].map((app) => (
+                        {['All Apps','My Monthly Budget', 'My To-Do List', 'My Locked Password', 'My Flashcards', 'My Pen Calculator'].map((app) => (
                             <label key={app} style={{ 
                                 display: 'flex', 
                                 alignItems: 'center', 
