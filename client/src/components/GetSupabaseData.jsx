@@ -37,12 +37,23 @@ const GetSupabaseData = () => {
             if (contactsResult.error) throw contactsResult.error;
             if (issuesResult.error) throw issuesResult.error;
 
-            // Sort users to show "Request to Unsubscribed" first
+            // Sort users with priority order: Request to Unsubscribed > Active > Unsubscribed > Others
             const sortedUsers = (usersResult.data || []).sort((a, b) => {
-                // Prioritize "Request to Unsubscribed" status
-                if (a.status === 'Request to Unsubscribed' && b.status !== 'Request to Unsubscribed') return -1;
-                if (b.status === 'Request to Unsubscribed' && a.status !== 'Request to Unsubscribed') return 1;
-                // Then sort by created_at (newest first)
+                const statusPriority = {
+                    'Request to Unsubscribed': 1,
+                    'Active': 2,
+                    'Unsubscribed': 3
+                };
+                
+                const aPriority = statusPriority[a.status] || 99;
+                const bPriority = statusPriority[b.status] || 99;
+                
+                // First sort by status priority
+                if (aPriority !== bPriority) {
+                    return aPriority - bPriority;
+                }
+                
+                // Then sort by created_at (newest first) within same priority
                 return new Date(b.created_at) - new Date(a.created_at);
             });
 
@@ -115,8 +126,22 @@ const GetSupabaseData = () => {
                     }}>
                         🚨 Unsubscribe Requests: {accounts.filter(acc => acc.status === 'Request to Unsubscribed').length}
                     </span>
+                    <span style={{
+                        ...styles.statItem,
+                        backgroundColor: '#dcfce7',
+                        color: '#166534'
+                    }}>
+                        ✅ Active: {accounts.filter(acc => acc.status === 'Active').length}
+                    </span>
+                    <span style={{
+                        ...styles.statItem,
+                        backgroundColor: '#fee2e2',
+                        color: '#991b1b'
+                    }}>
+                        ❌ Unsubscribed: {accounts.filter(acc => acc.status === 'Unsubscribed').length}
+                    </span>
                     <span style={styles.statItem}>
-                        Active Users: {accounts.filter(acc => getUserActivitySummary(acc.email).totalActivity > 0).length}
+                        With Activity: {accounts.filter(acc => getUserActivitySummary(acc.email).totalActivity > 0).length}
                     </span>
                 </div>
             </div>
