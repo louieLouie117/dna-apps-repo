@@ -108,17 +108,10 @@ const DashboardAdmin = () => {
             case 'users':
                 return (
                     <div style={styles.tabContent}>
-                        <div style={styles.sectionHeader}>
-                            <h3 style={styles.sectionTitle}>Azure Database</h3>
-                            <p style={styles.sectionDescription}>Create and manage users in the Azure database</p>
-                        </div>
-                        <CreateUser />
-                        
-                        <div style={styles.sectionHeader}>
-                            <h3 style={styles.sectionTitle}>Supabase Data</h3>
-                            <p style={styles.sectionDescription}>View and manage user data from Supabase</p>
-                        </div>
+                    
                         <GetSupabaseData />
+
+                        <CreateUser />
                     </div>
                 );
             case 'contacts':
