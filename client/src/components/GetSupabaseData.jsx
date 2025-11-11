@@ -210,6 +210,49 @@ const GetSupabaseData = () => {
 
     // Function to handle status change
     const handleStatusChange = async (userId, newStatus) => {
+        if (newStatus === 'Unsubscribed') {
+            // Get the user's email for the unsubscription process
+            const userEmail = accounts.find(acc => acc.id === userId)?.email;
+            
+            if (!userEmail) {
+                alert('Error: Could not find user email for unsubscription notification.');
+                return;
+            }
+
+            try {
+                // Send email notification to user that they have been unsubscribed
+                await emailjs.send(
+                    serviceId,
+                    templateId, {
+                        to_email: userEmail,
+                        subject: 'Unsubscription Confirmation - All App Access',
+                        message: 'You have been unsubscribed from our All App Access. You will no longer be charged. If this was a mistake, please contact support to reactivate your subscription.'
+                    }, publicKey);
+
+                // Add to Supabase CustomerContact table the unsubscription record
+                const { error } = await supabase
+                    .from('CustomerContact')
+                    .insert([
+                        {
+                            email: userEmail,
+                            subject: 'Unsubscription Confirmation',
+                            message: 'You have been unsubscribed from our All App Access. You will no longer be charged. If this was a mistake, please contact support to reactivate your subscription.',
+                            message_by: 'Support Team'
+                        }
+                    ]);
+
+                if (error) {
+                    console.error('Error inserting unsubscription record:', error);
+                    alert('Warning: Unsubscription record could not be saved to database.');
+                } else {
+                    alert('Email confirmation sent successfully and unsubscription recorded.');
+                }
+            } catch (emailError) {
+                console.error('Error sending unsubscription email:', emailError);
+                alert('Warning: Email notification could not be sent, but status will still be updated.');
+            }
+        }
+
         try {
             const { error } = await supabase
                 .from('Users')
