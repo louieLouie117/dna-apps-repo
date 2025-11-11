@@ -156,6 +156,11 @@ const GetSupabaseData = () => {
                         const activity = getUserActivitySummary(account.email);
                         return (
                             <div key={account.id} style={styles.userCard}>
+                                <div style={styles.userMeta}>
+                                        <small style={styles.joinDate}>
+                                            Joined: {new Date(account.created_at).toLocaleDateString()}
+                                        </small>
+                                    </div>
                                 <div style={styles.userHeader}>
                                     <div style={styles.userInfo}>
                                         <h3 style={styles.userEmail}>{account.email}</h3>
@@ -166,11 +171,7 @@ const GetSupabaseData = () => {
                                             {account.status || 'Unknown'}
                                         </span>
                                     </div>
-                                    <div style={styles.userMeta}>
-                                        <small style={styles.joinDate}>
-                                            Joined: {new Date(account.created_at).toLocaleDateString()}
-                                        </small>
-                                    </div>
+                                    
                                 </div>
 
                                 <div style={styles.activitySection}>
@@ -249,6 +250,9 @@ const GetSupabaseData = () => {
                                                         <strong style={styles.itemSubject}>
                                                             Subject: {contact.subject}
                                                         </strong>
+                                                        {contact.message && (
+                                                            <p style={styles.itemDescription}>{contact.message}</p>
+                                                        )}
                                                     </div>
                                                 </div>
                                             ))}
@@ -345,7 +349,9 @@ const styles = {
     },
     usersList: {
         display: 'flex',
-        flexDirection: 'column',
+        // flexDirection: 'column',
+        overflow: 'scroll',
+        // width: '95vw', not working in mobile
         gap: '20px'
     },
     userCard: {
@@ -363,7 +369,7 @@ const styles = {
         marginBottom: '20px'
     },
     userInfo: {
-        display: 'flex',
+        display: 'grid',
         alignItems: 'center',
         gap: '12px'
     },
