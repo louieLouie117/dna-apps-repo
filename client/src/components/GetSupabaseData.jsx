@@ -1,12 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import supabase from '../config/SupaBaseClient';
+import emailjs from '@emailjs/browser';
+
+
+// Add CSS keyframes for spinner animation
+const spinnerKeyframes = `
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+`;
+
+// Inject the keyframes into the document head
+if (typeof document !== 'undefined') {
+    const style = document.createElement('style');
+    style.textContent = spinnerKeyframes;
+    document.head.appendChild(style);
+}
+
+// email js import
+const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
 const GetSupabaseData = () => {
+
+
     const [accounts, setAccounts] = useState([]);
     const [customerContacts, setCustomerContacts] = useState([]);
     const [issueReports, setIssueReports] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showReplyForm, setShowReplyForm] = useState(null);
+    const [replyFormData, setReplyFormData] = useState({
+        email: '',
+        subject: '',
+        message: ''
+    });
+    const [submittingReply, setSubmittingReply] = useState(false);
 
     useEffect(() => {
         fetchAllData();
@@ -25,7 +56,7 @@ const GetSupabaseData = () => {
                     .limit(50),
                 supabase
                     .from('CustomerContact')
-                    .select('email, created_at, subject, message, payment_method, status')
+                    .select('email, created_at, subject, message, payment_method, status, message_by')
                     .order('created_at', { ascending: false }),
                 supabase
                     .from('IssueReporting')
@@ -91,6 +122,89 @@ const GetSupabaseData = () => {
             latestContact: contacts.length > 0 ? new Date(Math.max(...contacts.map(c => new Date(c.created_at)))) : null,
             latestIssue: issues.length > 0 ? new Date(Math.max(...issues.map(i => new Date(i.created_at)))) : null
         };
+    };
+
+    // Function to handle reply form
+    const handleReplyToUser = (userEmail) => {
+        setReplyFormData({
+            email: userEmail,
+            subject: '',
+            message: ''
+        });
+        setShowReplyForm(userEmail);
+    };
+
+    // Function to handle form input changes
+    const handleReplyFormChange = (e) => {
+        const { name, value } = e.target;
+        setReplyFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    // Function to submit reply
+    const handleSubmitReply = async (e) => {
+        e.preventDefault();
+        
+        if (!replyFormData.subject.trim() || !replyFormData.message.trim()) {
+            alert('Please fill in both subject and message fields.');
+            return;
+        }
+
+        try {
+            setSubmittingReply(true);
+            
+            // Insert reply into CustomerContact table
+            const { data, error } = await supabase
+                .from('CustomerContact')
+                .insert([
+                    {
+                        email: replyFormData.email,
+                        subject: replyFormData.subject.trim(),
+                        message: replyFormData.message.trim(),
+                    }
+                ]);
+
+            if (error) {
+                throw error;
+            }
+
+            alert('Reply sent successfully! The response has been saved to the database.');
+            
+            // Reset form and close modal
+            setReplyFormData({
+                email: '',
+                subject: '',
+                message: ''
+            });
+            setShowReplyForm(null);
+
+            // send notification email to user of message using emailjs
+            emailjs.send(
+                serviceId, 
+                templateId, {
+                to_email: replyFormData.email,
+                subject: replyFormData.subject,
+                message: replyFormData.message
+            }, publicKey);
+
+        } catch (error) {
+            console.error('Error sending reply:', error);
+            alert(`Error sending reply: ${error.message}`);
+        } finally {
+            setSubmittingReply(false);
+        }
+    };
+
+    // Function to cancel reply
+    const handleCancelReply = () => {
+        setReplyFormData({
+            email: '',
+            subject: '',
+            message: ''
+        });
+        setShowReplyForm(null);
     };
 
    
@@ -241,7 +355,11 @@ const GetSupabaseData = () => {
                                             {getUserContacts(account.email).map((contact, index) => (
                                                 <div key={`contact-${index}`} style={styles.activityItem}>
                                                     <div style={styles.itemHeader}>
-                                                        <span style={styles.itemType}>Contact</span>
+                                                        {/* message_by */}
+                                                        <span style={styles.itemBy}>
+                                                            {/* if null render "Customer" */}
+                                                            By: {contact.message_by || "Customer"}
+                                                        </span>
                                                         <span style={styles.itemDate}>
                                                             {new Date(contact.created_at).toLocaleDateString()}
                                                         </span>
@@ -256,6 +374,12 @@ const GetSupabaseData = () => {
                                                     </div>
                                                 </div>
                                             ))}
+                                            <button 
+                                                style={styles.replyButton}
+                                                onClick={() => handleReplyToUser(account.email)}
+                                            >
+                                                Reply to User
+                                            </button>
                                         </div>
                                     </div>
                                 )}
@@ -287,12 +411,101 @@ const GetSupabaseData = () => {
                                                     </div>
                                                 </div>
                                             ))}
+                                            <button 
+                                                style={styles.replyButton}
+                                                onClick={() => handleReplyToUser(account.email)}
+                                            >
+                                                Reply to User
+                                            </button>
                                         </div>
                                     </div>
                                 )}
                             </div>
                         );
                     })}
+                </div>
+            )}
+
+            {/* Reply Form Modal */}
+            {showReplyForm && (
+                <div style={styles.modalOverlay}>
+                    <div style={styles.modalContent}>
+                        <div style={styles.modalHeader}>
+                            <h3 style={styles.modalTitle}>Reply to User</h3>
+                            <button 
+                                style={styles.closeButton}
+                                onClick={handleCancelReply}
+                            >
+                                ✕
+                            </button>
+                        </div>
+                        
+                        <form onSubmit={handleSubmitReply} style={styles.replyForm}>
+                            <div style={styles.formGroup}>
+                                <label style={styles.formLabel}>To:</label>
+                                <input
+                                    type="email"
+                                    value={replyFormData.email}
+                                    disabled
+                                    style={styles.formInputDisabled}
+                                />
+                            </div>
+
+                            <div style={styles.formGroup}>
+                                <label style={styles.formLabel}>Subject: *</label>
+                                <input
+                                    type="text"
+                                    name="subject"
+                                    value={replyFormData.subject}
+                                    onChange={handleReplyFormChange}
+                                    placeholder="Enter subject..."
+                                    style={styles.formInput}
+                                    required
+                                />
+                            </div>
+
+                            <div style={styles.formGroup}>
+                                <label style={styles.formLabel}>Message: *</label>
+                                <textarea
+                                    name="message"
+                                    value={replyFormData.message}
+                                    onChange={handleReplyFormChange}
+                                    placeholder="Enter your reply message..."
+                                    rows="6"
+                                    style={styles.formTextarea}
+                                    required
+                                />
+                            </div>
+
+                            <div style={styles.formActions}>
+                                <button
+                                    type="button"
+                                    onClick={handleCancelReply}
+                                    style={styles.cancelButton}
+                                    disabled={submittingReply}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    style={{
+                                        ...styles.submitButton,
+                                        opacity: submittingReply ? 0.6 : 1,
+                                        cursor: submittingReply ? 'not-allowed' : 'pointer'
+                                    }}
+                                    disabled={submittingReply}
+                                >
+                                    {submittingReply ? 'Sending...' : 'Send Reply'}
+                                </button>
+                            </div>
+                        </form>
+
+                        <div style={styles.modalFooter}>
+                            <small style={styles.footerNote}>
+                                * This reply will be saved to the database for record keeping.
+                            </small>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
@@ -313,6 +526,24 @@ const getStatusColor = (status) => {
 
 // Styles
 const styles = {
+    itemBy: {
+    color: '#6b7280',
+    fontSize: '0.8rem',
+    fontWeight: '500',
+    fontStyle: 'italic'
+},
+    replyButton: {
+        padding: '8px 16px',
+        backgroundColor: '#3b82f6',
+        border: 'none',
+        borderRadius: '4px',
+        color: 'white',
+        cursor: 'pointer',
+        fontSize: '0.9rem',
+        fontWeight: '600',
+        transition: 'background-color 0.2s',
+        marginTop: '12px'
+    },
     container: {
         padding: '24px',
         maxWidth: '1200px',
@@ -360,7 +591,8 @@ const styles = {
         padding: '24px',
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
         border: '1px solid #e5e7eb',
-        transition: 'transform 0.2s, box-shadow 0.2s'
+        transition: 'transform 0.2s, box-shadow 0.2s',
+        minWidth: '500px'
     },
     userHeader: {
         display: 'flex',
@@ -518,6 +750,7 @@ const styles = {
         fontSize: '0.8rem',
         fontWeight: '500'
     },
+   
     itemContent: {
         display: 'flex',
         flexDirection: 'column',
@@ -572,6 +805,139 @@ const styles = {
         textAlign: 'center',
         padding: '40px',
         color: '#6b7280'
+    },
+    // Modal styles
+    modalOverlay: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 1000,
+        padding: '20px'
+    },
+    modalContent: {
+        backgroundColor: 'white',
+        borderRadius: '12px',
+        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+        width: '100%',
+        maxWidth: '600px',
+        maxHeight: '90vh',
+        overflow: 'auto'
+    },
+    modalHeader: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '24px 24px 0 24px',
+        borderBottom: '1px solid #e5e7eb',
+        paddingBottom: '16px',
+        marginBottom: '24px'
+    },
+    modalTitle: {
+        margin: 0,
+        color: '#1f2937',
+        fontSize: '1.5rem',
+        fontWeight: '600'
+    },
+    closeButton: {
+        background: 'none',
+        border: 'none',
+        fontSize: '1.5rem',
+        color: '#6b7280',
+        cursor: 'pointer',
+        padding: '4px',
+        borderRadius: '4px',
+        transition: 'background-color 0.2s'
+    },
+    replyForm: {
+        padding: '0 24px'
+    },
+    formGroup: {
+        marginBottom: '20px'
+    },
+    formLabel: {
+        display: 'block',
+        marginBottom: '8px',
+        color: '#374151',
+        fontSize: '0.9rem',
+        fontWeight: '600'
+    },
+    formInput: {
+        width: '100%',
+        padding: '12px',
+        border: '1px solid #d1d5db',
+        borderRadius: '8px',
+        fontSize: '1rem',
+        backgroundColor: '#f9fafb',
+        transition: 'border-color 0.2s, background-color 0.2s',
+        boxSizing: 'border-box'
+    },
+    formInputDisabled: {
+        width: '100%',
+        padding: '12px',
+        border: '1px solid #d1d5db',
+        borderRadius: '8px',
+        fontSize: '1rem',
+        backgroundColor: '#f3f4f6',
+        color: '#6b7280',
+        cursor: 'not-allowed',
+        boxSizing: 'border-box'
+    },
+    formTextarea: {
+        width: '100%',
+        padding: '12px',
+        border: '1px solid #d1d5db',
+        borderRadius: '8px',
+        fontSize: '1rem',
+        backgroundColor: '#f9fafb',
+        transition: 'border-color 0.2s, background-color 0.2s',
+        resize: 'vertical',
+        minHeight: '120px',
+        boxSizing: 'border-box',
+        fontFamily: 'inherit'
+    },
+    formActions: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        gap: '12px',
+        marginBottom: '24px'
+    },
+    cancelButton: {
+        padding: '12px 24px',
+        backgroundColor: '#f3f4f6',
+        border: '1px solid #d1d5db',
+        borderRadius: '8px',
+        color: '#374151',
+        cursor: 'pointer',
+        fontSize: '1rem',
+        fontWeight: '500',
+        transition: 'background-color 0.2s'
+    },
+    submitButton: {
+        padding: '12px 24px',
+        backgroundColor: '#3b82f6',
+        border: 'none',
+        borderRadius: '8px',
+        color: 'white',
+        cursor: 'pointer',
+        fontSize: '1rem',
+        fontWeight: '600',
+        transition: 'background-color 0.2s'
+    },
+    modalFooter: {
+        padding: '0 24px 24px 24px',
+        borderTop: '1px solid #e5e7eb',
+        paddingTop: '16px'
+    },
+    footerNote: {
+        color: '#6b7280',
+        fontSize: '0.8rem',
+        fontStyle: 'italic'
     }
 };
 
