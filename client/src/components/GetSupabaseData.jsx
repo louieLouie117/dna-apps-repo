@@ -593,7 +593,9 @@ const styles = {
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
         border: '1px solid #e5e7eb',
         transition: 'transform 0.2s, box-shadow 0.2s',
-        minWidth: '500px'
+        minWidth: '500px',
+        maxHeight: '80vh',
+        overflow: 'scroll'
     },
     userHeader: {
         display: 'flex',
@@ -707,6 +709,8 @@ const styles = {
     detailsSection: {
         marginTop: '20px',
         padding: '16px',
+        maxHeight: '300px',
+        overflowY: 'scroll',
         backgroundColor: '#f8fafc',
         borderRadius: '8px',
         border: '1px solid #e2e8f0'
