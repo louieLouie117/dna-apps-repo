@@ -163,6 +163,7 @@ const GetSupabaseData = () => {
                         email: replyFormData.email,
                         subject: replyFormData.subject.trim(),
                         message: replyFormData.message.trim(),
+                        message_by: 'Support Team'
                     }
                 ]);
 
