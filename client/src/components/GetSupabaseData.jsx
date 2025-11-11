@@ -208,6 +208,30 @@ const GetSupabaseData = () => {
         setShowReplyForm(null);
     };
 
+    // Function to handle status change
+    const handleStatusChange = async (userId, newStatus) => {
+        try {
+            const { error } = await supabase
+                .from('Users')
+                .update({ status: newStatus })
+                .eq('id', userId);
+
+            if (error) {
+                throw error;
+            }
+
+            // Update local state
+            setAccounts(accounts.map(account => 
+                account.id === userId ? { ...account, status: newStatus } : account
+            ));
+
+            alert(`User status updated to "${newStatus}" successfully!`);
+        } catch (error) {
+            console.error('Error updating status:', error);
+            alert(`Error updating status: ${error.message}`);
+        }
+    };
+
    
 
     if (loading) return (
@@ -279,12 +303,20 @@ const GetSupabaseData = () => {
                                 <div style={styles.userHeader}>
                                     <div style={styles.userInfo}>
                                         <h3 style={styles.userEmail}>{account.email}</h3>
-                                        <span style={{
-                                            ...styles.statusBadge,
-                                            backgroundColor: getStatusColor(account.status)
-                                        }}>
-                                            {account.status || 'Unknown'}
-                                        </span>
+                                        <select
+                                            value={account.status || 'Unknown'}
+                                            onChange={(e) => handleStatusChange(account.id, e.target.value)}
+                                            style={{
+                                                ...styles.statusDropdown,
+                                                backgroundColor: getStatusColor(account.status)
+                                            }}
+                                        >
+                                            <option value="Active">Active</option>
+                                            <option value="Request to Unsubscribed">Request to Unsubscribed</option>
+                                            <option value="Unsubscribed">Unsubscribed</option>
+                                            <option value="Pending Verification">Pending Verification</option>
+                                            <option value="Request to Active">Request to Active</option>
+                                        </select>
                                     </div>
                                     
                                 </div>
@@ -620,6 +652,23 @@ const styles = {
         color: 'white',
         fontSize: '0.8rem',
         fontWeight: '600'
+    },
+    statusDropdown: {
+        padding: '6px 12px',
+        borderRadius: '20px',
+        color: 'white',
+        fontSize: '0.8rem',
+        fontWeight: '600',
+        border: 'none',
+        cursor: 'pointer',
+        outline: 'none',
+        transition: 'all 0.2s ease',
+        appearance: 'none',
+        backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6,9 12,15 18,9\'%3e%3c/polyline%3e%3c/svg%3e")',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'right 8px center',
+        backgroundSize: '12px',
+        paddingRight: '32px'
     },
     userMeta: {
         textAlign: 'right'
