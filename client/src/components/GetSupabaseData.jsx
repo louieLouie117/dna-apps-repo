@@ -190,6 +190,9 @@ const GetSupabaseData = () => {
                 message: replyFormData.message
             }, publicKey);
 
+            // Reload all data to show the new reply in CustomerContact
+            fetchAllData();
+
         } catch (error) {
             console.error('Error sending reply:', error);
             alert(`Error sending reply: ${error.message}`);
@@ -251,7 +254,11 @@ const GetSupabaseData = () => {
                 console.error('Error sending unsubscription email:', emailError);
                 alert('Warning: Email notification could not be sent, but status will still be updated.');
             }
+            
+            // Reload all data to show the new unsubscription record in CustomerContact
+            fetchAllData();
         }
+          
 
         try {
             const { error } = await supabase
