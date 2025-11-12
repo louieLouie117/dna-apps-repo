@@ -353,6 +353,220 @@ const GetSupabaseData = () => {
         }));
     };
 
+    // Function to render user card (extracted to avoid duplication)
+    const renderUserCard = (account) => {
+        const activity = getUserActivitySummary(account.email);
+        return (
+            <div key={account.id} style={styles.userCard}>
+                <div style={styles.userMeta}>
+                    <small style={styles.joinDate}>
+                        Joined: {new Date(account.created_at).toLocaleDateString()}
+                    </small>
+                </div>
+                <div style={styles.userHeader}>
+                    <div style={styles.userInfo}>
+                        <h3 style={styles.userEmail}>{account.email}</h3>
+                        
+                        <select
+                            value={account.status || 'Unknown'}
+                            onChange={(e) => handleStatusChange(account.id, e.target.value)}
+                            style={{
+                                ...styles.statusDropdown,
+                                backgroundColor: getStatusColor(account.status)
+                            }}
+                        >
+                            <option value="Active">Active</option>
+                            <option value="Request to Unsubscribed">Request to Unsubscribed</option>
+                            <option value="Unsubscribed">Unsubscribed</option>
+                            <option value="Pending Verification">Pending Verification</option>
+                            <option value="Request to Active">Request to Active</option>
+                        </select>
+
+                        <div style={styles.idFormContainer}>
+                            <form 
+                                onSubmit={(e) => handleUpdateIds(e, account.id)}
+                                style={styles.idForm}
+                            >
+                                <div style={styles.formField}>
+                                    <label style={styles.idFormLabel}>Customer ID:</label>
+                                    <input 
+                                        type="text" 
+                                        value={editingIds[account.id]?.customer_id ?? (account.customer_id || '')}
+                                        onChange={(e) => {
+                                            if (!editingIds[account.id]) {
+                                                initializeIdEditing(account.id, account.customer_id, account.sub_id);
+                                            }
+                                            handleIdFormChange(account.id, 'customer_id', e.target.value);
+                                        }}
+                                        style={styles.idFormInput}
+                                        placeholder="Enter Customer ID"
+                                    />
+                                </div>
+                                <div style={styles.formField}>
+                                    <label style={styles.idFormLabel}>Sub ID:</label>
+                                    <input 
+                                        type="text" 
+                                        value={editingIds[account.id]?.sub_id ?? (account.sub_id || '')}
+                                        onChange={(e) => {
+                                            if (!editingIds[account.id]) {
+                                                initializeIdEditing(account.id, account.customer_id, account.sub_id);
+                                            }
+                                            handleIdFormChange(account.id, 'sub_id', e.target.value);
+                                        }}
+                                        style={styles.idFormInput}
+                                        placeholder="Enter Sub ID"
+                                    />
+                                </div>
+                                <button 
+                                    type="submit" 
+                                    style={{
+                                        ...styles.idFormSubmit,
+                                        opacity: submittingIds[account.id] ? 0.6 : 1,
+                                        cursor: submittingIds[account.id] ? 'not-allowed' : 'pointer'
+                                    }}
+                                    disabled={submittingIds[account.id]}
+                                >
+                                    {submittingIds[account.id] ? 'Updating...' : 'Update IDs'}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div style={styles.activitySection}>
+                    <h4 style={styles.activityTitle}>Activity Summary</h4>
+                    <div style={styles.activityGrid}>
+                        <div style={{
+                            ...styles.activityCard,
+                            backgroundColor: activity.hasContacts ? '#dcfce7' : '#f3f4f6'
+                        }}>
+                            <div style={styles.activityIcon}>📞</div>
+                            <div style={styles.activityDetails}>
+                                <span style={styles.activityCount}>
+                                    {activity.contactCount}
+                                </span>
+                                <span style={styles.activityLabel}>Contacts</span>
+                            </div>
+                        </div>
+
+                        <div style={{
+                            ...styles.activityCard,
+                            backgroundColor: activity.hasIssues ? '#fef3c7' : '#f3f4f6'
+                        }}>
+                            <div style={styles.activityIcon}>🐛</div>
+                            <div style={styles.activityDetails}>
+                                <span style={styles.activityCount}>
+                                    {activity.issueCount}
+                                </span>
+                                <span style={styles.activityLabel}>Issues</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {activity.totalActivity > 0 && (
+                        <div style={styles.lastActivitySection}>
+                            <strong style={styles.lastActivityLabel}>Last Activity:</strong>
+                            <div style={styles.lastActivityDetails}>
+                                {activity.latestContact && (
+                                    <span style={styles.lastActivityItem}>
+                                        📞 Contact: {activity.latestContact.toLocaleDateString()}
+                                    </span>
+                                )}
+                                {activity.latestIssue && (
+                                    <span style={styles.lastActivityItem}>
+                                        🐛 Issue: {activity.latestIssue.toLocaleDateString()}
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {activity.totalActivity === 0 && (
+                        <div style={styles.noActivitySection}>
+                            <span style={styles.noActivityText}>
+                                No contact or issue activity yet
+                            </span>
+                        </div>
+                    )}
+                </div>
+
+                {/* Render Individual Contacts */}
+                {activity.hasContacts && (
+                    <div style={styles.detailsSection}>
+                        <h4 style={styles.detailsTitle}>
+                            📞 Customer Contacts ({activity.contactCount})
+                        </h4>
+                        <div style={styles.itemsList}>
+                            {getUserContacts(account.email).map((contact, index) => (
+                                <div key={`contact-${index}`} style={styles.activityItem}>
+                                    <div style={styles.itemHeader}>
+                                        <span style={styles.itemBy}>
+                                            By: {contact.message_by || "Customer"}
+                                        </span>
+                                        <span style={styles.itemDate}>
+                                            {new Date(contact.created_at).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                    <div style={styles.itemContent}>
+                                        <strong style={styles.itemSubject}>
+                                            Subject: {contact.subject}
+                                        </strong>
+                                        {contact.message && (
+                                            <p style={styles.itemDescription}>{contact.message}</p>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                            <button 
+                                style={styles.replyButton}
+                                onClick={() => handleReplyToUser(account.email)}
+                            >
+                                Reply to User
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* Render Individual Issue Reports */}
+                {activity.hasIssues && (
+                    <div style={styles.detailsSection}>
+                        <h4 style={styles.detailsTitle}>
+                            🐛 Issue Reports ({activity.issueCount})
+                        </h4>
+                        <div style={styles.itemsList}>
+                            {getUserIssueReports(account.email).map((issue, index) => (
+                                <div key={`issue-${index}`} style={styles.activityItem}>
+                                    <div style={styles.itemHeader}>
+                                        <span style={styles.itemType}>Issue</span>
+                                        <span style={styles.itemDate}>
+                                            {new Date(issue.created_at).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                    <div style={styles.itemContent}>
+                                        <strong style={styles.itemSubject}>
+                                            Issue: {issue.known_issue}
+                                        </strong>
+                                        {issue.description && (
+                                            <p style={styles.itemDescription}>
+                                                Description: {issue.description}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                            <button 
+                                style={styles.replyButton}
+                                onClick={() => handleReplyToUser(account.email)}
+                            >
+                                Reply to User
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    };
+
    
 
     if (loading) return (
@@ -411,222 +625,76 @@ const GetSupabaseData = () => {
                     <p>No accounts found.</p>
                 </div>
             ) : (
-                <div style={styles.usersList}>
-                    {accounts.map((account) => {
-                        const activity = getUserActivitySummary(account.email);
-                        return (
-                            <div key={account.id} style={styles.userCard}>
-                                <div style={styles.userMeta}>
-                                        <small style={styles.joinDate}>
-                                            Joined: {new Date(account.created_at).toLocaleDateString()}
-                                        </small>
-                                    </div>
-                                <div style={styles.userHeader}>
-                                    <div style={styles.userInfo}>
-                                        <h3 style={styles.userEmail}>{account.email}</h3>
-                                        
-                                        <select
-                                            value={account.status || 'Unknown'}
-                                            onChange={(e) => handleStatusChange(account.id, e.target.value)}
-                                            style={{
-                                                ...styles.statusDropdown,
-                                                backgroundColor: getStatusColor(account.status)
-                                            }}
-                                        >
-                                            <option value="Active">Active</option>
-                                            <option value="Request to Unsubscribed">Request to Unsubscribed</option>
-                                            <option value="Unsubscribed">Unsubscribed</option>
-                                            <option value="Pending Verification">Pending Verification</option>
-                                            <option value="Request to Active">Request to Active</option>
-                                        </select>
-
-                                        <div style={styles.idFormContainer}>
-                                            <form 
-                                                onSubmit={(e) => handleUpdateIds(e, account.id)}
-                                                style={styles.idForm}
-                                            >
-                                                <div style={styles.formField}>
-                                                    <label style={styles.idFormLabel}>Customer ID:</label>
-                                                    <input 
-                                                        type="text" 
-                                                        value={editingIds[account.id]?.customer_id ?? (account.customer_id || '')}
-                                                        onChange={(e) => {
-                                                            if (!editingIds[account.id]) {
-                                                                initializeIdEditing(account.id, account.customer_id, account.sub_id);
-                                                            }
-                                                            handleIdFormChange(account.id, 'customer_id', e.target.value);
-                                                        }}
-                                                        style={styles.idFormInput}
-                                                        placeholder="Enter Customer ID"
-                                                    />
-                                                </div>
-                                                <div style={styles.formField}>
-                                                    <label style={styles.idFormLabel}>Sub ID:</label>
-                                                    <input 
-                                                        type="text" 
-                                                        value={editingIds[account.id]?.sub_id ?? (account.sub_id || '')}
-                                                        onChange={(e) => {
-                                                            if (!editingIds[account.id]) {
-                                                                initializeIdEditing(account.id, account.customer_id, account.sub_id);
-                                                            }
-                                                            handleIdFormChange(account.id, 'sub_id', e.target.value);
-                                                        }}
-                                                        style={styles.idFormInput}
-                                                        placeholder="Enter Sub ID"
-                                                    />
-                                                </div>
-                                                <button 
-                                                    type="submit" 
-                                                    style={{
-                                                        ...styles.idFormSubmit,
-                                                        opacity: submittingIds[account.id] ? 0.6 : 1,
-                                                        cursor: submittingIds[account.id] ? 'not-allowed' : 'pointer'
-                                                    }}
-                                                    disabled={submittingIds[account.id]}
-                                                >
-                                                    {submittingIds[account.id] ? 'Updating...' : 'Update IDs'}
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    
+                <div style={styles.statusSections}>
+                    {/* Request to Unsubscribed Section */}
+                    {(() => {
+                        const requestToUnsubscribeUsers = accounts.filter(acc => acc.status === 'Request to Unsubscribed');
+                        return requestToUnsubscribeUsers.length > 0 && (
+                            <div style={styles.statusSection}>
+                                <div style={styles.statusSectionHeader}>
+                                    <h3 style={{...styles.statusSectionTitle, color: '#dc2626'}}>
+                                        🚨 Request to Unsubscribed ({requestToUnsubscribeUsers.length})
+                                    </h3>
                                 </div>
-
-                                <div style={styles.activitySection}>
-                                    <h4 style={styles.activityTitle}>Activity Summary</h4>
-                                    <div style={styles.activityGrid}>
-                                        <div style={{
-                                            ...styles.activityCard,
-                                            backgroundColor: activity.hasContacts ? '#dcfce7' : '#f3f4f6'
-                                        }}>
-                                            <div style={styles.activityIcon}>📞</div>
-                                            <div style={styles.activityDetails}>
-                                                <span style={styles.activityCount}>
-                                                    {activity.contactCount}
-                                                </span>
-                                                <span style={styles.activityLabel}>Contacts</span>
-                                            </div>
-                                        </div>
-
-                                        <div style={{
-                                            ...styles.activityCard,
-                                            backgroundColor: activity.hasIssues ? '#fef3c7' : '#f3f4f6'
-                                        }}>
-                                            <div style={styles.activityIcon}>🐛</div>
-                                            <div style={styles.activityDetails}>
-                                                <span style={styles.activityCount}>
-                                                    {activity.issueCount}
-                                                </span>
-                                                <span style={styles.activityLabel}>Issues</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {activity.totalActivity > 0 && (
-                                        <div style={styles.lastActivitySection}>
-                                            <strong style={styles.lastActivityLabel}>Last Activity:</strong>
-                                            <div style={styles.lastActivityDetails}>
-                                                {activity.latestContact && (
-                                                    <span style={styles.lastActivityItem}>
-                                                        📞 Contact: {activity.latestContact.toLocaleDateString()}
-                                                    </span>
-                                                )}
-                                                {activity.latestIssue && (
-                                                    <span style={styles.lastActivityItem}>
-                                                        🐛 Issue: {activity.latestIssue.toLocaleDateString()}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {activity.totalActivity === 0 && (
-                                        <div style={styles.noActivitySection}>
-                                            <span style={styles.noActivityText}>
-                                                No contact or issue activity yet
-                                            </span>
-                                        </div>
-                                    )}
+                                <div style={styles.usersList}>
+                                    {requestToUnsubscribeUsers.map((account) => renderUserCard(account))}
                                 </div>
-
-                                {/* Render Individual Contacts */}
-                                {activity.hasContacts && (
-                                    <div style={styles.detailsSection}>
-                                        <h4 style={styles.detailsTitle}>
-                                            📞 Customer Contacts ({activity.contactCount})
-                                        </h4>
-                                        <div style={styles.itemsList}>
-                                            {getUserContacts(account.email).map((contact, index) => (
-                                                <div key={`contact-${index}`} style={styles.activityItem}>
-                                                    <div style={styles.itemHeader}>
-                                                        {/* message_by */}
-                                                        <span style={styles.itemBy}>
-                                                            {/* if null render "Customer" */}
-                                                            By: {contact.message_by || "Customer"}
-                                                        </span>
-                                                        <span style={styles.itemDate}>
-                                                            {new Date(contact.created_at).toLocaleDateString()}
-                                                        </span>
-                                                    </div>
-                                                    <div style={styles.itemContent}>
-                                                        <strong style={styles.itemSubject}>
-                                                            Subject: {contact.subject}
-                                                        </strong>
-                                                        {contact.message && (
-                                                            <p style={styles.itemDescription}>{contact.message}</p>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                            <button 
-                                                style={styles.replyButton}
-                                                onClick={() => handleReplyToUser(account.email)}
-                                            >
-                                                Reply to User
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Render Individual Issue Reports */}
-                                {activity.hasIssues && (
-                                    <div style={styles.detailsSection}>
-                                        <h4 style={styles.detailsTitle}>
-                                            🐛 Issue Reports ({activity.issueCount})
-                                        </h4>
-                                        <div style={styles.itemsList}>
-                                            {getUserIssueReports(account.email).map((issue, index) => (
-                                                <div key={`issue-${index}`} style={styles.activityItem}>
-                                                    <div style={styles.itemHeader}>
-                                                        <span style={styles.itemType}>Issue</span>
-                                                        <span style={styles.itemDate}>
-                                                            {new Date(issue.created_at).toLocaleDateString()}
-                                                        </span>
-                                                    </div>
-                                                    <div style={styles.itemContent}>
-                                                        <strong style={styles.itemSubject}>
-                                                            Issue: {issue.known_issue}
-                                                        </strong>
-                                                        {issue.description && (
-                                                            <p style={styles.itemDescription}>
-                                                                Description: {issue.description}
-                                                            </p>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                            <button 
-                                                style={styles.replyButton}
-                                                onClick={() => handleReplyToUser(account.email)}
-                                            >
-                                                Reply to User
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
                             </div>
                         );
-                    })}
+                    })()}
+
+                    {/* Active Section */}
+                    {(() => {
+                        const activeUsers = accounts.filter(acc => acc.status === 'Active');
+                        return activeUsers.length > 0 && (
+                            <div style={styles.statusSection}>
+                                <div style={styles.statusSectionHeader}>
+                                    <h3 style={{...styles.statusSectionTitle, color: '#059669'}}>
+                                        ✅ Active Users ({activeUsers.length})
+                                    </h3>
+                                </div>
+                                <div style={styles.usersList}>
+                                    {activeUsers.map((account) => renderUserCard(account))}
+                                </div>
+                            </div>
+                        );
+                    })()}
+
+                    {/* Unsubscribed Section */}
+                    {(() => {
+                        const unsubscribedUsers = accounts.filter(acc => acc.status === 'Unsubscribed');
+                        return unsubscribedUsers.length > 0 && (
+                            <div style={styles.statusSection}>
+                                <div style={styles.statusSectionHeader}>
+                                    <h3 style={{...styles.statusSectionTitle, color: '#6b7280'}}>
+                                        ❌ Unsubscribed Users ({unsubscribedUsers.length})
+                                    </h3>
+                                </div>
+                                <div style={styles.usersList}>
+                                    {unsubscribedUsers.map((account) => renderUserCard(account))}
+                                </div>
+                            </div>
+                        );
+                    })()}
+
+                    {/* Other Status Section */}
+                    {(() => {
+                        const otherUsers = accounts.filter(acc => 
+                            !['Active', 'Request to Unsubscribed', 'Unsubscribed'].includes(acc.status)
+                        );
+                        return otherUsers.length > 0 && (
+                            <div style={styles.statusSection}>
+                                <div style={styles.statusSectionHeader}>
+                                    <h3 style={{...styles.statusSectionTitle, color: '#7c3aed'}}>
+                                        🔄 Other Status ({otherUsers.length})
+                                    </h3>
+                                </div>
+                                <div style={styles.usersList}>
+                                    {otherUsers.map((account) => renderUserCard(account))}
+                                </div>
+                            </div>
+                        );
+                    })()}
                 </div>
             )}
 
@@ -782,12 +850,35 @@ const styles = {
         fontWeight: '600',
         color: '#374151'
     },
+    statusSections: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '40px'
+    },
+    statusSection: {
+        backgroundColor: '#f9fafb',
+        borderRadius: '16px',
+        padding: '24px',
+        border: '1px solid #e5e7eb'
+    },
+    statusSectionHeader: {
+        marginBottom: '20px',
+        borderBottom: '2px solid #e5e7eb',
+        paddingBottom: '12px'
+    },
+    statusSectionTitle: {
+        margin: 0,
+        fontSize: '1.5rem',
+        fontWeight: '700',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px'
+    },
     usersList: {
         display: 'flex',
-        // flexDirection: 'column',
-        overflow: 'scroll',
-        // width: '95vw', not working in mobile
-        gap: '20px'
+        overflow: 'auto',
+        gap: '20px',
+        paddingBottom: '10px'
     },
     userCard: {
         backgroundColor: 'white',
