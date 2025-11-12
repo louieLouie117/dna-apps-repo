@@ -38,6 +38,8 @@ const GetSupabaseData = () => {
         message: ''
     });
     const [submittingReply, setSubmittingReply] = useState(false);
+    const [editingIds, setEditingIds] = useState({});
+    const [submittingIds, setSubmittingIds] = useState({});
 
     useEffect(() => {
         fetchAllData();
@@ -52,8 +54,8 @@ const GetSupabaseData = () => {
                 supabase
                     .from('Users')
                     .select('*')
-                    .order('created_at', { ascending: false })
-                    .limit(50),
+                    .order('created_at', { ascending: false }),
+                    // .limit(50),
                 supabase
                     .from('CustomerContact')
                     .select('email, created_at, subject, message, payment_method, status, message_by')
@@ -282,6 +284,75 @@ const GetSupabaseData = () => {
         }
     };
 
+    // Function to handle ID form changes
+    const handleIdFormChange = (userId, field, value) => {
+        setEditingIds(prev => ({
+            ...prev,
+            [userId]: {
+                ...prev[userId],
+                [field]: value
+            }
+        }));
+    };
+
+    // Function to submit ID updates
+    const handleUpdateIds = async (e, userId) => {
+        e.preventDefault();
+        
+        const updates = editingIds[userId];
+        if (!updates) return;
+
+        try {
+            setSubmittingIds(prev => ({ ...prev, [userId]: true }));
+            
+            const { error } = await supabase
+                .from('Users')
+                .update({
+                    customer_id: updates.customer_id || null,
+                    sub_id: updates.sub_id || null
+                })
+                .eq('id', userId);
+
+            if (error) {
+                throw error;
+            }
+
+            // Update local state
+            setAccounts(accounts.map(account => 
+                account.id === userId ? { 
+                    ...account, 
+                    customer_id: updates.customer_id || account.customer_id,
+                    sub_id: updates.sub_id || account.sub_id
+                } : account
+            ));
+
+            // Clear editing state for this user
+            setEditingIds(prev => {
+                const newState = { ...prev };
+                delete newState[userId];
+                return newState;
+            });
+
+            alert('Customer ID and Sub ID updated successfully!');
+        } catch (error) {
+            console.error('Error updating IDs:', error);
+            alert(`Error updating IDs: ${error.message}`);
+        } finally {
+            setSubmittingIds(prev => ({ ...prev, [userId]: false }));
+        }
+    };
+
+    // Function to initialize editing state
+    const initializeIdEditing = (userId, currentCustomerId, currentSubId) => {
+        setEditingIds(prev => ({
+            ...prev,
+            [userId]: {
+                customer_id: currentCustomerId || '',
+                sub_id: currentSubId || ''
+            }
+        }));
+    };
+
    
 
     if (loading) return (
@@ -353,6 +424,7 @@ const GetSupabaseData = () => {
                                 <div style={styles.userHeader}>
                                     <div style={styles.userInfo}>
                                         <h3 style={styles.userEmail}>{account.email}</h3>
+                                        
                                         <select
                                             value={account.status || 'Unknown'}
                                             onChange={(e) => handleStatusChange(account.id, e.target.value)}
@@ -367,6 +439,55 @@ const GetSupabaseData = () => {
                                             <option value="Pending Verification">Pending Verification</option>
                                             <option value="Request to Active">Request to Active</option>
                                         </select>
+
+                                        <div style={styles.idFormContainer}>
+                                            <form 
+                                                onSubmit={(e) => handleUpdateIds(e, account.id)}
+                                                style={styles.idForm}
+                                            >
+                                                <div style={styles.formField}>
+                                                    <label style={styles.idFormLabel}>Customer ID:</label>
+                                                    <input 
+                                                        type="text" 
+                                                        value={editingIds[account.id]?.customer_id ?? (account.customer_id || '')}
+                                                        onChange={(e) => {
+                                                            if (!editingIds[account.id]) {
+                                                                initializeIdEditing(account.id, account.customer_id, account.sub_id);
+                                                            }
+                                                            handleIdFormChange(account.id, 'customer_id', e.target.value);
+                                                        }}
+                                                        style={styles.idFormInput}
+                                                        placeholder="Enter Customer ID"
+                                                    />
+                                                </div>
+                                                <div style={styles.formField}>
+                                                    <label style={styles.idFormLabel}>Sub ID:</label>
+                                                    <input 
+                                                        type="text" 
+                                                        value={editingIds[account.id]?.sub_id ?? (account.sub_id || '')}
+                                                        onChange={(e) => {
+                                                            if (!editingIds[account.id]) {
+                                                                initializeIdEditing(account.id, account.customer_id, account.sub_id);
+                                                            }
+                                                            handleIdFormChange(account.id, 'sub_id', e.target.value);
+                                                        }}
+                                                        style={styles.idFormInput}
+                                                        placeholder="Enter Sub ID"
+                                                    />
+                                                </div>
+                                                <button 
+                                                    type="submit" 
+                                                    style={{
+                                                        ...styles.idFormSubmit,
+                                                        opacity: submittingIds[account.id] ? 0.6 : 1,
+                                                        cursor: submittingIds[account.id] ? 'not-allowed' : 'pointer'
+                                                    }}
+                                                    disabled={submittingIds[account.id]}
+                                                >
+                                                    {submittingIds[account.id] ? 'Updating...' : 'Update IDs'}
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                     
                                 </div>
@@ -1042,6 +1163,50 @@ const styles = {
         color: '#6b7280',
         fontSize: '0.8rem',
         fontStyle: 'italic'
+    },
+    // ID Form styles
+    idFormContainer: {
+        marginTop: '16px',
+        padding: '16px',
+        backgroundColor: '#f8fafc',
+        borderRadius: '8px',
+        border: '1px solid #e2e8f0'
+    },
+    idForm: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px'
+    },
+    formField: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '4px'
+    },
+    idFormLabel: {
+        fontSize: '0.85rem',
+        fontWeight: '600',
+        color: '#374151'
+    },
+    idFormInput: {
+        padding: '8px 12px',
+        border: '1px solid #d1d5db',
+        borderRadius: '6px',
+        fontSize: '0.9rem',
+        backgroundColor: 'white',
+        transition: 'border-color 0.2s',
+        outline: 'none'
+    },
+    idFormSubmit: {
+        padding: '10px 16px',
+        backgroundColor: '#059669',
+        color: 'white',
+        border: 'none',
+        borderRadius: '6px',
+        fontSize: '0.9rem',
+        fontWeight: '600',
+        cursor: 'pointer',
+        transition: 'background-color 0.2s',
+        marginTop: '8px'
     }
 };
 
