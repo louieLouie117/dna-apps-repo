@@ -38,6 +38,8 @@ const GetSupabaseData = () => {
         message: ''
     });
     const [submittingReply, setSubmittingReply] = useState(false);
+    const [editingIds, setEditingIds] = useState({});
+    const [submittingIds, setSubmittingIds] = useState({});
 
     useEffect(() => {
         fetchAllData();
@@ -52,8 +54,8 @@ const GetSupabaseData = () => {
                 supabase
                     .from('Users')
                     .select('*')
-                    .order('created_at', { ascending: false })
-                    .limit(50),
+                    .order('created_at', { ascending: false }),
+                    // .limit(50),
                 supabase
                     .from('CustomerContact')
                     .select('email, created_at, subject, message, payment_method, status, message_by')
@@ -282,6 +284,289 @@ const GetSupabaseData = () => {
         }
     };
 
+    // Function to handle ID form changes
+    const handleIdFormChange = (userId, field, value) => {
+        setEditingIds(prev => ({
+            ...prev,
+            [userId]: {
+                ...prev[userId],
+                [field]: value
+            }
+        }));
+    };
+
+    // Function to submit ID updates
+    const handleUpdateIds = async (e, userId) => {
+        e.preventDefault();
+        
+        const updates = editingIds[userId];
+        if (!updates) return;
+
+        try {
+            setSubmittingIds(prev => ({ ...prev, [userId]: true }));
+            
+            const { error } = await supabase
+                .from('Users')
+                .update({
+                    customer_id: updates.customer_id || null,
+                    sub_id: updates.sub_id || null
+                })
+                .eq('id', userId);
+
+            if (error) {
+                throw error;
+            }
+
+            // Update local state
+            setAccounts(accounts.map(account => 
+                account.id === userId ? { 
+                    ...account, 
+                    customer_id: updates.customer_id || account.customer_id,
+                    sub_id: updates.sub_id || account.sub_id
+                } : account
+            ));
+
+            // Clear editing state for this user
+            setEditingIds(prev => {
+                const newState = { ...prev };
+                delete newState[userId];
+                return newState;
+            });
+
+            alert('Customer ID and Sub ID updated successfully!');
+        } catch (error) {
+            console.error('Error updating IDs:', error);
+            alert(`Error updating IDs: ${error.message}`);
+        } finally {
+            setSubmittingIds(prev => ({ ...prev, [userId]: false }));
+        }
+    };
+
+    // Function to initialize editing state
+    const initializeIdEditing = (userId, currentCustomerId, currentSubId) => {
+        setEditingIds(prev => ({
+            ...prev,
+            [userId]: {
+                customer_id: currentCustomerId || '',
+                sub_id: currentSubId || ''
+            }
+        }));
+    };
+
+    // Function to render user card (extracted to avoid duplication)
+    const renderUserCard = (account) => {
+        const activity = getUserActivitySummary(account.email);
+        return (
+            <div key={account.id} style={styles.userCard}>
+                <div style={styles.userMeta}>
+                    <small style={styles.joinDate}>
+                        Joined: {new Date(account.created_at).toLocaleDateString()}
+                    </small>
+                </div>
+                <div style={styles.userHeader}>
+                    <div style={styles.userInfo}>
+                        <h3 style={styles.userEmail}>{account.email}</h3>
+                        
+                        <select
+                            value={account.status || 'Unknown'}
+                            onChange={(e) => handleStatusChange(account.id, e.target.value)}
+                            style={{
+                                ...styles.statusDropdown,
+                                backgroundColor: getStatusColor(account.status)
+                            }}
+                        >
+                            <option value="Active">Active</option>
+                            <option value="Request to Unsubscribed">Request to Unsubscribed</option>
+                            <option value="Unsubscribed">Unsubscribed</option>
+                            <option value="Pending Verification">Pending Verification</option>
+                            <option value="Request to Active">Request to Active</option>
+                        </select>
+
+                        <div style={styles.idFormContainer}>
+                            <form 
+                                onSubmit={(e) => handleUpdateIds(e, account.id)}
+                                style={styles.idForm}
+                            >
+                                <div style={styles.formField}>
+                                    <label style={styles.idFormLabel}>Customer ID:</label>
+                                    <input 
+                                        type="text" 
+                                        value={editingIds[account.id]?.customer_id ?? (account.customer_id || '')}
+                                        onChange={(e) => {
+                                            if (!editingIds[account.id]) {
+                                                initializeIdEditing(account.id, account.customer_id, account.sub_id);
+                                            }
+                                            handleIdFormChange(account.id, 'customer_id', e.target.value);
+                                        }}
+                                        style={styles.idFormInput}
+                                        placeholder="Enter Customer ID"
+                                    />
+                                </div>
+                                <div style={styles.formField}>
+                                    <label style={styles.idFormLabel}>Sub ID:</label>
+                                    <input 
+                                        type="text" 
+                                        value={editingIds[account.id]?.sub_id ?? (account.sub_id || '')}
+                                        onChange={(e) => {
+                                            if (!editingIds[account.id]) {
+                                                initializeIdEditing(account.id, account.customer_id, account.sub_id);
+                                            }
+                                            handleIdFormChange(account.id, 'sub_id', e.target.value);
+                                        }}
+                                        style={styles.idFormInput}
+                                        placeholder="Enter Sub ID"
+                                    />
+                                </div>
+                                <button 
+                                    type="submit" 
+                                    style={{
+                                        ...styles.idFormSubmit,
+                                        opacity: submittingIds[account.id] ? 0.6 : 1,
+                                        cursor: submittingIds[account.id] ? 'not-allowed' : 'pointer'
+                                    }}
+                                    disabled={submittingIds[account.id]}
+                                >
+                                    {submittingIds[account.id] ? 'Updating...' : 'Update IDs'}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div style={styles.activitySection}>
+                    <h4 style={styles.activityTitle}>Activity Summary</h4>
+                    <div style={styles.activityGrid}>
+                        <div style={{
+                            ...styles.activityCard,
+                            backgroundColor: activity.hasContacts ? '#dcfce7' : '#f3f4f6'
+                        }}>
+                            <div style={styles.activityIcon}>📞</div>
+                            <div style={styles.activityDetails}>
+                                <span style={styles.activityCount}>
+                                    {activity.contactCount}
+                                </span>
+                                <span style={styles.activityLabel}>Contacts</span>
+                            </div>
+                        </div>
+
+                        <div style={{
+                            ...styles.activityCard,
+                            backgroundColor: activity.hasIssues ? '#fef3c7' : '#f3f4f6'
+                        }}>
+                            <div style={styles.activityIcon}>🐛</div>
+                            <div style={styles.activityDetails}>
+                                <span style={styles.activityCount}>
+                                    {activity.issueCount}
+                                </span>
+                                <span style={styles.activityLabel}>Issues</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {activity.totalActivity > 0 && (
+                        <div style={styles.lastActivitySection}>
+                            <strong style={styles.lastActivityLabel}>Last Activity:</strong>
+                            <div style={styles.lastActivityDetails}>
+                                {activity.latestContact && (
+                                    <span style={styles.lastActivityItem}>
+                                        📞 Contact: {activity.latestContact.toLocaleDateString()}
+                                    </span>
+                                )}
+                                {activity.latestIssue && (
+                                    <span style={styles.lastActivityItem}>
+                                        🐛 Issue: {activity.latestIssue.toLocaleDateString()}
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {activity.totalActivity === 0 && (
+                        <div style={styles.noActivitySection}>
+                            <span style={styles.noActivityText}>
+                                No contact or issue activity yet
+                            </span>
+                        </div>
+                    )}
+                </div>
+
+                {/* Render Individual Contacts */}
+                {activity.hasContacts && (
+                    <div style={styles.detailsSection}>
+                        <h4 style={styles.detailsTitle}>
+                            📞 Customer Contacts ({activity.contactCount})
+                        </h4>
+                        <div style={styles.itemsList}>
+                            {getUserContacts(account.email).map((contact, index) => (
+                                <div key={`contact-${index}`} style={styles.activityItem}>
+                                    <div style={styles.itemHeader}>
+                                        <span style={styles.itemBy}>
+                                            By: {contact.message_by || "Customer"}
+                                        </span>
+                                        <span style={styles.itemDate}>
+                                            {new Date(contact.created_at).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                    <div style={styles.itemContent}>
+                                        <strong style={styles.itemSubject}>
+                                            Subject: {contact.subject}
+                                        </strong>
+                                        {contact.message && (
+                                            <p style={styles.itemDescription}>{contact.message}</p>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                            <button 
+                                style={styles.replyButton}
+                                onClick={() => handleReplyToUser(account.email)}
+                            >
+                                Reply to User
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* Render Individual Issue Reports */}
+                {activity.hasIssues && (
+                    <div style={styles.detailsSection}>
+                        <h4 style={styles.detailsTitle}>
+                            🐛 Issue Reports ({activity.issueCount})
+                        </h4>
+                        <div style={styles.itemsList}>
+                            {getUserIssueReports(account.email).map((issue, index) => (
+                                <div key={`issue-${index}`} style={styles.activityItem}>
+                                    <div style={styles.itemHeader}>
+                                        <span style={styles.itemType}>Issue</span>
+                                        <span style={styles.itemDate}>
+                                            {new Date(issue.created_at).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                    <div style={styles.itemContent}>
+                                        <strong style={styles.itemSubject}>
+                                            Issue: {issue.known_issue}
+                                        </strong>
+                                        {issue.description && (
+                                            <p style={styles.itemDescription}>
+                                                Description: {issue.description}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                            <button 
+                                style={styles.replyButton}
+                                onClick={() => handleReplyToUser(account.email)}
+                            >
+                                Reply to User
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    };
+
    
 
     if (loading) return (
@@ -340,172 +625,99 @@ const GetSupabaseData = () => {
                     <p>No accounts found.</p>
                 </div>
             ) : (
-                <div style={styles.usersList}>
-                    {accounts.map((account) => {
-                        const activity = getUserActivitySummary(account.email);
-                        return (
-                            <div key={account.id} style={styles.userCard}>
-                                <div style={styles.userMeta}>
-                                        <small style={styles.joinDate}>
-                                            Joined: {new Date(account.created_at).toLocaleDateString()}
-                                        </small>
-                                    </div>
-                                <div style={styles.userHeader}>
-                                    <div style={styles.userInfo}>
-                                        <h3 style={styles.userEmail}>{account.email}</h3>
-                                        <select
-                                            value={account.status || 'Unknown'}
-                                            onChange={(e) => handleStatusChange(account.id, e.target.value)}
-                                            style={{
-                                                ...styles.statusDropdown,
-                                                backgroundColor: getStatusColor(account.status)
-                                            }}
-                                        >
-                                            <option value="Active">Active</option>
-                                            <option value="Request to Unsubscribed">Request to Unsubscribed</option>
-                                            <option value="Unsubscribed">Unsubscribed</option>
-                                            <option value="Pending Verification">Pending Verification</option>
-                                            <option value="Request to Active">Request to Active</option>
-                                        </select>
-                                    </div>
-                                    
+                <div style={styles.statusSections}>
+                    {/* Request to Unsubscribed Section */}
+                    {(() => {
+                        const requestToUnsubscribeUsers = accounts.filter(acc => acc.status === 'Request to Unsubscribed');
+                        return requestToUnsubscribeUsers.length > 0 && (
+                            <div style={styles.statusSection}>
+                                <div style={styles.statusSectionHeader}>
+                                    <h3 style={{...styles.statusSectionTitle, color: '#dc2626'}}>
+                                        🚨 Request to Unsubscribed ({requestToUnsubscribeUsers.length})
+                                    </h3>
                                 </div>
-
-                                <div style={styles.activitySection}>
-                                    <h4 style={styles.activityTitle}>Activity Summary</h4>
-                                    <div style={styles.activityGrid}>
-                                        <div style={{
-                                            ...styles.activityCard,
-                                            backgroundColor: activity.hasContacts ? '#dcfce7' : '#f3f4f6'
-                                        }}>
-                                            <div style={styles.activityIcon}>📞</div>
-                                            <div style={styles.activityDetails}>
-                                                <span style={styles.activityCount}>
-                                                    {activity.contactCount}
-                                                </span>
-                                                <span style={styles.activityLabel}>Contacts</span>
-                                            </div>
-                                        </div>
-
-                                        <div style={{
-                                            ...styles.activityCard,
-                                            backgroundColor: activity.hasIssues ? '#fef3c7' : '#f3f4f6'
-                                        }}>
-                                            <div style={styles.activityIcon}>🐛</div>
-                                            <div style={styles.activityDetails}>
-                                                <span style={styles.activityCount}>
-                                                    {activity.issueCount}
-                                                </span>
-                                                <span style={styles.activityLabel}>Issues</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {activity.totalActivity > 0 && (
-                                        <div style={styles.lastActivitySection}>
-                                            <strong style={styles.lastActivityLabel}>Last Activity:</strong>
-                                            <div style={styles.lastActivityDetails}>
-                                                {activity.latestContact && (
-                                                    <span style={styles.lastActivityItem}>
-                                                        📞 Contact: {activity.latestContact.toLocaleDateString()}
-                                                    </span>
-                                                )}
-                                                {activity.latestIssue && (
-                                                    <span style={styles.lastActivityItem}>
-                                                        🐛 Issue: {activity.latestIssue.toLocaleDateString()}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {activity.totalActivity === 0 && (
-                                        <div style={styles.noActivitySection}>
-                                            <span style={styles.noActivityText}>
-                                                No contact or issue activity yet
-                                            </span>
-                                        </div>
-                                    )}
+                                <div style={styles.usersList}>
+                                    {requestToUnsubscribeUsers.map((account) => renderUserCard(account))}
                                 </div>
-
-                                {/* Render Individual Contacts */}
-                                {activity.hasContacts && (
-                                    <div style={styles.detailsSection}>
-                                        <h4 style={styles.detailsTitle}>
-                                            📞 Customer Contacts ({activity.contactCount})
-                                        </h4>
-                                        <div style={styles.itemsList}>
-                                            {getUserContacts(account.email).map((contact, index) => (
-                                                <div key={`contact-${index}`} style={styles.activityItem}>
-                                                    <div style={styles.itemHeader}>
-                                                        {/* message_by */}
-                                                        <span style={styles.itemBy}>
-                                                            {/* if null render "Customer" */}
-                                                            By: {contact.message_by || "Customer"}
-                                                        </span>
-                                                        <span style={styles.itemDate}>
-                                                            {new Date(contact.created_at).toLocaleDateString()}
-                                                        </span>
-                                                    </div>
-                                                    <div style={styles.itemContent}>
-                                                        <strong style={styles.itemSubject}>
-                                                            Subject: {contact.subject}
-                                                        </strong>
-                                                        {contact.message && (
-                                                            <p style={styles.itemDescription}>{contact.message}</p>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                            <button 
-                                                style={styles.replyButton}
-                                                onClick={() => handleReplyToUser(account.email)}
-                                            >
-                                                Reply to User
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Render Individual Issue Reports */}
-                                {activity.hasIssues && (
-                                    <div style={styles.detailsSection}>
-                                        <h4 style={styles.detailsTitle}>
-                                            🐛 Issue Reports ({activity.issueCount})
-                                        </h4>
-                                        <div style={styles.itemsList}>
-                                            {getUserIssueReports(account.email).map((issue, index) => (
-                                                <div key={`issue-${index}`} style={styles.activityItem}>
-                                                    <div style={styles.itemHeader}>
-                                                        <span style={styles.itemType}>Issue</span>
-                                                        <span style={styles.itemDate}>
-                                                            {new Date(issue.created_at).toLocaleDateString()}
-                                                        </span>
-                                                    </div>
-                                                    <div style={styles.itemContent}>
-                                                        <strong style={styles.itemSubject}>
-                                                            Issue: {issue.known_issue}
-                                                        </strong>
-                                                        {issue.description && (
-                                                            <p style={styles.itemDescription}>
-                                                                Description: {issue.description}
-                                                            </p>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                            <button 
-                                                style={styles.replyButton}
-                                                onClick={() => handleReplyToUser(account.email)}
-                                            >
-                                                Reply to User
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
                             </div>
                         );
-                    })}
+                    })()}
+
+                    {/* Active Users with Activity Section */}
+                    {(() => {
+                        const activeUsersWithActivity = accounts
+                            .filter(acc => acc.status === 'Active')
+                            .filter(acc => getUserActivitySummary(acc.email).totalActivity > 0)
+                            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                        return activeUsersWithActivity.length > 0 && (
+                            <div style={styles.statusSection}>
+                                <div style={styles.statusSectionHeader}>
+                                    <h3 style={{...styles.statusSectionTitle, color: '#059669'}}>
+                                        📞 Active Users with Activity ({activeUsersWithActivity.length})
+                                    </h3>
+                                </div>
+                                <div style={styles.usersList}>
+                                    {activeUsersWithActivity.map((account) => renderUserCard(account))}
+                                </div>
+                            </div>
+                        );
+                    })()}
+
+                    {/* Active Users without Activity Section */}
+                    {(() => {
+                        const activeUsersNoActivity = accounts
+                            .filter(acc => acc.status === 'Active')
+                            .filter(acc => getUserActivitySummary(acc.email).totalActivity === 0)
+                            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                        return activeUsersNoActivity.length > 0 && (
+                            <div style={styles.statusSection}>
+                                <div style={styles.statusSectionHeader}>
+                                    <h3 style={{...styles.statusSectionTitle, color: '#10b981'}}>
+                                        ✅ Active Users - No Activity ({activeUsersNoActivity.length})
+                                    </h3>
+                                </div>
+                                <div style={styles.usersList}>
+                                    {activeUsersNoActivity.map((account) => renderUserCard(account))}
+                                </div>
+                            </div>
+                        );
+                    })()}
+
+                    {/* Unsubscribed Section */}
+                    {(() => {
+                        const unsubscribedUsers = accounts.filter(acc => acc.status === 'Unsubscribed');
+                        return unsubscribedUsers.length > 0 && (
+                            <div style={styles.statusSection}>
+                                <div style={styles.statusSectionHeader}>
+                                    <h3 style={{...styles.statusSectionTitle, color: '#6b7280'}}>
+                                        ❌ Unsubscribed Users ({unsubscribedUsers.length})
+                                    </h3>
+                                </div>
+                                <div style={styles.usersList}>
+                                    {unsubscribedUsers.map((account) => renderUserCard(account))}
+                                </div>
+                            </div>
+                        );
+                    })()}
+
+                    {/* Other Status Section */}
+                    {(() => {
+                        const otherUsers = accounts.filter(acc => 
+                            !['Active', 'Request to Unsubscribed', 'Unsubscribed'].includes(acc.status)
+                        );
+                        return otherUsers.length > 0 && (
+                            <div style={styles.statusSection}>
+                                <div style={styles.statusSectionHeader}>
+                                    <h3 style={{...styles.statusSectionTitle, color: '#7c3aed'}}>
+                                        🔄 Other Status ({otherUsers.length})
+                                    </h3>
+                                </div>
+                                <div style={styles.usersList}>
+                                    {otherUsers.map((account) => renderUserCard(account))}
+                                </div>
+                            </div>
+                        );
+                    })()}
                 </div>
             )}
 
@@ -661,12 +873,35 @@ const styles = {
         fontWeight: '600',
         color: '#374151'
     },
+    statusSections: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '40px'
+    },
+    statusSection: {
+        backgroundColor: '#f9fafb',
+        borderRadius: '16px',
+        padding: '24px',
+        border: '1px solid #e5e7eb'
+    },
+    statusSectionHeader: {
+        marginBottom: '20px',
+        borderBottom: '2px solid #e5e7eb',
+        paddingBottom: '12px'
+    },
+    statusSectionTitle: {
+        margin: 0,
+        fontSize: '1.5rem',
+        fontWeight: '700',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px'
+    },
     usersList: {
         display: 'flex',
-        // flexDirection: 'column',
-        overflow: 'scroll',
-        // width: '95vw', not working in mobile
-        gap: '20px'
+        overflow: 'auto',
+        gap: '20px',
+        paddingBottom: '10px'
     },
     userCard: {
         backgroundColor: 'white',
@@ -1042,6 +1277,50 @@ const styles = {
         color: '#6b7280',
         fontSize: '0.8rem',
         fontStyle: 'italic'
+    },
+    // ID Form styles
+    idFormContainer: {
+        marginTop: '16px',
+        padding: '16px',
+        backgroundColor: '#f8fafc',
+        borderRadius: '8px',
+        border: '1px solid #e2e8f0'
+    },
+    idForm: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px'
+    },
+    formField: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '4px'
+    },
+    idFormLabel: {
+        fontSize: '0.85rem',
+        fontWeight: '600',
+        color: '#374151'
+    },
+    idFormInput: {
+        padding: '8px 12px',
+        border: '1px solid #d1d5db',
+        borderRadius: '6px',
+        fontSize: '0.9rem',
+        backgroundColor: 'white',
+        transition: 'border-color 0.2s',
+        outline: 'none'
+    },
+    idFormSubmit: {
+        padding: '10px 16px',
+        backgroundColor: '#059669',
+        color: 'white',
+        border: 'none',
+        borderRadius: '6px',
+        fontSize: '0.9rem',
+        fontWeight: '600',
+        cursor: 'pointer',
+        transition: 'background-color 0.2s',
+        marginTop: '8px'
     }
 };
 
