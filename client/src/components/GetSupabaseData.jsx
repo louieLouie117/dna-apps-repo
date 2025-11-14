@@ -380,6 +380,7 @@ const GetSupabaseData = () => {
                             <option value="Unsubscribed">Unsubscribed</option>
                             <option value="Pending Verification">Pending Verification</option>
                             <option value="Request to Active">Request to Active</option>
+                            <option value="Subscription Has been Paused">Subscription Has been Paused</option>
                         </select>
 
                         <div style={styles.idFormContainer}>
@@ -614,6 +615,13 @@ const GetSupabaseData = () => {
                     }}>
                         ❌ Unsubscribed: {accounts.filter(acc => acc.status === 'Unsubscribed').length}
                     </span>
+                    <span style={{
+                        ...styles.statItem,
+                        backgroundColor: '#fff3e0',
+                        color: '#e65100'
+                    }}>
+                        ⏸️ Paused: {accounts.filter(acc => acc.status === 'Subscription Has been Paused').length}
+                    </span>
                     <span style={styles.statItem}>
                         With Activity: {accounts.filter(acc => getUserActivitySummary(acc.email).totalActivity > 0).length}
                     </span>
@@ -638,6 +646,23 @@ const GetSupabaseData = () => {
                                 </div>
                                 <div style={styles.usersList}>
                                     {requestToUnsubscribeUsers.map((account) => renderUserCard(account))}
+                                </div>
+                            </div>
+                        );
+                    })()}
+
+                    {/* Subscription Has been Paused Section */}
+                    {(() => {
+                        const pausedSubscriptionUsers = accounts.filter(acc => acc.status === 'Subscription Has been Paused');
+                        return pausedSubscriptionUsers.length > 0 && (
+                            <div style={styles.statusSection}>
+                                <div style={styles.statusSectionHeader}>
+                                    <h3 style={{...styles.statusSectionTitle, color: '#e65100'}}>
+                                        ⏸️ Subscription Has been Paused ({pausedSubscriptionUsers.length})
+                                    </h3>
+                                </div>
+                                <div style={styles.usersList}>
+                                    {pausedSubscriptionUsers.map((account) => renderUserCard(account))}
                                 </div>
                             </div>
                         );
@@ -815,6 +840,7 @@ const getStatusColor = (status) => {
         case 'unsubscribed': return '#ef4444';
         case 'request to unsubscribed': return '#f97316';
         case 'request to active': return '#8b5cf6';
+        case 'subscription has been paused': return '#e65100';
         default: return '#6b7280';
     }
 };
