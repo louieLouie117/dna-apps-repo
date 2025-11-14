@@ -71,6 +71,49 @@ const UserDashboard = () => {
             });
     };
 
+    const handleReportIssue = async () => {
+        setReportContainer(true);
+        
+        // Update user status to 'Subscription Has been Paused'
+        if (!userLoggedIn) return;
+        
+        try {
+            const { error } = await supabase
+                .from('Users')
+                .update({ status: 'Subscription Has been Paused' })
+                .eq('auth_uid', userLoggedIn);
+                
+            if (error) {
+                console.error('Error updating account status:', error);
+                alert('Error updating account status. Please try again.');
+                return;
+            }
+
+            // Send message to customerContact table in supabase
+            const { error: contactError } = await supabase
+                .from('CustomerContact')
+                .insert([{
+                    email: user.email,
+                    subject: 'Subscription Paused - Issue Reporting Initiated',
+                    message: 'User has initiated issue reporting and subscription has been paused.',
+                    payment_method: 'Supabase Update'
+                }]);
+
+            if (contactError) {
+                console.error('Error inserting contact record:', contactError);
+            }
+
+            // Update local state to reflect the status change
+            setAccountStatus('Subscription Has been Paused');
+            
+            alert('Your subscription has been paused and you will not be charged during this outage. Please fill out the issue report form.');
+            
+        } catch (error) {
+            console.error('Error in handleReportIssue:', error);
+            alert('An error occurred. Please try again.');
+        }
+    };
+
     return (
         <div>
             <header>
@@ -130,7 +173,7 @@ const UserDashboard = () => {
                             fontSize: '1rem',
                             opacity: '0.95'
                         }}>
-                            <strong>New User Alert:</strong> Some new users registered on or after November 1 2025 are experiencing sign-in difficulties with one or more applications. If you're encountering login issues, please report them using the form below so our team can assist you promptly.
+                            <strong>New User Alert:</strong> Some new users registered on or after November 1 2025 are experiencing sign-in difficulties with one or more applications. If you're encountering login issues, please report them using the form below so our team can assist you promptly. During this period, you can pause your subscription to <b>avoid charges</b> while we resolve the issue.
                         </p>
                         <div>
                             <button  style={{
@@ -143,10 +186,10 @@ const UserDashboard = () => {
                             color: '#ffffff',
                             cursor: 'pointer'   
                         }}
-                        onClick={() => setReportContainer(!reportContainer)}
+                        onClick={() => handleReportIssue()}
                         
                         
-                        >Report Issue</button>
+                        >Pause Subscription and Report Issue</button>
                         </div>
                     </div>
                 </div>
@@ -330,6 +373,42 @@ const UserDashboard = () => {
                         }}
                     >
                         Refresh Status
+                    </button>
+                </div>
+            ) : accountStatus === 'Subscription Has been Paused' ? (
+                <div
+                    style={{
+                        background: '#fff3e0',
+                        color: '#e65100',
+                        padding: '20px',
+                        marginBottom: '24px',
+                        borderRadius: '8px',
+                        border: '2px solid #ffcc02',
+                        boxShadow: '0 2px 8px rgba(255, 204, 2, 0.2)',
+                        maxWidth: '420px',
+                        margin: '0 auto',
+                        textAlign: 'center',
+                        fontSize: '1.1rem',
+                    }}
+                >
+                    <strong style={{ fontSize: '1.2rem', display: 'block', marginBottom: '8px' }}>
+                        Account Status: <span style={{ fontWeight: 'bold', color: '#f57c00' }}>Subscription Paused</span>
+                    </strong>
+                    <div>
+                        Thank you for reporting. Your account has been paused and you will not be charged during this outage. We will email you once we have fixed the issue.
+                    </div>
+                    <button
+                        onClick={() => window.location.reload()}
+                        style={{
+                            fontWeight: 'bold',
+                            background: '#e65100',
+                            padding: '10px',
+                            marginTop: '16px',
+                            borderRadius: '3px',
+                            color: '#fff3e0'
+                        }}
+                    >
+                        Check Status
                     </button>
                 </div>
             ) : accountStatus === 'Unsubscribed' ? (
