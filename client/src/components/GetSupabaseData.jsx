@@ -643,18 +643,41 @@ const GetSupabaseData = () => {
                         );
                     })()}
 
-                    {/* Active Section */}
+                    {/* Active Users with Activity Section */}
                     {(() => {
-                        const activeUsers = accounts.filter(acc => acc.status === 'Active');
-                        return activeUsers.length > 0 && (
+                        const activeUsersWithActivity = accounts
+                            .filter(acc => acc.status === 'Active')
+                            .filter(acc => getUserActivitySummary(acc.email).totalActivity > 0)
+                            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                        return activeUsersWithActivity.length > 0 && (
                             <div style={styles.statusSection}>
                                 <div style={styles.statusSectionHeader}>
                                     <h3 style={{...styles.statusSectionTitle, color: '#059669'}}>
-                                        ✅ Active Users ({activeUsers.length})
+                                        📞 Active Users with Activity ({activeUsersWithActivity.length})
                                     </h3>
                                 </div>
                                 <div style={styles.usersList}>
-                                    {activeUsers.map((account) => renderUserCard(account))}
+                                    {activeUsersWithActivity.map((account) => renderUserCard(account))}
+                                </div>
+                            </div>
+                        );
+                    })()}
+
+                    {/* Active Users without Activity Section */}
+                    {(() => {
+                        const activeUsersNoActivity = accounts
+                            .filter(acc => acc.status === 'Active')
+                            .filter(acc => getUserActivitySummary(acc.email).totalActivity === 0)
+                            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                        return activeUsersNoActivity.length > 0 && (
+                            <div style={styles.statusSection}>
+                                <div style={styles.statusSectionHeader}>
+                                    <h3 style={{...styles.statusSectionTitle, color: '#10b981'}}>
+                                        ✅ Active Users - No Activity ({activeUsersNoActivity.length})
+                                    </h3>
+                                </div>
+                                <div style={styles.usersList}>
+                                    {activeUsersNoActivity.map((account) => renderUserCard(account))}
                                 </div>
                             </div>
                         );
