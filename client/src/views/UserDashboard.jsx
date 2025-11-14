@@ -173,7 +173,7 @@ const UserDashboard = () => {
                             fontSize: '1rem',
                             opacity: '0.95'
                         }}>
-                            <strong>New User Alert:</strong> Some new users registered on or after November 1 2025 are experiencing sign-in difficulties with one or more applications. If you're encountering login issues, please report them using the form below so our team can assist you promptly.
+                            <strong>New User Alert:</strong> Some new users registered on or after November 1 2025 are experiencing sign-in difficulties with one or more applications. If you're encountering login issues, please report them using the form below so our team can assist you promptly. During this period, you can pause your subscription to <b>avoid charges</b> while we resolve the issue.
                         </p>
                         <div>
                             <button  style={{
