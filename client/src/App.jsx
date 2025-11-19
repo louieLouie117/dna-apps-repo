@@ -20,6 +20,10 @@ import Wrapper from './views/Wrapper';
 import AdminWrapper from './views/AdminWrapper';
 import RegAllApps from './components/RegAllApps';
 import DashboardAdmin from './views/DashboardAdmin'
+import WrapperJWT from './views/WrapperJWT';
+import DashboardUser from './views/DashboardUser'
+import LoginTest from './components/LoginTest';
+
 
 function App() {
   // Check if Supabase is initialized
@@ -52,6 +56,17 @@ function App() {
           <Wrapper>
             <UserDashboard />
           </Wrapper>
+        } />
+
+        <Route path='/dashboard' element={
+          <WrapperJWT>
+            <DashboardUser />
+          </WrapperJWT>
+        } />
+
+        {/* login test */}
+        <Route path='/login-test' element={
+            <LoginTest />
         } />
 
          <Route path='/get-users' element={
