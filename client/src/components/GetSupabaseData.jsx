@@ -40,6 +40,8 @@ const GetSupabaseData = () => {
     const [submittingReply, setSubmittingReply] = useState(false);
     const [editingIds, setEditingIds] = useState({});
     const [submittingIds, setSubmittingIds] = useState({});
+    const [statusFilter, setStatusFilter] = useState('all');
+    const [activityFilter, setActivityFilter] = useState('all');
 
     useEffect(() => {
         fetchAllData();
@@ -353,6 +355,33 @@ const GetSupabaseData = () => {
         }));
     };
 
+    // Function to filter accounts based on selected filters
+    const getFilteredAccounts = () => {
+        let filtered = [...accounts];
+
+        // Filter by status
+        if (statusFilter !== 'all') {
+            filtered = filtered.filter(account => account.status === statusFilter);
+        }
+
+        // Filter by activity
+        if (activityFilter !== 'all') {
+            filtered = filtered.filter(account => {
+                const activity = getUserActivitySummary(account.email);
+                if (activityFilter === 'with-activity') {
+                    return activity.totalActivity > 0;
+                } else if (activityFilter === 'no-activity') {
+                    return activity.totalActivity === 0;
+                }
+                return true;
+            });
+        }
+
+        return filtered;
+    };
+
+    const filteredAccounts = getFilteredAccounts();
+
     // Function to render user card (extracted to avoid duplication)
     const renderUserCard = (account) => {
         const activity = getUserActivitySummary(account.email);
@@ -381,6 +410,7 @@ const GetSupabaseData = () => {
                             <option value="Pending Verification">Pending Verification</option>
                             <option value="Request to Active">Request to Active</option>
                             <option value="Subscription Has been Paused">Subscription Has been Paused</option>
+                            <option value="Request to Pause Subscription">Request to Pause Subscription</option>
                         </select>
 
                         <div style={styles.idFormContainer}>
@@ -590,9 +620,16 @@ const GetSupabaseData = () => {
     return (
         <div style={styles.container}>
             <div style={styles.header}>
-                <h2 style={styles.title}>Users with Activity Status</h2>
+                <h2 style={styles.title}>User Management Dashboard</h2>
                 <div style={styles.stats}>
                     <span style={styles.statItem}>Total Users: {accounts.length}</span>
+                    <span style={{
+                        ...styles.statItem,
+                        backgroundColor: '#dcfce7',
+                        color: '#166534'
+                    }}>
+                        ✅ Active: {accounts.filter(acc => acc.status === 'Active').length}
+                    </span>
                     <span style={{
                         ...styles.statItem,
                         backgroundColor: accounts.filter(acc => acc.status === 'Request to Unsubscribed').length > 0 ? '#fef3c7' : styles.statItem.backgroundColor,
@@ -603,11 +640,13 @@ const GetSupabaseData = () => {
                     </span>
                     <span style={{
                         ...styles.statItem,
-                        backgroundColor: '#dcfce7',
-                        color: '#166534'
+                        backgroundColor: '#fef3c7',
+                        color: '#d97706',
+                        fontWeight: '600'
                     }}>
-                        ✅ Active: {accounts.filter(acc => acc.status === 'Active').length}
+                        🔄 Request to Pause: {accounts.filter(acc => acc.status === 'Request to Pause Subscription').length}
                     </span>
+                    
                     <span style={{
                         ...styles.statItem,
                         backgroundColor: '#fee2e2',
@@ -622,127 +661,88 @@ const GetSupabaseData = () => {
                     }}>
                         ⏸️ Paused: {accounts.filter(acc => acc.status === 'Subscription Has been Paused').length}
                     </span>
+                    
                     <span style={styles.statItem}>
                         With Activity: {accounts.filter(acc => getUserActivitySummary(acc.email).totalActivity > 0).length}
+                    </span>
+                    <span style={{
+                        ...styles.statItem,
+                        backgroundColor: '#e0f2fe',
+                        color: '#01579b',
+                        fontWeight: '600'
+                    }}>
+                        Filtered Results: {filteredAccounts.length}
                     </span>
                 </div>
             </div>
 
-            {accounts.length === 0 ? (
+            {/* Filter Controls */}
+            <div style={styles.filterContainer}>
+                <div style={styles.filterGroup}>
+                    <label style={styles.filterLabel}>Status Filter:</label>
+                    <select 
+                        value={statusFilter} 
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        style={styles.filterSelect}
+                    >
+                        <option value="all">All Statuses</option>
+                        <option value="Active">Active</option>
+                        <option value="Request to Pause Subscription">Request to Pause Subscription</option>
+                        <option value="Request to Unsubscribed">Request to Unsubscribed</option>
+                        <option value="Request to Active">Request to Active</option>
+                        <option value="Unsubscribed">Unsubscribed</option>
+                        {/* <option value="Pending Verification">Pending Verification</option> */}
+                        <option value="Subscription Has been Paused">Subscription Has been Paused</option>
+                    </select>
+                </div>
+
+                <div style={styles.filterGroup}>
+                    <label style={styles.filterLabel}>Activity Filter:</label>
+                    <select 
+                        value={activityFilter} 
+                        onChange={(e) => setActivityFilter(e.target.value)}
+                        style={styles.filterSelect}
+                    >
+                        <option value="all">All Activity Levels</option>
+                        <option value="with-activity">With Activity</option>
+                        <option value="no-activity">No Activity</option>
+                    </select>
+                </div>
+
+                <button 
+                    onClick={() => {
+                        setStatusFilter('all');
+                        setActivityFilter('all');
+                    }}
+                    style={styles.clearFiltersButton}
+                >
+                    Clear Filters
+                </button>
+            </div>
+
+            {/* Users Grid */}
+            {filteredAccounts.length === 0 ? (
                 <div style={styles.noDataContainer}>
-                    <p>No accounts found.</p>
+                    {accounts.length === 0 ? (
+                        <p>No accounts found in the database.</p>
+                    ) : (
+                        <div>
+                            <p>No users match the selected filters.</p>
+                            <button 
+                                onClick={() => {
+                                    setStatusFilter('all');
+                                    setActivityFilter('all');
+                                }}
+                                style={styles.clearFiltersButton}
+                            >
+                                Clear Filters to Show All Users
+                            </button>
+                        </div>
+                    )}
                 </div>
             ) : (
-                <div style={styles.statusSections}>
-                    {/* Request to Unsubscribed Section */}
-                    {(() => {
-                        const requestToUnsubscribeUsers = accounts.filter(acc => acc.status === 'Request to Unsubscribed');
-                        return requestToUnsubscribeUsers.length > 0 && (
-                            <div style={styles.statusSection}>
-                                <div style={styles.statusSectionHeader}>
-                                    <h3 style={{...styles.statusSectionTitle, color: '#dc2626'}}>
-                                        🚨 Request to Unsubscribed ({requestToUnsubscribeUsers.length})
-                                    </h3>
-                                </div>
-                                <div style={styles.usersList}>
-                                    {requestToUnsubscribeUsers.map((account) => renderUserCard(account))}
-                                </div>
-                            </div>
-                        );
-                    })()}
-
-                    {/* Subscription Has been Paused Section */}
-                    {(() => {
-                        const pausedSubscriptionUsers = accounts.filter(acc => acc.status === 'Subscription Has been Paused');
-                        return pausedSubscriptionUsers.length > 0 && (
-                            <div style={styles.statusSection}>
-                                <div style={styles.statusSectionHeader}>
-                                    <h3 style={{...styles.statusSectionTitle, color: '#e65100'}}>
-                                        ⏸️ Subscription Has been Paused ({pausedSubscriptionUsers.length})
-                                    </h3>
-                                </div>
-                                <div style={styles.usersList}>
-                                    {pausedSubscriptionUsers.map((account) => renderUserCard(account))}
-                                </div>
-                            </div>
-                        );
-                    })()}
-
-                    {/* Active Users with Activity Section */}
-                    {(() => {
-                        const activeUsersWithActivity = accounts
-                            .filter(acc => acc.status === 'Active')
-                            .filter(acc => getUserActivitySummary(acc.email).totalActivity > 0)
-                            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-                        return activeUsersWithActivity.length > 0 && (
-                            <div style={styles.statusSection}>
-                                <div style={styles.statusSectionHeader}>
-                                    <h3 style={{...styles.statusSectionTitle, color: '#059669'}}>
-                                        📞 Active Users with Activity ({activeUsersWithActivity.length})
-                                    </h3>
-                                </div>
-                                <div style={styles.usersList}>
-                                    {activeUsersWithActivity.map((account) => renderUserCard(account))}
-                                </div>
-                            </div>
-                        );
-                    })()}
-
-                    {/* Active Users without Activity Section */}
-                    {(() => {
-                        const activeUsersNoActivity = accounts
-                            .filter(acc => acc.status === 'Active')
-                            .filter(acc => getUserActivitySummary(acc.email).totalActivity === 0)
-                            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-                        return activeUsersNoActivity.length > 0 && (
-                            <div style={styles.statusSection}>
-                                <div style={styles.statusSectionHeader}>
-                                    <h3 style={{...styles.statusSectionTitle, color: '#10b981'}}>
-                                        ✅ Active Users - No Activity ({activeUsersNoActivity.length})
-                                    </h3>
-                                </div>
-                                <div style={styles.usersList}>
-                                    {activeUsersNoActivity.map((account) => renderUserCard(account))}
-                                </div>
-                            </div>
-                        );
-                    })()}
-
-                    {/* Unsubscribed Section */}
-                    {(() => {
-                        const unsubscribedUsers = accounts.filter(acc => acc.status === 'Unsubscribed');
-                        return unsubscribedUsers.length > 0 && (
-                            <div style={styles.statusSection}>
-                                <div style={styles.statusSectionHeader}>
-                                    <h3 style={{...styles.statusSectionTitle, color: '#6b7280'}}>
-                                        ❌ Unsubscribed Users ({unsubscribedUsers.length})
-                                    </h3>
-                                </div>
-                                <div style={styles.usersList}>
-                                    {unsubscribedUsers.map((account) => renderUserCard(account))}
-                                </div>
-                            </div>
-                        );
-                    })()}
-
-                    {/* Other Status Section */}
-                    {(() => {
-                        const otherUsers = accounts.filter(acc => 
-                            !['Active', 'Request to Unsubscribed', 'Unsubscribed'].includes(acc.status)
-                        );
-                        return otherUsers.length > 0 && (
-                            <div style={styles.statusSection}>
-                                <div style={styles.statusSectionHeader}>
-                                    <h3 style={{...styles.statusSectionTitle, color: '#7c3aed'}}>
-                                        🔄 Other Status ({otherUsers.length})
-                                    </h3>
-                                </div>
-                                <div style={styles.usersList}>
-                                    {otherUsers.map((account) => renderUserCard(account))}
-                                </div>
-                            </div>
-                        );
-                    })()}
+                <div style={styles.usersGrid}>
+                    {filteredAccounts.map((account) => renderUserCard(account))}
                 </div>
             )}
 
@@ -841,6 +841,7 @@ const getStatusColor = (status) => {
         case 'request to unsubscribed': return '#f97316';
         case 'request to active': return '#8b5cf6';
         case 'subscription has been paused': return '#e65100';
+        case 'request to pause subscription': return '#d97706';
         default: return '#6b7280';
     }
 };
@@ -1347,6 +1348,59 @@ const styles = {
         cursor: 'pointer',
         transition: 'background-color 0.2s',
         marginTop: '8px'
+    },
+    // Filter styles
+    filterContainer: {
+        display: 'flex',
+        gap: '20px',
+        alignItems: 'flex-end',
+        padding: '20px',
+        backgroundColor: '#f8fafc',
+        borderRadius: '12px',
+        border: '1px solid #e2e8f0',
+        marginBottom: '24px',
+        flexWrap: 'wrap'
+    },
+    filterGroup: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '6px',
+        minWidth: '180px'
+    },
+    filterLabel: {
+        fontSize: '0.9rem',
+        fontWeight: '600',
+        color: '#374151'
+    },
+    filterSelect: {
+        padding: '10px 12px',
+        border: '1px solid #d1d5db',
+        borderRadius: '8px',
+        backgroundColor: 'white',
+        fontSize: '0.9rem',
+        color: '#374151',
+        cursor: 'pointer',
+        outline: 'none',
+        transition: 'border-color 0.2s'
+    },
+    clearFiltersButton: {
+        padding: '10px 16px',
+        backgroundColor: '#6b7280',
+        color: 'white',
+        border: 'none',
+        borderRadius: '8px',
+        fontSize: '0.9rem',
+        fontWeight: '600',
+        cursor: 'pointer',
+        transition: 'background-color 0.2s',
+        height: 'fit-content'
+    },
+    // Users grid styles
+    usersGrid: {
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '24px',
+        padding: '0'
     }
 };
 

@@ -80,7 +80,7 @@ const UserDashboard = () => {
         try {
             const { error } = await supabase
                 .from('Users')
-                .update({ status: 'Subscription Has been Paused' })
+                .update({ status: 'Request to Pause Subscription' })
                 .eq('auth_uid', userLoggedIn);
                 
             if (error) {
@@ -94,8 +94,8 @@ const UserDashboard = () => {
                 .from('CustomerContact')
                 .insert([{
                     email: user.email,
-                    subject: 'Subscription Paused - Issue Reporting Initiated',
-                    message: 'User has initiated issue reporting and subscription has been paused.',
+                    subject: 'Request to Paused Subscription - Issue Reporting Initiated',
+                    message: 'User has initiated issue reporting and request to pause subscription has been made.',
                     payment_method: 'Supabase Update'
                 }]);
 
