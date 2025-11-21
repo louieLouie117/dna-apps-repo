@@ -410,6 +410,7 @@ const GetSupabaseData = () => {
                             <option value="Pending Verification">Pending Verification</option>
                             <option value="Request to Active">Request to Active</option>
                             <option value="Subscription Has been Paused">Subscription Has been Paused</option>
+                            <option value="Request to Pause Subscription">Request to Pause Subscription</option>
                         </select>
 
                         <div style={styles.idFormContainer}>
@@ -624,6 +625,13 @@ const GetSupabaseData = () => {
                     <span style={styles.statItem}>Total Users: {accounts.length}</span>
                     <span style={{
                         ...styles.statItem,
+                        backgroundColor: '#dcfce7',
+                        color: '#166534'
+                    }}>
+                        ✅ Active: {accounts.filter(acc => acc.status === 'Active').length}
+                    </span>
+                    <span style={{
+                        ...styles.statItem,
                         backgroundColor: accounts.filter(acc => acc.status === 'Request to Unsubscribed').length > 0 ? '#fef3c7' : styles.statItem.backgroundColor,
                         color: accounts.filter(acc => acc.status === 'Request to Unsubscribed').length > 0 ? '#92400e' : styles.statItem.color,
                         fontWeight: '700'
@@ -632,11 +640,13 @@ const GetSupabaseData = () => {
                     </span>
                     <span style={{
                         ...styles.statItem,
-                        backgroundColor: '#dcfce7',
-                        color: '#166534'
+                        backgroundColor: '#fef3c7',
+                        color: '#d97706',
+                        fontWeight: '600'
                     }}>
-                        ✅ Active: {accounts.filter(acc => acc.status === 'Active').length}
+                        🔄 Request to Pause: {accounts.filter(acc => acc.status === 'Request to Pause Subscription').length}
                     </span>
+                    
                     <span style={{
                         ...styles.statItem,
                         backgroundColor: '#fee2e2',
@@ -651,6 +661,7 @@ const GetSupabaseData = () => {
                     }}>
                         ⏸️ Paused: {accounts.filter(acc => acc.status === 'Subscription Has been Paused').length}
                     </span>
+                    
                     <span style={styles.statItem}>
                         With Activity: {accounts.filter(acc => getUserActivitySummary(acc.email).totalActivity > 0).length}
                     </span>
@@ -676,10 +687,11 @@ const GetSupabaseData = () => {
                     >
                         <option value="all">All Statuses</option>
                         <option value="Active">Active</option>
+                        <option value="Request to Pause Subscription">Request to Pause Subscription</option>
                         <option value="Request to Unsubscribed">Request to Unsubscribed</option>
-                        <option value="Unsubscribed">Unsubscribed</option>
-                        <option value="Pending Verification">Pending Verification</option>
                         <option value="Request to Active">Request to Active</option>
+                        <option value="Unsubscribed">Unsubscribed</option>
+                        {/* <option value="Pending Verification">Pending Verification</option> */}
                         <option value="Subscription Has been Paused">Subscription Has been Paused</option>
                     </select>
                 </div>
@@ -829,6 +841,7 @@ const getStatusColor = (status) => {
         case 'request to unsubscribed': return '#f97316';
         case 'request to active': return '#8b5cf6';
         case 'subscription has been paused': return '#e65100';
+        case 'request to pause subscription': return '#d97706';
         default: return '#6b7280';
     }
 };
@@ -1385,7 +1398,7 @@ const styles = {
     // Users grid styles
     usersGrid: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))',
+        gridTemplateColumns: '1fr 1fr',
         gap: '24px',
         padding: '0'
     }
