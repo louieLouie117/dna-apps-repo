@@ -146,7 +146,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     
     try {
       console.log('Attempting to delete user with ID:', id);
-      const response = await fetch(`${API_BASE_URL}api/delete-user/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/delete-user/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
