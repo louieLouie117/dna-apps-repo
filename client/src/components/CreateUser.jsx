@@ -16,7 +16,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}api/users`);
+        const response = await fetch(`${API_BASE_URL}/api/users`);
         const data = await response.json();
         setUserList(data.data || []);
         console.log('Fetched users:', data.data);
@@ -56,7 +56,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     console.log('Form data being sent:', formData);
 
     try {
-      const response = await fetch(`${API_BASE_URL}api/create-user`, {
+      const response = await fetch(`${API_BASE_URL}/api/create-user`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
