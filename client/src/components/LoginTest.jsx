@@ -15,6 +15,7 @@ export default function LoginTest() {
     setLoading(true);
     setMessage('');
     try {
+        // checked url is correct
       const response = await fetch(`${API_BASE_URL}/api/login`, {
         method: 'POST',
         headers: {
@@ -53,6 +54,7 @@ export default function LoginTest() {
 
   const checkSession = async () => {
     try {
+        // checked url is correct
       const response = await fetch(`${API_BASE_URL}/api/session/status`, {
         method: 'GET',
         credentials: 'include',
