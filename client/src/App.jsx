@@ -23,6 +23,7 @@ import DashboardAdmin from './views/DashboardAdmin'
 import WrapperJWT from './views/WrapperJWT';
 import DashboardUser from './views/DashboardUser'
 import LoginTest from './components/LoginTest';
+import RequestPasswordReset from './components/RequestPasswordReset';
 
 
 function App() {
@@ -51,6 +52,8 @@ function App() {
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/contact-us-1.html' element={<ContactUs />} />
         <Route path='/unsubscribe' element={<Unsubscribe />} />
+
+        <Route path='/request-password-reset' element={<RequestPasswordReset />} />
 
         <Route path='/user-dashboard' element={
           <Wrapper>
