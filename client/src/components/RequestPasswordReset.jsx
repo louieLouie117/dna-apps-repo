@@ -27,15 +27,74 @@ const RequestPasswordReset = () => {
         try {
             console.log('Sending password reset email to:', email);
             
+            // Create proper HTML email content
+            const htmlMessage = `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff;">
+                    <div style="background-color: #3b82f6; padding: 30px; text-align: center; border-radius: 12px 12px 0 0;">
+                        <h1 style="color: #ffffff; font-size: 32px; margin: 0; font-weight: bold;">DNA Apps</h1>
+                        <p style="color: #e0f2fe; font-size: 18px; margin: 15px 0 0 0;">Password Reset Request</p>
+                    </div>
+                    
+                    <div style="background-color: #ffffff; padding: 40px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0;">
+                        <p style="font-size: 18px; color: #1f2937; margin: 0 0 25px 0;">Hello! 👋</p>
+                        
+                        <p style="font-size: 16px; color: #374151; margin: 0 0 25px 0;">
+                            You requested a password reset for your DNA Apps account.
+                        </p>
+                        
+                        <p style="font-size: 16px; color: #374151; margin: 0 0 30px 0;">
+                            Click the button below to reset your password (this link expires in 15 minutes):
+                        </p>
+                        
+                        <div style="text-align: center; margin: 30px 0;">
+                            <a href="${resetLink}" 
+                               style="display: inline-block; background-color: #3b82f6; color: #ffffff !important; 
+                                      padding: 15px 30px; text-decoration: none; border-radius: 8px; 
+                                      font-size: 16px; font-weight: bold; text-align: center;">
+                                🔐 Reset My Password
+                            </a>
+                        </div>
+                        
+                        <p style="font-size: 14px; color: #6b7280; margin: 20px 0 0 0;">
+                            If the button doesn't work, copy and paste this link: <br>
+                            <a href="${resetLink}" style="color: #3b82f6; word-break: break-all;">${resetLink}</a>
+                        </p>
+                        
+                        <p style="font-size: 14px; color: #6b7280; margin: 20px 0 0 0;">
+                            If you didn't request this reset, please ignore this email.
+                        </p>
+                        
+                        <p style="font-size: 16px; color: #374151; margin: 30px 0 0 0;">
+                            Best regards,<br><strong>DNA Apps Team</strong>
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            // Plain text fallback
+            const plainTextMessage = `Hello!
+
+PainText You requested a password reset for your DNA Apps account.
+
+Click this link to reset your password (expires in 15 minutes):
+${resetLink}
+
+If you didn't request this reset, please ignore this email.
+
+Best regards,
+DNA Apps Team`;
+            
             await emailjs.send(
                 serviceId,
                 templateId,
                 {
                     to_email: email,
                     subject: 'Password Reset Request - DNA Apps',
-                    message: `Hello,\n\nYou requested a password reset for your DNA Apps account.\n\nClick the link below to reset your password (this link expires in 15 minutes):\n\n${resetLink}\n\nIf you didn't request this reset, please ignore this email.\n\nBest regards,\nDNA Apps Team`,
-                    reset_link: resetLink,
-                    user_email: email
+                    message: htmlMessage,        // Main HTML content
+                    html: htmlMessage,           // Alternative HTML field  
+                    html_message: htmlMessage,   // Another HTML field option
+                    text: plainTextMessage,      // Plain text version
+                    reset_link: resetLink        // Individual link field
                 },
                 publicKey
             );
