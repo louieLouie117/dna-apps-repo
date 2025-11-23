@@ -100,12 +100,12 @@ const IssueReporting = () => {
                         subject: 'New Issue Report Submitted',
                         message: `A new issue report has been submitted:
                         
-Email: ${email}
-Known Issue: ${known_issue}
-Description: ${known_issue === 'Other' ? description : 'N/A'}
-Apps Affected: ${apps_affected.length > 0 ? apps_affected.join(', ') : 'None selected'}
-Submitted: ${new Date().toLocaleString()}`,
-                    },
+                        Email: ${email}
+                        Known Issue: ${known_issue}
+                        Description: ${known_issue === 'Other' ? description : 'N/A'}
+                        Apps Affected: ${apps_affected.length > 0 ? apps_affected.join(', ') : 'None selected'}
+                        Submitted: ${new Date().toLocaleString()}`,
+                                            },
                     publicKey
                 );
                 console.log('Support email sent successfully');

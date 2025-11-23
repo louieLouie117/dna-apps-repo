@@ -24,6 +24,7 @@ import WrapperJWT from './views/WrapperJWT';
 import DashboardUser from './views/DashboardUser'
 import LoginTest from './components/LoginTest';
 import RequestPasswordReset from './components/RequestPasswordReset';
+import ConfirmPasswordReset from './components/ConfirmPasswordReset';
 
 
 function App() {
@@ -54,6 +55,7 @@ function App() {
         <Route path='/unsubscribe' element={<Unsubscribe />} />
 
         <Route path='/request-password-reset' element={<RequestPasswordReset />} />
+        <Route path="/reset-password" element={<ConfirmPasswordReset />} />
 
         <Route path='/user-dashboard' element={
           <Wrapper>
