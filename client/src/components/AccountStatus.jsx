@@ -10,11 +10,13 @@ const AccountStatus = () => {
     // Get user data from cookies
     const getUserFromCookie = () => {
         const getUsernameFromCookie = () => {
+            if (!document.cookie) return null;
             const match = document.cookie.match(new RegExp('(^| )username=([^;]+)'));
             return match ? match[2] : null;
         };
         
         const getUserIdFromCookie = () => {
+            if (!document.cookie) return null;
             const match = document.cookie.match(new RegExp('(^| )userId=([^;]+)'));
             return match ? match[2] : null;
         };

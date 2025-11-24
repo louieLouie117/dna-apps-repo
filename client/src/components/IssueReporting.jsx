@@ -18,6 +18,7 @@ const IssueReporting = () => {
 
     // Function to get username from cookies
     const getUserFromCookie = () => {
+        if (!document.cookie) return null;
         const match = document.cookie.match(new RegExp('(^| )username=([^;]+)'));
         return match ? decodeURIComponent(match[2]) : null;
     };

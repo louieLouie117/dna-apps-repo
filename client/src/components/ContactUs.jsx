@@ -22,6 +22,7 @@ const ContactUs = () => {
 
     // Get user email from cookies
     const getUserFromCookie = () => {
+        if (!document.cookie) return null;
         const match = document.cookie.match(new RegExp('(^| )username=([^;]+)'));
         return match ? match[2] : null;
     };

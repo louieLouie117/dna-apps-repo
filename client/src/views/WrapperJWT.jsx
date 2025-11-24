@@ -7,6 +7,7 @@ export default function WrapperJWT({ children }) {
   const [authenticated, setAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [authFailureReason, setAuthFailureReason] = useState(null);
   const navigate = useNavigate();
 
   // Get API base URL from environment or default to localhost
@@ -85,19 +86,18 @@ export default function WrapperJWT({ children }) {
           // Handle different authentication failure scenarios
           if (data.status === 'EXPIRED' || data.status === 'INVALID_TOKEN') {
             console.log('Session expired or invalid token detected');
-            clearAuthenticationData();
-            
-            // Show user-friendly message about session expiry
-            // alert('Your session has expired. Please log in again.');
-            // navigate('/login');
+            setAuthFailureReason('EXPIRED');
+            clearAuthenticationData(); // This already sets authenticated to false
           } else if (data.status === 'NO_TOKEN') {
             console.log('No session token found - user needs to log in');
+            setAuthFailureReason('NO_TOKEN');
             // Clear any stale data but don't show alert (could be first visit)
             clearAuthenticationData();
             // Don't auto-redirect, let the parent component decide
           } else {
             // Handle other authentication failures
             console.log('Authentication failed:', data.status);
+            setAuthFailureReason('OTHER');
             clearAuthenticationData();
           }
         }
@@ -167,6 +167,29 @@ export default function WrapperJWT({ children }) {
 
   // Only render children if authenticated, otherwise show message
   if (!authenticated && !loading) {
+    // Determine message based on failure reason
+    const getAuthMessage = () => {
+      switch (authFailureReason) {
+        case 'EXPIRED':
+          return {
+            title: 'Welcome back!',
+            message: 'Your session has expired. Please log in again to continue.'
+          };
+        case 'NO_TOKEN':
+          return {
+            title: 'Your account has been created.',
+            message: 'Please log in to access this content.'
+          };
+        default:
+          return {
+            title: 'Your account has been created.',
+            message: 'Please log in to continue.'
+          };
+      }
+    };
+
+    const authMessage = getAuthMessage();
+
     return (
       <div style={{
         display: 'flex',
@@ -177,9 +200,8 @@ export default function WrapperJWT({ children }) {
         gap: '20px'
       }}>
         <PageHeader />
-        {/* temp fix I need to add session when user registers */}
-        <h2>Your Account has been created.</h2>
-        <p>Please log in to continue.</p>
+        <h2>{authMessage.title}</h2>
+        <p>{authMessage.message}</p>
         <button 
           onClick={() => navigate('/login')}
           style={{
