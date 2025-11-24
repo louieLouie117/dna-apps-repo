@@ -191,6 +191,7 @@ DNA Apps Team`;
                             'Password reset link has been sent to your email address. Please check your inbox (and spam folder) for the reset link.'
                         );
                         setMessageType('success');
+                        alert('Password reset link has been sent to your email address. Please check your inbox (and spam folder) for the reset link.');
                     } catch (emailError) {
                         console.error('Email sending failed:', emailError);
                         setMessage(
