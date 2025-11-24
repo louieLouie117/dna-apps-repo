@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import PageHeader from './PageHeader';
 
@@ -17,6 +17,24 @@ const ContactUs = () => {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
+    const [emailFromCookie, setEmailFromCookie] = useState(false);
+    const [initializing, setInitializing] = useState(true);
+
+    // Get user email from cookies
+    const getUserFromCookie = () => {
+        const match = document.cookie.match(new RegExp('(^| )username=([^;]+)'));
+        return match ? match[2] : null;
+    };
+
+    // Initialize form with cookie data
+    useEffect(() => {
+        const cookieEmail = getUserFromCookie();
+        if (cookieEmail) {
+            setForm(prev => ({ ...prev, email: cookieEmail }));
+            setEmailFromCookie(true);
+        }
+        setInitializing(false);
+    }, []);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -48,6 +66,44 @@ const ContactUs = () => {
         setLoading(false);
     };
 
+    if (initializing) {
+        return (
+            <div>
+                <header>
+                    <PageHeader />
+                </header>
+                <div style={{
+                    maxWidth: 500,
+                    margin: '40px auto',
+                    padding: 32,
+                    borderRadius: 16,
+                    boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
+                    background: '#fff',
+                    textAlign: 'center'
+                }}>
+                    <div style={{ padding: '40px 0' }}>
+                        <div style={{
+                            width: '32px',
+                            height: '32px',
+                            border: '3px solid #e5e7eb',
+                            borderTop: '3px solid #3b82f6',
+                            borderRadius: '50%',
+                            animation: 'spin 1s linear infinite',
+                            margin: '0 auto 16px'
+                        }}></div>
+                        <p style={{ color: '#6b7280' }}>Loading contact form...</p>
+                    </div>
+                    <style>{`
+                        @keyframes spin {
+                            0% { transform: rotate(0deg); }
+                            100% { transform: rotate(360deg); }
+                        }
+                    `}</style>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div>  
             <header>
@@ -64,6 +120,23 @@ const ContactUs = () => {
 
             
             <h2 style={{ textAlign: 'center', marginBottom: 24 }}>Contact Us</h2>
+            {emailFromCookie && (
+                <div style={{
+                    backgroundColor: '#ecfdf5',
+                    border: '1px solid #a7f3d0',
+                    borderRadius: '8px',
+                    padding: '12px',
+                    marginBottom: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                }}>
+                    <span style={{ color: '#10b981', fontSize: '16px' }}>✓</span>
+                    <span style={{ color: '#047857', fontSize: '14px', fontWeight: '500' }}>
+                        Email auto-filled from your account session
+                    </span>
+                </div>
+            )}
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <input
                     type="text"
@@ -74,15 +147,36 @@ const ContactUs = () => {
                     style={inputStyle}
                     required
                 />
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Your Email"
-                    value={form.email}
-                    onChange={handleChange}
-                    style={inputStyle}
-                    required
-                />
+                <div style={{ position: 'relative' }}>
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder={emailFromCookie ? "Email (from your account)" : "Your Email"}
+                        value={form.email}
+                        onChange={handleChange}
+                        style={{
+                            ...inputStyle,
+                            backgroundColor: emailFromCookie ? '#f9fafb' : '#ffffff',
+                            color: emailFromCookie ? '#374151' : '#000000',
+                            cursor: emailFromCookie ? 'default' : 'text'
+                        }}
+                        readOnly={emailFromCookie}
+                        required
+                    />
+                    {emailFromCookie && (
+                        <div style={{
+                            position: 'absolute',
+                            right: '12px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            color: '#10b981',
+                            fontSize: '12px',
+                            fontWeight: '600'
+                        }}>
+                            ✓ Auto-filled
+                        </div>
+                    )}
+                </div>
                 <input
                     type="text"
                     name="subject"

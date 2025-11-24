@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import emailjs from '@emailjs/browser';
+import PageHeader from './PageHeader';
 
 const RequestPasswordReset = () => {
     const [formData, setFormData] = useState({
@@ -231,6 +232,8 @@ DNA Apps Team`;
     };
 
     return (
+        <>
+        <PageHeader title="Request Password Reset" />
         <div style={styles.container}>
             <div style={styles.formCard}>
                 <div style={styles.header}>
@@ -323,6 +326,7 @@ DNA Apps Team`;
                 }
             `}</style>
         </div>
+        </>
     );
 };
 

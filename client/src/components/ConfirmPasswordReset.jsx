@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import PageHeader from './PageHeader';
 
 const ConfirmPasswordReset = () => {
     const [searchParams] = useSearchParams();
@@ -160,6 +161,8 @@ const ConfirmPasswordReset = () => {
     // Show error if token is invalid
     if (tokenValid === false) {
         return (
+            <>
+            <PageHeader />
             <div style={styles.container}>
                 <div style={styles.formCard}>
                     <div style={styles.header}>
@@ -175,17 +178,21 @@ const ConfirmPasswordReset = () => {
                             </a>
                         </p>
                         <p style={styles.helpText}>
-                            <a href="/login-test" style={styles.link}>
+                            <a href="/login" style={styles.link}>
                                 Back to login
                             </a>
                         </p>
                     </div>
                 </div>
             </div>
+            
+            </>
         );
     }
 
     return (
+        <>
+        <PageHeader />
         <div style={styles.container}>
             <div style={styles.formCard}>
                 <div style={styles.header}>
@@ -287,6 +294,7 @@ const ConfirmPasswordReset = () => {
                 }
             `}</style>
         </div>
+        </>
     );
 };
 

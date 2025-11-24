@@ -6,9 +6,10 @@ import PageHeader from './PageHeader';
 const RegAllApps = () => {
   const [userList, setUserList] = useState([]);
 
-const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const currentUrl = window.location.href;
@@ -172,7 +173,6 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
             .from('Users')
             .insert([{ 
               email: formData.username, 
-              password: formData.password, 
               status: 'Active', 
               auth_uid: userId,
               payment_method: paymentMethod,

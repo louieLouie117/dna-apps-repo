@@ -10,6 +10,10 @@ const SignOutButton = ({ style, className }) => {
 
     const handleSignOut = async () => {
         setSigningOut(true);
+        // clear cookies and session
+        document.cookie = 'username=; Max-Age=0; path=/;';
+        document.cookie = 'userId=; Max-Age=0; path=/;';
+
         
         try {
             const response = await fetch(`${API_BASE_URL}/api/session/logout`, {
@@ -29,16 +33,16 @@ const SignOutButton = ({ style, className }) => {
                 // Clear userId cookie
                 document.cookie = 'userId=; Max-Age=0; path=/;';
                 // Redirect to sign-in page
-                navigate('/login-test');
+                navigate('/login');
             } else {
                 console.error('Logout failed with status:', response.status);
                 // Even if logout fails on server, redirect to login-test
-                navigate('/login-test');
+                navigate('/login');
             }
         } catch (error) {
             console.error('Error during logout:', error);
             // Even if there's a network error, redirect to login-test
-            navigate('/login-test');
+            navigate('/login');
         } finally {
             setSigningOut(false);
         }

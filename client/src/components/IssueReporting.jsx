@@ -13,18 +13,23 @@ const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const IssueReporting = () => {
-    // Get user email from supabase auth
+    // Get user email from session cookies
     const [userEmail, setUserEmail] = useState('');
 
+    // Function to get username from cookies
+    const getUserFromCookie = () => {
+        const match = document.cookie.match(new RegExp('(^| )username=([^;]+)'));
+        return match ? decodeURIComponent(match[2]) : null;
+    };
+
     useEffect(() => {
-        const fetchUserEmail = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            const email = user?.email || '';
-            setUserEmail(email);
-            // Update form state with the fetched email
-            setForm(prevForm => ({ ...prevForm, email: email }));
-        };
-        fetchUserEmail();
+        // Get email from cookies (username is actually email in your system)
+        const emailFromCookie = getUserFromCookie();
+        if (emailFromCookie) {
+            setUserEmail(emailFromCookie);
+            // Update form state with the email from cookie
+            setForm(prevForm => ({ ...prevForm, email: emailFromCookie }));
+        }
     }, []);
 
     const [form, setForm] = useState({
@@ -233,7 +238,7 @@ const IssueReporting = () => {
                     )}
                 </div>
 
-                      <div>
+                <div>
                     <label style={{ display: 'block', marginBottom: 4, fontWeight: 600, color: '#374151' }}>
                         Email Address *
                     </label>
@@ -243,9 +248,24 @@ const IssueReporting = () => {
                         placeholder="your.email@example.com"
                         value={form.email}
                         onChange={handleChange}
-                        style={inputStyle}
+                        style={{
+                            ...inputStyle,
+                            backgroundColor: userEmail ? '#f3f4f6' : '#ffffff',
+                            color: userEmail ? '#6b7280' : '#1f2937'
+                        }}
+                        readOnly={!!userEmail}
                         required
                     />
+                    {userEmail && (
+                        <div style={{ 
+                            fontSize: 12, 
+                            color: '#6b7280', 
+                            marginTop: 4,
+                            fontStyle: 'italic'
+                        }}>
+                            ✓ Email automatically filled from your session
+                        </div>
+                    )}
                 </div>
 
 
