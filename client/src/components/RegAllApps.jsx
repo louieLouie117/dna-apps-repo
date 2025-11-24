@@ -203,7 +203,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
           // 4. Redirect to user dashboard
           setTimeout(() => {
-            window.location.href = '/user-dashboard';
+            window.location.href = '/dashboard';
           }, 2000);
 
         } catch (supabaseError) {
