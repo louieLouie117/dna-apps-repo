@@ -178,7 +178,7 @@ export default function LoginTest() {
           </p>
           <p style={styles.helpText}>
             Don't have an account? 
-            <a href="/register" style={styles.link}> Create one now</a>
+            <a href="/all-app-access-subscription" style={styles.link}> Create one now</a>
           </p>
         </div>
 

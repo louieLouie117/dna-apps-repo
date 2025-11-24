@@ -3,59 +3,24 @@ import SignOutButton from '../components/SignOutButton';
 import supabase from '../config/SupaBaseClient';
 import IssueReporting from '../components/IssueReporting';
 import PageHeader from '../components/PageHeader';
+import AccountStatus from '../components/AccountStatus';
 
 const DashboardUser = () => {
-    // get user ID from cookie and username
-    const [userLoggedIn, setUserLoggedIn] = useState(null);
-    const [userInfo, setUserInfo] = useState(null);
-    const [AccountStatus, setAccountStatus] = useState(null);
     const [reportContainer, setReportContainer] = useState(false);
 
-    useEffect(() => {
-        // call fetchUserInfo when userLoggedIn changes
-        fetchUserInfo();
-    }, [userLoggedIn]);
 
-        
-
-    const getUserIdFromCookie = () => {
-        const match = document.cookie.match(new RegExp('(^| )userId=([^;]+)'));
-        return match ? match[2] : null;
-    };
-    // get username from cookie
-    const userId = getUserIdFromCookie();
+    // Get username from cookie for handleReportIssue function
     const getUsernameFromCookie = () => {
         const match = document.cookie.match(new RegExp('(^| )username=([^;]+)'));
         return match ? match[2] : null;
     };
     const username = getUsernameFromCookie();
-    console.log('User ID from cookie:', userId);
-    console.log('Username from cookie:', username);
-
-    // get user info from supabase using username
-    const fetchUserInfo = async () => {
-        if (!username) return;      
-        // Fetch user info logic here
-        const { data, error } = await supabase
-            .from('Users')
-            .select('*')
-            .eq('email', username);
-
-        if (error) {
-            console.error('Error fetching user info:', error);
-        } else {
-            console.log('User info:', data);
-            setUserInfo(data);
-            setAccountStatus(data?.[0]?.status || null);
-            console.log('-------User info state updated:', data);
-        }
-    };
 
      const handleReportIssue = async () => {
             setReportContainer(true);
             
             // Update user status to 'Subscription Has been Paused'
-                
+
             try {
                 const { error } = await supabase
                     .from('Users')
@@ -82,8 +47,7 @@ const DashboardUser = () => {
                     console.error('Error inserting contact record:', contactError);
                 }
     
-                // Update local state to reflect the status change
-                setAccountStatus('Subscription Has been Paused');
+                // Status will be automatically updated by AccountStatus component
                 
                 alert('Your subscription has been paused and you will not be charged during this outage. Please fill out the issue report form.');
                 
@@ -201,7 +165,7 @@ const DashboardUser = () => {
                                  <main>
                 {/* <p>Username: {username}</p> */}
 
-                <p>Account Status: {AccountStatus}</p>
+                <AccountStatus/>
             </main>
 
             </div>
