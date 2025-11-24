@@ -10,9 +10,9 @@ import AppLogo7 from '../assets/AppLogos/app7.png';
 const AppLogosFooter = () => {
     return (
         <>
-            <h3>Apps available in the Microsoft Store with your subscription.</h3>
 
           <footer className='app-logos'>
+
             <a href="https://apps.microsoft.com/detail/9nblggh3tktw?hl=en-US&gl=US" target="_blank" rel="noopener noreferrer"><img src={AppLogo3} alt="App Logo 3" /></a>
             <a href="https://apps.microsoft.com/detail/9wzdncrdsnzk?hl=en-US&gl=US" target="_blank" rel="noopener noreferrer"><img src={AppLogo1} alt="App Logo 1" /></a>
             <a href="https://apps.microsoft.com/detail/9nblggh318dq?hl=en-US&gl=US" target="_blank" rel="noopener noreferrer"><img src={AppLogo2} alt="App Logo 2" /></a>

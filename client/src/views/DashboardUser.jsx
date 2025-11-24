@@ -4,6 +4,7 @@ import supabase from '../config/SupaBaseClient';
 import IssueReporting from '../components/IssueReporting';
 import PageHeader from '../components/PageHeader';
 import AccountStatus from '../components/AccountStatus';
+import AppLogosFooter from '../components/AppLogosFooter';
 
 const DashboardUser = () => {
     const [reportContainer, setReportContainer] = useState(false);
@@ -170,6 +171,11 @@ const DashboardUser = () => {
 
                 <AccountStatus/>
             </main>
+            <footer style={{display: 'grid', justifyItems: 'center'}}>
+            <h3>Apps available in the Microsoft Store with your subscription.</h3>
+
+                <AppLogosFooter />
+            </footer>
 
             </div>
         </div>
