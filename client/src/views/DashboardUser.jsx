@@ -51,6 +51,48 @@ const DashboardUser = () => {
         }
     };
 
+     const handleReportIssue = async () => {
+            setReportContainer(true);
+            
+            // Update user status to 'Subscription Has been Paused'
+                
+            try {
+                const { error } = await supabase
+                    .from('Users')
+                    .update({ status: 'Request to Pause Subscription' })
+                    .eq('email', username);
+                    
+                if (error) {
+                    console.error('Error updating account status:', error);
+                    alert('Error updating account status. Please try again.');
+                    return;
+                }
+    
+                // Send message to customerContact table in supabase
+                const { error: contactError } = await supabase
+                    .from('CustomerContact')
+                    .insert([{
+                        email: username,
+                        subject: 'Request to Paused Subscription - Issue Reporting Initiated',
+                        message: 'User has initiated issue reporting and request to pause subscription has been made.',
+                        payment_method: 'Supabase Update'
+                    }]);
+    
+                if (contactError) {
+                    console.error('Error inserting contact record:', contactError);
+                }
+    
+                // Update local state to reflect the status change
+                setAccountStatus('Subscription Has been Paused');
+                
+                alert('Your subscription has been paused and you will not be charged during this outage. Please fill out the issue report form.');
+                
+            } catch (error) {
+                console.error('Error in handleReportIssue:', error);
+                alert('An error occurred. Please try again.');
+            }
+        };
+
 
     return (
         <>
