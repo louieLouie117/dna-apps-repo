@@ -66,12 +66,11 @@ function App() {
         <Route path='/dashboard' element={
           <WrapperJWT>
             <DashboardUser />
-            <UserDashboard />
           </WrapperJWT>
         } />
 
         {/* login test */}
-        <Route path='/login-test' element={
+        <Route path='/login' element={
             <LoginTest />
         } />
 
