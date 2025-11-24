@@ -12,6 +12,7 @@ const DashboardUser = () => {
 
     // Get username from cookie for handleReportIssue function
     const getUsernameFromCookie = () => {
+        if (!document.cookie) return null;
         const match = document.cookie.match(new RegExp('(^| )username=([^;]+)'));
         return match ? match[2] : null;
     };

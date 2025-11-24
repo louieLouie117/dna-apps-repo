@@ -90,6 +90,8 @@ export default function WrapperJWT({ children }) {
             // Show user-friendly message about session expiry
             // alert('Your session has expired. Please log in again.');
             // navigate('/login');
+            // set athenticated to false
+            setAuthenticated(false);
           } else if (data.status === 'NO_TOKEN') {
             console.log('No session token found - user needs to log in');
             // Clear any stale data but don't show alert (could be first visit)
