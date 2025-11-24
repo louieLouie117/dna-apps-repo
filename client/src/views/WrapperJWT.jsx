@@ -47,7 +47,7 @@ export default function WrapperJWT({ children }) {
           // Allow component to render and let parent handle redirect logic
           if (data.status === 'EXPIRED' || data.status === 'INVALID_TOKEN') {
             console.log('Session expired or invalid, redirecting to sign-in');
-            navigate('/login-test');
+            navigate('/login');
           } else if (data.status === 'NO_TOKEN') {
             console.log('No session token found - user needs to log in');
             // Don't auto-redirect, let the parent component decide
@@ -121,7 +121,7 @@ export default function WrapperJWT({ children }) {
         <h2>Authentication Required</h2>
         <p>Please log in to access this content.</p>
         <button 
-          onClick={() => navigate('/login-test')}
+          onClick={() => navigate('/login')}
           style={{
             padding: '10px 20px',
             backgroundColor: '#3498db',

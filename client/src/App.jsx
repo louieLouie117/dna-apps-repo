@@ -79,6 +79,11 @@ function App() {
          }
           />
 
+          <Route path='/sign-in-old' element={
+            <SignIn />
+         }
+          />
+
          <Route path='/get-users' element={
           <AdminWrapper>
             <GetUsers />
