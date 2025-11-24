@@ -173,7 +173,6 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
             .from('Users')
             .insert([{ 
               email: formData.username, 
-              password: formData.password, 
               status: 'Active', 
               auth_uid: userId,
               payment_method: paymentMethod,
