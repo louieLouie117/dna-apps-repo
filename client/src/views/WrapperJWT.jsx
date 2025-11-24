@@ -87,8 +87,8 @@ export default function WrapperJWT({ children }) {
             clearAuthenticationData();
             
             // Show user-friendly message about session expiry
-            alert('Your session has expired. Please log in again.');
-            navigate('/login');
+            // alert('Your session has expired. Please log in again.');
+            // navigate('/login');
           } else if (data.status === 'NO_TOKEN') {
             console.log('No session token found - user needs to log in');
             // Clear any stale data but don't show alert (could be first visit)
@@ -188,7 +188,7 @@ export default function WrapperJWT({ children }) {
             cursor: 'pointer'
           }}
         >
-          Go to Sign In
+          Go to Login page
         </button>
       </div>
     );
