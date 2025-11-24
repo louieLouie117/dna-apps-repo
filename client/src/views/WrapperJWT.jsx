@@ -175,8 +175,8 @@ export default function WrapperJWT({ children }) {
         flexDirection: 'column',
         gap: '20px'
       }}>
-        <h2>Authentication Required</h2>
-        <p>Please log in to access this content.</p>
+        <h2>Your Account has been created.</h2>
+        <p>Please log in to continue.</p>
         <button 
           onClick={() => navigate('/login')}
           style={{
