@@ -47,9 +47,12 @@ const DashboardUser = () => {
                     console.error('Error inserting contact record:', contactError);
                 }
     
-                // Status will be automatically updated by AccountStatus component
+                // Trigger immediate refresh of AccountStatus component
+                window.localStorage.setItem('refreshAccountStatus', Date.now().toString());
+                window.dispatchEvent(new CustomEvent('refreshAccountStatus', { detail: 'refreshAccountStatus' }));
                 
                 alert('Your subscription has been paused and you will not be charged during this outage. Please fill out the issue report form.');
+        
                 
             } catch (error) {
                 console.error('Error in handleReportIssue:', error);

@@ -69,15 +69,26 @@ const AccountStatus = () => {
         const interval = setInterval(fetchUserInfo, 30000); // Refresh every 30 seconds
         
         // Listen for storage events to refresh when other tabs update the status
-        const handleStorageChange = () => {
-            fetchUserInfo();
+        const handleStorageChange = (e) => {
+            if (e.key === 'refreshAccountStatus') {
+                fetchUserInfo();
+            }
+        };
+        
+        // Listen for custom refresh trigger
+        const handleCustomRefresh = (e) => {
+            if (e.detail === 'refreshAccountStatus') {
+                fetchUserInfo();
+            }
         };
         
         window.addEventListener('storage', handleStorageChange);
+        window.addEventListener('refreshAccountStatus', handleCustomRefresh);
         
         return () => {
             clearInterval(interval);
             window.removeEventListener('storage', handleStorageChange);
+            window.removeEventListener('refreshAccountStatus', handleCustomRefresh);
         };
     }, []);
     // Status configuration with colors, icons, and messages
