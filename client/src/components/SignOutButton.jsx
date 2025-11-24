@@ -10,6 +10,10 @@ const SignOutButton = ({ style, className }) => {
 
     const handleSignOut = async () => {
         setSigningOut(true);
+        // clear cookies and session
+        document.cookie = 'username=; Max-Age=0; path=/;';
+        document.cookie = 'userId=; Max-Age=0; path=/;';
+
         
         try {
             const response = await fetch(`${API_BASE_URL}/api/session/logout`, {
