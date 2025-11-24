@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import PageHeader from '../components/PageHeader';
 
 export default function WrapperJWT({ children }) {
   const [loading, setLoading] = useState(true);
@@ -175,6 +176,8 @@ export default function WrapperJWT({ children }) {
         flexDirection: 'column',
         gap: '20px'
       }}>
+        <PageHeader />
+        {/* temp fix I need to add session when user registers */}
         <h2>Your Account has been created.</h2>
         <p>Please log in to continue.</p>
         <button 
