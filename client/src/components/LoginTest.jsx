@@ -197,6 +197,14 @@ export default function LoginTest() {
         )} */}
       </div>
 
+      {/* Floating Background Elements */}
+      <div style={styles.backgroundElements}>
+        <div style={{...styles.floatingShape, ...styles.shape1}}></div>
+        <div style={{...styles.floatingShape, ...styles.shape2}}></div>
+        <div style={{...styles.floatingShape, ...styles.shape3}}></div>
+        <div style={{...styles.floatingShape, ...styles.shape4}}></div>
+      </div>
+
       {/* CSS for animations */}
       <style>{`
         @keyframes spin {
@@ -205,8 +213,23 @@ export default function LoginTest() {
         }
         
         @keyframes slideIn {
-          from { opacity: 0; transform: translateY(-10px); }
+          from { opacity: 0; transform: translateY(-20px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        @keyframes floatReverse {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(20px) rotate(-180deg); }
+        }
+        
+        @keyframes pulse {
+          0%, 100% { opacity: 0.4; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(1.1); }
         }
       `}</style>
     </div>
@@ -222,18 +245,30 @@ const styles = {
     alignItems: 'center',
     minHeight: '100vh',
     padding: '20px',
-    backgroundColor: '#f5f7fa',
-    fontFamily: 'system-ui, -apple-system, sans-serif'
+    fontFamily: 'system-ui, -apple-system, sans-serif',
+    background: `
+      linear-gradient(135deg, #667eea 0%, #764ba2 100%),
+      radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.15) 0%, transparent 50%)
+    `,
+    backgroundSize: '100% 100%, 800px 800px, 600px 600px, 400px 400px',
+    backgroundPosition: 'center, 20% 80%, 80% 20%, 40% 40%',
+    position: 'relative',
+    overflow: 'hidden'
   },
   formCard: {
-    backgroundColor: 'white',
-    borderRadius: '16px',
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
-    padding: '40px',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    backdropFilter: 'blur(20px)',
+    borderRadius: '24px',
+    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.2)',
+    padding: '48px',
     width: '100%',
     maxWidth: '420px',
-    border: '1px solid #e1e5e9',
-    animation: 'slideIn 0.3s ease-out'
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    animation: 'slideIn 0.5s ease-out',
+    position: 'relative',
+    zIndex: 1
   },
   header: {
     textAlign: 'center',
@@ -387,5 +422,56 @@ const styles = {
     fontSize: '0.75rem',
     color: '#6b7280',
     fontFamily: 'Monaco, Consolas, monospace'
+  },
+  
+  // Background Elements
+  backgroundElements: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    overflow: 'hidden',
+    zIndex: 0,
+    pointerEvents: 'none'
+  },
+  floatingShape: {
+    position: 'absolute',
+    borderRadius: '50%',
+    background: 'linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
+    backdropFilter: 'blur(10px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)'
+  },
+  shape1: {
+    width: '200px',
+    height: '200px',
+    top: '10%',
+    left: '10%',
+    background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))',
+    animation: 'float 6s ease-in-out infinite'
+  },
+  shape2: {
+    width: '150px',
+    height: '150px',
+    top: '20%',
+    right: '15%',
+    background: 'linear-gradient(45deg, rgba(255, 255, 255, 0.15), rgba(120, 119, 198, 0.1))',
+    animation: 'floatReverse 8s ease-in-out infinite'
+  },
+  shape3: {
+    width: '100px',
+    height: '100px',
+    bottom: '20%',
+    left: '20%',
+    background: 'linear-gradient(225deg, rgba(102, 126, 234, 0.15), rgba(255, 255, 255, 0.1))',
+    animation: 'pulse 4s ease-in-out infinite'
+  },
+  shape4: {
+    width: '120px',
+    height: '120px',
+    bottom: '15%',
+    right: '10%',
+    background: 'linear-gradient(315deg, rgba(118, 75, 162, 0.1), rgba(255, 255, 255, 0.05))',
+    animation: 'float 7s ease-in-out infinite reverse'
   }
 };
