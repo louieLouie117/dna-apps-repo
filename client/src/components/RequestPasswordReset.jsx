@@ -26,6 +26,17 @@ const RequestPasswordReset = () => {
     const sendResetEmail = async (email, resetLink) => {
         try {
             console.log('Sending password reset email to:', email);
+            console.log('EmailJS Config:', { serviceId: !!serviceId, templateId: !!templateId, publicKey: !!publicKey });
+            
+            // Validate EmailJS configuration
+            if (!serviceId || !templateId || !publicKey) {
+                throw new Error('EmailJS configuration missing. Check environment variables.');
+            }
+            
+            // Validate inputs
+            if (!email || !resetLink) {
+                throw new Error('Email and reset link are required.');
+            }
             
             // Create proper HTML email content
             const htmlMessage = `
@@ -74,32 +85,40 @@ const RequestPasswordReset = () => {
             // Plain text fallback
             const plainTextMessage = `Hello!
 
-PainText You requested a password reset for your DNA Apps account.
+You requested a password reset for your DNA Apps account.
 
 Click this link to reset your password (expires in 15 minutes):
-${resetLink}
+${resetLink || 'Link not available'}
 
 If you didn't request this reset, please ignore this email.
 
 Best regards,
 DNA Apps Team`;
+
+            // Prepare email data with safe fallbacks
+            const emailData = {
+                to_email: email || '',
+                subject: 'Password Reset Request - DNA Apps',
+                message: htmlMessage || '',        // Main HTML content
+                html: htmlMessage || '',           // Alternative HTML field  
+                html_message: htmlMessage || '',   // Another HTML field option
+                text: plainTextMessage || '',      // Plain text version
+                reset_link: resetLink || ''        // Individual link field
+            };
+
+            console.log('Sending email with data:', { 
+                to_email: emailData.to_email,
+                subject: emailData.subject,
+                hasHtml: !!emailData.message,
+                hasResetLink: !!emailData.reset_link
+            });
             
             await emailjs.send(
                 serviceId,
                 templateId,
-                {
-                    to_email: email,
-                    subject: 'Password Reset Request - DNA Apps',
-                    message: htmlMessage,        // Main HTML content
-                    html: htmlMessage,           // Alternative HTML field  
-                    html_message: htmlMessage,   // Another HTML field option
-                    text: plainTextMessage,      // Plain text version
-                    reset_link: resetLink        // Individual link field
-                },
+                emailData,
                 publicKey
-            );
-            
-            console.log('Password reset email sent successfully');
+            );            console.log('Password reset email sent successfully');
             return true;
         } catch (error) {
             console.error('Failed to send password reset email:', error);
@@ -172,6 +191,7 @@ DNA Apps Team`;
                             'Password reset link has been sent to your email address. Please check your inbox (and spam folder) for the reset link.'
                         );
                         setMessageType('success');
+                        alert('Password reset link has been sent to your email address. Please check your inbox (and spam folder) for the reset link.');
                     } catch (emailError) {
                         console.error('Email sending failed:', emailError);
                         setMessage(
