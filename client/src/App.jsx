@@ -50,7 +50,7 @@ function App() {
         <Route path='/stripe-all-app-access-account' element={<RegAllApps />} />
         <Route path='/paypal-all-app-access-account' element={<RegAllApps />} />
 
-        <Route path='/sign-in' element={<SignIn />} />
+     
         <Route path='/contact-us-1.html' element={<ContactUs />} />
         <Route path='/unsubscribe' element={<Unsubscribe />} />
 
@@ -73,6 +73,11 @@ function App() {
         <Route path='/login' element={
             <LoginTest />
         } />
+
+           <Route path='/sign-in' element={
+            <LoginTest />
+         }
+          />
 
          <Route path='/get-users' element={
           <AdminWrapper>

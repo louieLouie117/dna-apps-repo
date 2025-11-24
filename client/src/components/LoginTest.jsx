@@ -96,7 +96,7 @@ export default function LoginTest() {
       <div style={styles.formCard}>
         {/* Header */}
         <div style={styles.header}>
-          <h1 style={styles.title}>Welcome Back</h1>
+          <h1 style={styles.title}>Welcome</h1>
           <p style={styles.subtitle}>
             Sign in to your DNA Apps account
           </p>
