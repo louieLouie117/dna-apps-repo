@@ -66,6 +66,7 @@ function App() {
         <Route path='/dashboard' element={
           <WrapperJWT>
             <DashboardUser />
+            <UserDashboard />
           </WrapperJWT>
         } />
 
