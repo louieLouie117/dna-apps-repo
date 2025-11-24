@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import PageHeader from '../components/PageHeader';
 
 export default function WrapperJWT({ children }) {
   const [loading, setLoading] = useState(true);
@@ -87,8 +88,8 @@ export default function WrapperJWT({ children }) {
             clearAuthenticationData();
             
             // Show user-friendly message about session expiry
-            alert('Your session has expired. Please log in again.');
-            navigate('/login');
+            // alert('Your session has expired. Please log in again.');
+            // navigate('/login');
           } else if (data.status === 'NO_TOKEN') {
             console.log('No session token found - user needs to log in');
             // Clear any stale data but don't show alert (could be first visit)
@@ -175,6 +176,8 @@ export default function WrapperJWT({ children }) {
         flexDirection: 'column',
         gap: '20px'
       }}>
+        <PageHeader />
+        {/* temp fix I need to add session when user registers */}
         <h2>Your Account has been created.</h2>
         <p>Please log in to continue.</p>
         <button 
@@ -188,7 +191,7 @@ export default function WrapperJWT({ children }) {
             cursor: 'pointer'
           }}
         >
-          Go to Sign In
+          Go to Login page
         </button>
       </div>
     );
