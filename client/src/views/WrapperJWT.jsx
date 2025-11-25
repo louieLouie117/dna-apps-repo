@@ -13,63 +13,11 @@ export default function WrapperJWT({ children }) {
   // Get API base URL from environment or default to localhost
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
-  // Function to clear all authentication cookies and session data
-  const clearAuthenticationData = () => {
-    console.log('Clearing authentication data...');
-    
-    try {
-      // Clear all authentication-related cookies
-      const cookiesToClear = ['token', 'userId', 'username', 'refreshToken', 'sessionId'];
-      
-      cookiesToClear.forEach(cookieName => {
-        try {
-          // Clear cookie for current domain
-          document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-          // Clear cookie for root domain (in case of subdomain)
-          if (window.location && window.location.hostname) {
-            document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
-            // Clear cookie for parent domain
-            const domainParts = window.location.hostname.split('.');
-            if (domainParts.length > 1) {
-              const parentDomain = '.' + domainParts.slice(-2).join('.');
-              document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${parentDomain};`;
-            }
-          }
-        } catch (error) {
-          console.warn(`Error clearing cookie ${cookieName}:`, error);
-        }
-      });
-      
-      // Clear localStorage items
-      const localStorageKeys = ['token', 'user', 'userId', 'username', 'refreshAccountStatus'];
-      localStorageKeys.forEach(key => {
-        try {
-          localStorage.removeItem(key);
-        } catch (error) {
-          console.warn(`Error clearing localStorage ${key}:`, error);
-        }
-      });
-      
-      // Clear sessionStorage items
-      const sessionStorageKeys = ['token', 'user', 'userId', 'username'];
-      sessionStorageKeys.forEach(key => {
-        try {
-          sessionStorage.removeItem(key);
-        } catch (error) {
-          console.warn(`Error clearing sessionStorage ${key}:`, error);
-        }
-      });
-      
-    } catch (error) {
-      console.error('Error in clearAuthenticationData:', error);
-    }
-    
-    // Reset component state (outside try-catch to ensure it always runs)
+  // Simple function to reset authentication state
+  const resetAuthState = () => {
     setAuthenticated(false);
     setUser(null);
     setUserId(null);
-    
-    console.log('Authentication data cleared successfully');
   };
 
   useEffect(() => {
@@ -110,18 +58,17 @@ export default function WrapperJWT({ children }) {
           if (data.status === 'EXPIRED' || data.status === 'INVALID_TOKEN') {
             console.log('Session expired or invalid token detected');
             setAuthFailureReason('EXPIRED');
-            clearAuthenticationData(); // This already sets authenticated to false
+            resetAuthState();
           } else if (data.status === 'NO_TOKEN') {
             console.log('No session token found - user needs to log in');
             setAuthFailureReason('NO_TOKEN');
-            // Clear any stale data but don't show alert (could be first visit)
-            clearAuthenticationData();
+            resetAuthState();
             // Don't auto-redirect, let the parent component decide
           } else {
             // Handle other authentication failures
             console.log('Authentication failed:', data.status);
             setAuthFailureReason('OTHER');
-            clearAuthenticationData();
+            resetAuthState();
           }
         }
       } else {
@@ -129,17 +76,17 @@ export default function WrapperJWT({ children }) {
         
         // Handle different HTTP status codes
         if (response.status === 401 || response.status === 403) {
-          console.log('Unauthorized access - clearing authentication data');
-          clearAuthenticationData();
+          console.log('Unauthorized access - resetting auth state');
+          resetAuthState();
           alert('Your session is no longer valid. Please log in again.');
           navigate('/login');
         } else if (response.status >= 500) {
-          console.log('Server error, clearing stale data and redirecting');
-          clearAuthenticationData();
+          console.log('Server error, resetting auth state and redirecting');
+          resetAuthState();
           navigate('/login');
         } else {
           // Other client errors (400, 404, etc.)
-          clearAuthenticationData();
+          resetAuthState();
         }
       }
     } catch (error) {
