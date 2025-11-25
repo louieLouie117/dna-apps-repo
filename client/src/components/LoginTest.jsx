@@ -174,8 +174,8 @@ export default function LoginTest() {
         {/* Help Links */}
         <div style={styles.helpSection}>
           <p style={styles.helpText}>
-            Forgot your password? 
-            <a href="/request-password-reset" style={styles.link}> Reset it here</a>
+            Password Help? 
+            <a href="/request-password-reset" style={styles.link}> Reset Password</a>
           </p>
           <p style={styles.helpText}>
             Don't have an account? 
