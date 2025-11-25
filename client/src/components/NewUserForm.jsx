@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import supabase from '../config/SupaBaseClient';
 import PageHeader from './PageHeader';
 // import AppLogosFooter from './AppLogosFooter';
 import emailjs from '@emailjs/browser';
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
