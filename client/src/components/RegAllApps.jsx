@@ -106,17 +106,60 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
             templateId,
             {
               to_email: formData.username,
-              subject: 'Your account is now active',
-              message: `Welcome!
-
-                Thank you for joining us. Your account has been successfully activated.
-
-                🎉 You can now enjoy All App Access services!
-
-                Need help? If you have any questions, feel free to reach out to our support team.
-
-                Best regards,
-                The Support Team`,
+              subject: '🎉 Welcome to DNA Apps - Your Account is Active!',
+              message: `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <style>
+                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+                    .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+                    .welcome-text { font-size: 24px; font-weight: bold; margin-bottom: 20px; }
+                    .button { display: inline-block; background: #4CAF50; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; }
+                    .highlight { background: #e8f5e8; padding: 15px; border-left: 4px solid #4CAF50; margin: 20px 0; }
+                    .footer { text-align: center; margin-top: 30px; color: #666; }
+                  </style>
+                </head>
+                <body>
+                  <div class="container">
+                  
+                    <div class="content">
+                      <div class="welcome-text">
+                       <h3>🎉 Welcome to DNA Apps!</h3>
+                      <p>Your All App Access account is now active</p>
+                      </div>
+                      <p>Thank you for joining the DNA Apps community! We're excited to have you on board.</p>
+                      
+                      <div class="highlight">
+                        <strong>✅ Your account has been successfully activated!</strong><br>
+                        You now have full access to all our premium applications and services.
+                      </div>
+                      
+                      <p>Ready to get started? Access your personalized dashboard to explore all available apps:</p>
+                      
+                      <div style="text-align: center;">
+                        <a href="${window.location.origin}/dashboard" class="button">🚀 Go to Dashboard</a>
+                      </div>
+                      
+                      <h3>What's Next?</h3>
+                      <ul>
+                        <li>🎯 Browse and launch all available applications</li>
+                        <li>⚙️ Customize your preferences in settings</li>
+                        <li>📞 Contact support if you need any assistance</li>
+                      </ul>
+                      
+                      <div class="footer">
+                        <p><strong>Need Help?</strong><br>
+                        Our support team is here to help! Feel free to reach out anytime.</p>
+                        <p>Best regards,<br><strong>The DNA Apps Team</strong></p>
+                      </div>
+                    </div>
+                  </div>
+                </body>
+                </html>
+              `,
               status: 'Active'
             },
             
@@ -190,8 +233,52 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
               templateId,
               {
                 to_email: 'customersupport@projectdnaapps.com',
-                subject: 'A new subscriber just subscribed',
-                message: `A new user has subscribed with the email: ${formData.username}\nPayment Method: ${paymentMethod}`,
+                subject: '🎉 New DNA Apps Subscriber Registration',
+                message: `
+                  <!DOCTYPE html>
+                  <html>
+                  <head>
+                    <style>
+                      body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                      .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                      .header { background: #2196F3; color: white; padding: 20px; text-align: center; border-radius: 5px; }
+                      .content { background: #f5f5f5; padding: 20px; margin-top: 20px; border-radius: 5px; }
+                      .info-box { background: white; padding: 15px; margin: 15px 0; border-left: 4px solid #4CAF50; }
+                      .timestamp { color: #666; font-size: 14px; }
+                    </style>
+                  </head>
+                  <body>
+                    <div class="container">
+                      <div class="header">
+                        <h2>🎉 New Subscriber Alert</h2>
+                      </div>
+                      <div class="content">
+                        <p><strong>Great news!</strong> A new user has successfully subscribed to DNA Apps.</p>
+                        
+                        <div class="info-box">
+                          <h3>📊 Subscription Details:</h3>
+                          <p><strong>📧 Email:</strong> ${formData.username}</p>
+                          <p><strong>💳 Payment Method:</strong> ${paymentMethod}</p>
+                          <p><strong>📦 Subscription Type:</strong> All App Access</p>
+                          <p class="timestamp"><strong>🕒 Registration Time:</strong> ${new Date().toLocaleString()}</p>
+                        </div>
+                        
+                        <div class="info-box">
+                          <h3>✅ Actions Completed:</h3>
+                          <ul>
+                            <li>Account created in system</li>
+                            <li>User status set to 'Active'</li>
+                            <li>Welcome email sent to customer</li>
+                            <li>Dashboard access granted</li>
+                          </ul>
+                        </div>
+                        
+                        <p><em>This is an automated notification from the DNA Apps registration system.</em></p>
+                      </div>
+                    </div>
+                  </body>
+                  </html>
+                `,
               },
               publicKey
             );
