@@ -133,8 +133,13 @@ export default function WrapperJWT({ children }) {
     );
   }
 
-  // Only render children if authenticated, otherwise show message
-  if (!authenticated && !loading) {
+  // More specific condition handling to prevent edge cases
+  if (loading) {
+    // Already handled above
+    return null;
+  }
+
+  if (!authenticated) {
     // Determine message based on failure reason
     const getAuthMessage = () => {
       switch (authFailureReason) {
@@ -187,5 +192,33 @@ export default function WrapperJWT({ children }) {
     );
   }
 
-  return authenticated ? children : null;
+  // Only render children if we're authenticated AND have user data
+  if (authenticated && user && userId) {
+    return children;
+  }
+
+  // Fallback: if authenticated but missing user data, show loading
+  return (
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
+      fontSize: '1.2rem',
+      color: '#666'
+    }}>
+      <div>
+        <div style={{
+          width: '40px',
+          height: '40px',
+          border: '4px solid #f3f3f3',
+          borderTop: '4px solid #3498db',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite',
+          margin: '0 auto 16px'
+        }}></div>
+        Loading user data...
+      </div>
+    </div>
+  );
 }
