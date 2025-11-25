@@ -17,35 +17,54 @@ export default function WrapperJWT({ children }) {
   const clearAuthenticationData = () => {
     console.log('Clearing authentication data...');
     
-    // Clear all authentication-related cookies
-    const cookiesToClear = ['token', 'userId', 'username', 'refreshToken', 'sessionId'];
+    try {
+      // Clear all authentication-related cookies
+      const cookiesToClear = ['token', 'userId', 'username', 'refreshToken', 'sessionId'];
+      
+      cookiesToClear.forEach(cookieName => {
+        try {
+          // Clear cookie for current domain
+          document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+          // Clear cookie for root domain (in case of subdomain)
+          if (window.location && window.location.hostname) {
+            document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
+            // Clear cookie for parent domain
+            const domainParts = window.location.hostname.split('.');
+            if (domainParts.length > 1) {
+              const parentDomain = '.' + domainParts.slice(-2).join('.');
+              document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${parentDomain};`;
+            }
+          }
+        } catch (error) {
+          console.warn(`Error clearing cookie ${cookieName}:`, error);
+        }
+      });
+      
+      // Clear localStorage items
+      const localStorageKeys = ['token', 'user', 'userId', 'username', 'refreshAccountStatus'];
+      localStorageKeys.forEach(key => {
+        try {
+          localStorage.removeItem(key);
+        } catch (error) {
+          console.warn(`Error clearing localStorage ${key}:`, error);
+        }
+      });
+      
+      // Clear sessionStorage items
+      const sessionStorageKeys = ['token', 'user', 'userId', 'username'];
+      sessionStorageKeys.forEach(key => {
+        try {
+          sessionStorage.removeItem(key);
+        } catch (error) {
+          console.warn(`Error clearing sessionStorage ${key}:`, error);
+        }
+      });
+      
+    } catch (error) {
+      console.error('Error in clearAuthenticationData:', error);
+    }
     
-    cookiesToClear.forEach(cookieName => {
-      // Clear cookie for current domain
-      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-      // Clear cookie for root domain (in case of subdomain)
-      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
-      // Clear cookie for parent domain
-      const domainParts = window.location.hostname.split('.');
-      if (domainParts.length > 1) {
-        const parentDomain = '.' + domainParts.slice(-2).join('.');
-        document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${parentDomain};`;
-      }
-    });
-    
-    // Clear localStorage items
-    const localStorageKeys = ['token', 'user', 'userId', 'username', 'refreshAccountStatus'];
-    localStorageKeys.forEach(key => {
-      localStorage.removeItem(key);
-    });
-    
-    // Clear sessionStorage items
-    const sessionStorageKeys = ['token', 'user', 'userId', 'username'];
-    sessionStorageKeys.forEach(key => {
-      sessionStorage.removeItem(key);
-    });
-    
-    // Reset component state
+    // Reset component state (outside try-catch to ensure it always runs)
     setAuthenticated(false);
     setUser(null);
     setUserId(null);
@@ -74,11 +93,15 @@ export default function WrapperJWT({ children }) {
         if (data.success && data.authenticated) {
           setAuthenticated(true);
           setUser(data.user);
-            setUserId(data.user.id);
+          setUserId(data.user.id);
          
+          try {
             document.cookie = `userId=${data.user.id}; path=/;`;
             // console log cookie for debugging
             console.log('Set userId cookie:', document.cookie);
+          } catch (error) {
+            console.warn('Error setting userId cookie:', error);
+          }
        
         } else {
           console.log('Authentication status:', data.status, '-', data.message);
