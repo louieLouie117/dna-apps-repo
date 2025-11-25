@@ -8,10 +8,10 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-    detectSessionInUrl: false,
-    flowType: 'implicit'
+    autoRefreshToken: true,     // Enable for old SignIn to work
+    persistSession: true,       // Enable session persistence for old SignIn
+    detectSessionInUrl: false,  // Keep disabled to avoid URL conflicts
+    flowType: 'pkce'           // Use more secure flow type
   }
 });
 

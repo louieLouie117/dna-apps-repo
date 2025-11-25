@@ -9,14 +9,52 @@ const SignIn = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
+    // Check current session on component mount
+    React.useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                if (error) {
+                    console.error('Session check error:', error);
+                } else {
+                    console.log('Current Supabase session:', session ? 'Active' : 'None');
+                    if (session) {
+                        console.log('Session user:', session.user?.email);
+                    }
+                }
+            } catch (err) {
+                console.error('Session check catch error:', err);
+            }
+        };
+        
+        checkSession();
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) {
-            setError(error.message);
-        } else {
-            navigate('/user-dashboard');
+        
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({ 
+                email, 
+                password 
+            });
+            
+            if (error) {
+                setError(error.message);
+                console.error('Supabase sign in error:', error);
+            } else if (data?.user) {
+                console.log('Supabase sign in successful:', data);
+                // Add a small delay to ensure session is properly set
+                setTimeout(() => {
+                    navigate('/user-dashboard');
+                }, 500);
+            } else {
+                setError('Authentication failed. Please try again.');
+            }
+        } catch (err) {
+            console.error('Sign in catch error:', err);
+            setError('An error occurred during sign in. Please try again.');
         }
     };
 

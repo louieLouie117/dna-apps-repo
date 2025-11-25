@@ -241,15 +241,27 @@ p {
 }
 .app-logos{
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
   margin-bottom: 60px;
   max-width: 35em;
   justify-self: center;
+  justify-content: center;
 }
 
 .app-logos>a>img{
-  height: 250px;
+  height: 300px;
 }
+/* @media for larger screens */
+  @media (min-width: 1024px) {
+    .app-logos {
+      display: flex;
+    }
+
+    .app-logos>a>img{
+  height: 200px;
+}
+  }
+
+
 
 .reg-form {
   display: grid;
