@@ -234,7 +234,7 @@ export default function WrapperJWT({ children }) {
             cursor: 'pointer'
           }}
         >
-          Go to Login page
+          Login to your account.
         </button>
       </div>
     );
