@@ -10,11 +10,38 @@ const SignOutButton = ({ style, className }) => {
 
     const handleSignOut = async () => {
         setSigningOut(true);
-        // clear cookies and session
-        document.cookie = 'username=; Max-Age=0; path=/;';
-        document.cookie = 'userId=; Max-Age=0; path=/;';
-        document.cookie = 'token=; Max-Age=0; path=/;';
+        
+        // Comprehensive cookie clearing function
+        const clearAllCookies = () => {
+            try {
+                const cookiesToClear = ['username', 'userId', 'token', 'refreshToken', 'sessionId'];
+                
+                cookiesToClear.forEach(cookieName => {
+                    // Multiple clearing methods for better compatibility
+                    document.cookie = `${cookieName}=; Max-Age=0; path=/;`;
+                    document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                    
+                    // Clear for different domains if needed
+                    if (window.location && window.location.hostname) {
+                        document.cookie = `${cookieName}=; Max-Age=0; path=/; domain=${window.location.hostname};`;
+                        document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
+                        
+                        // Clear for parent domain
+                        const domainParts = window.location.hostname.split('.');
+                        if (domainParts.length > 1) {
+                            const parentDomain = '.' + domainParts.slice(-2).join('.');
+                            document.cookie = `${cookieName}=; Max-Age=0; path=/; domain=${parentDomain};`;
+                            document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${parentDomain};`;
+                        }
+                    }
+                });
+            } catch (error) {
+                console.warn('Error clearing cookies:', error);
+            }
+        };
 
+        // Clear cookies immediately
+        clearAllCookies();
         
         try {
             const response = await fetch(`${API_BASE_URL}/api/session/logout`, {
@@ -29,21 +56,53 @@ const SignOutButton = ({ style, className }) => {
                 const data = await response.json();
                 console.log('Logout successful:', data.message);
                 
-                // Clear any local storage tokens as well (if you're using them)
-                localStorage.removeItem('token');
-                // Clear userId cookie
-                document.cookie = 'userId=; Max-Age=0; path=/;';
-                // Redirect to sign-in page
-                navigate('/login');
+                // Clear all storage items
+                try {
+                    const storageKeys = ['token', 'user', 'userId', 'username', 'refreshAccountStatus'];
+                    storageKeys.forEach(key => {
+                        localStorage.removeItem(key);
+                        sessionStorage.removeItem(key);
+                    });
+                } catch (error) {
+                    console.warn('Error clearing storage:', error);
+                }
+                
+                // Clear cookies again to be absolutely sure
+                clearAllCookies();
+                
+                // Small delay before navigation to ensure cleanup completes
+                setTimeout(() => {
+                    navigate('/login');
+                }, 100);
             } else {
                 console.error('Logout failed with status:', response.status);
-                // Even if logout fails on server, redirect to login-test
-                navigate('/login');
+                // Clear local data even if server logout fails
+                clearAllCookies();
+                try {
+                    const storageKeys = ['token', 'user', 'userId', 'username', 'refreshAccountStatus'];
+                    storageKeys.forEach(key => {
+                        localStorage.removeItem(key);
+                        sessionStorage.removeItem(key);
+                    });
+                } catch (error) {
+                    console.warn('Error clearing storage on logout failure:', error);
+                }
+                setTimeout(() => navigate('/login'), 100);
             }
         } catch (error) {
             console.error('Error during logout:', error);
-            // Even if there's a network error, redirect to login-test
-            navigate('/login');
+            // Clear local data even on network error
+            clearAllCookies();
+            try {
+                const storageKeys = ['token', 'user', 'userId', 'username', 'refreshAccountStatus'];
+                storageKeys.forEach(key => {
+                    localStorage.removeItem(key);
+                    sessionStorage.removeItem(key);
+                });
+            } catch (storageError) {
+                console.warn('Error clearing storage on network error:', storageError);
+            }
+            setTimeout(() => navigate('/login'), 100);
         } finally {
             setSigningOut(false);
         }
