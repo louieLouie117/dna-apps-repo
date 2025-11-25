@@ -13,6 +13,7 @@ const SignOutButton = ({ style, className }) => {
         // clear cookies and session
         document.cookie = 'username=; Max-Age=0; path=/;';
         document.cookie = 'userId=; Max-Age=0; path=/;';
+        document.cookie = 'token=; Max-Age=0; path=/;';
 
         
         try {
