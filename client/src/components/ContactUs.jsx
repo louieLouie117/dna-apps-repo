@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import supabase from '../config/SupaBaseClient';
 import PageHeader from './PageHeader';
+import { safeCookieParser } from '../utils/cookieUtils';
 
 const ContactUs = () => {
     const [form, setForm] = useState({
@@ -15,11 +16,9 @@ const ContactUs = () => {
     const [emailFromCookie, setEmailFromCookie] = useState(false);
     const [initializing, setInitializing] = useState(true);
 
-    // Get user email from cookies
+    // Get user email from cookies using safe parser
     const getUserFromCookie = () => {
-        if (!document.cookie) return null;
-        const match = document.cookie.match(new RegExp('(^| )username=([^;]+)'));
-        return match ? match[2] : null;
+        return safeCookieParser.getUserEmail();
     };
 
     // Initialize form with cookie data

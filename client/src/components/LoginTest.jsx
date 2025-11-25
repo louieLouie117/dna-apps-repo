@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from './PageHeader';
+import { safeCookieParser } from '../utils/cookieUtils';
 
 export default function LoginTest() {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
@@ -31,11 +32,11 @@ export default function LoginTest() {
       const data = await response.json();
       
       if (response.ok) {
-        // Set username cookie
-        document.cookie = `username=${data.user.username}; path=/;`;
+        // Set username cookie using safe setter
+        const cookieSet = safeCookieParser.setCookie('username', data.user.username);
                
         console.log('Login response:', data);
-        console.log('Cookies after login:', document.cookie);
+        console.log('Username cookie set:', cookieSet ? 'Success' : 'Failed');
         
         setMessage('✅ Login successful! Verifying session...');
         setMessageType('success');
@@ -188,7 +189,7 @@ export default function LoginTest() {
             <details style={styles.debugDetails}>
               <summary style={styles.debugSummary}>🔧 Debug Information</summary>
               <div style={styles.debugContent}>
-                <p><strong>Cookies:</strong> {document.cookie || 'None'}</p>
+                <p><strong>Auth Cookies:</strong> {JSON.stringify(safeCookieParser.getAuthCookies())}</p>
                 <p><strong>Origin:</strong> {window.location.origin}</p>
                 <p><strong>API URL:</strong> {API_BASE_URL}</p>
               </div>

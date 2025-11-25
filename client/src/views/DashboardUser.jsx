@@ -5,18 +5,13 @@ import IssueReporting from '../components/IssueReporting';
 import PageHeader from '../components/PageHeader';
 import AccountStatus from '../components/AccountStatus';
 import AppLogosFooter from '../components/AppLogosFooter';
+import { safeCookieParser } from '../utils/cookieUtils';
 
 const DashboardUser = () => {
     const [reportContainer, setReportContainer] = useState(false);
 
-
-    // Get username from cookie for handleReportIssue function
-    const getUsernameFromCookie = () => {
-        if (!document.cookie) return null;
-        const match = document.cookie.match(new RegExp('(^| )username=([^;]+)'));
-        return match ? match[2] : null;
-    };
-    const username = getUsernameFromCookie();
+    // Get username from cookie using safe parser
+    const username = safeCookieParser.getUserEmail();
 
      const handleReportIssue = async () => {
             setReportContainer(true);
