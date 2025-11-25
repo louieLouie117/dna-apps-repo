@@ -55,10 +55,35 @@ export default function WrapperJWT({ children }) {
 
   useEffect(() => {
     checkAuthentication();
+    
+    // Listen for sign-out events
+    const handleSignOut = () => {
+      console.log('Sign-out event detected - clearing authentication state');
+      setAuthenticated(false);
+      setUser(null);
+      setUserId(null);
+      setAuthFailureReason('NO_TOKEN');
+      setLoading(false);
+    };
+    
+    window.addEventListener('userSignedOut', handleSignOut);
+    
+    return () => {
+      window.removeEventListener('userSignedOut', handleSignOut);
+    };
   }, []);
 
   const checkAuthentication = async () => {
     try {
+      // Quick cookie check first - if no cookies at all, skip API call
+      if (!document.cookie || !document.cookie.includes('token')) {
+        console.log('No authentication cookies found - skipping API call');
+        setAuthFailureReason('NO_TOKEN');
+        clearAuthenticationData();
+        setLoading(false);
+        return;
+      }
+      
       // Check session status using the session API
       const response = await fetch(`${API_BASE_URL}/api/session/status`, {
         method: 'GET',
@@ -123,6 +148,7 @@ export default function WrapperJWT({ children }) {
       console.error('Error checking authentication:', error);
       
       // Clear authentication data on network errors to prevent stale sessions
+      setAuthFailureReason('OTHER');
       clearAuthenticationData();
       
       // Don't redirect on network errors, but show the authentication required screen
@@ -219,5 +245,19 @@ export default function WrapperJWT({ children }) {
     );
   }
 
-  return authenticated ? children : null;
+  // Final safety check - ensure we have valid cookies before rendering children
+  const hasValidCookies = () => {
+    try {
+      return document.cookie && (
+        document.cookie.includes('token') || 
+        document.cookie.includes('userId') || 
+        document.cookie.includes('username')
+      );
+    } catch (error) {
+      console.error('Error checking cookies:', error);
+      return false;
+    }
+  };
+
+  return authenticated && hasValidCookies() ? children : null;
 }

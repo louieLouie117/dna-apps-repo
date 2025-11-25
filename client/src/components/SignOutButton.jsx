@@ -10,9 +10,30 @@ const SignOutButton = ({ style, className }) => {
 
     const handleSignOut = async () => {
         setSigningOut(true);
-        // clear cookies and session
-        document.cookie = 'username=; Max-Age=0; path=/;';
-        document.cookie = 'userId=; Max-Age=0; path=/;';
+        
+        // Comprehensive cookie clearing function
+        const clearAllAuthCookies = () => {
+            const cookiesToClear = ['token', 'userId', 'username', 'refreshToken', 'sessionId'];
+            
+            cookiesToClear.forEach(cookieName => {
+                // Clear cookie for current domain with different path variations
+                document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
+                
+                // Clear for parent domain if applicable
+                const domainParts = window.location.hostname.split('.');
+                if (domainParts.length > 1) {
+                    const parentDomain = '.' + domainParts.slice(-2).join('.');
+                    document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${parentDomain};`;
+                }
+                
+                // Also try Max-Age method as backup
+                document.cookie = `${cookieName}=; Max-Age=0; path=/;`;
+            });
+        };
+        
+        // Clear cookies immediately
+        clearAllAuthCookies();
 
         
         try {
@@ -28,12 +49,21 @@ const SignOutButton = ({ style, className }) => {
                 const data = await response.json();
                 console.log('Logout successful:', data.message);
                 
-                // Clear any local storage tokens as well (if you're using them)
-                localStorage.removeItem('token');
-                // Clear userId cookie
-                document.cookie = 'userId=; Max-Age=0; path=/;';
-                // Redirect to sign-in page
-                navigate('/login');
+                // Clear all storage items
+                const localStorageKeys = ['token', 'user', 'userId', 'username', 'refreshAccountStatus'];
+                localStorageKeys.forEach(key => localStorage.removeItem(key));
+                
+                const sessionStorageKeys = ['token', 'user', 'userId', 'username'];
+                sessionStorageKeys.forEach(key => sessionStorage.removeItem(key));
+                
+                // Clear cookies again to be sure
+                clearAllAuthCookies();
+                
+                // Trigger custom event to notify other components
+                window.dispatchEvent(new CustomEvent('userSignedOut'));
+                
+                // Force page reload to reset all component states
+                window.location.href = '/login';
             } else {
                 console.error('Logout failed with status:', response.status);
                 // Even if logout fails on server, redirect to login-test
