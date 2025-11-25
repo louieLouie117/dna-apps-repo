@@ -152,7 +152,7 @@ export default function WrapperJWT({ children }) {
         case 'NO_TOKEN':
           return {
             title: 'Your account has been created.',
-            message: 'Please log in to access this content.'
+            message: 'Please sign in to access your account.'
           };
         default:
           return {
@@ -187,7 +187,7 @@ export default function WrapperJWT({ children }) {
             cursor: 'pointer'
           }}
         >
-          Login to your account.
+          Go to sign in page.
         </button>
       </div>
     );
