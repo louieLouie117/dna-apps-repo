@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import supabase from '../config/SupaBaseClient';
+import { safeCookieParser } from '../utils/cookieUtils';
 
 const AccountStatus = () => {
     const [status, setStatus] = useState(null);
@@ -7,23 +8,11 @@ const AccountStatus = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Get user data from cookies
+    // Get user data from cookies using safe parser
     const getUserFromCookie = () => {
-        const getUsernameFromCookie = () => {
-            if (!document.cookie) return null;
-            const match = document.cookie.match(new RegExp('(^| )username=([^;]+)'));
-            return match ? match[2] : null;
-        };
-        
-        const getUserIdFromCookie = () => {
-            if (!document.cookie) return null;
-            const match = document.cookie.match(new RegExp('(^| )userId=([^;]+)'));
-            return match ? match[2] : null;
-        };
-
         return {
-            username: getUsernameFromCookie(),
-            userId: getUserIdFromCookie()
+            username: safeCookieParser.getUserEmail(),
+            userId: safeCookieParser.getUserId()
         };
     };
 

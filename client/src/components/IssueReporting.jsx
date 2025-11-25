@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import supabase from '../config/SupaBaseClient';
 import emailjs from '@emailjs/browser';
+import { safeCookieParser } from '../utils/cookieUtils';
 
 const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
@@ -11,11 +12,9 @@ const IssueReporting = () => {
     // Get user email from session cookies
     const [userEmail, setUserEmail] = useState('');
 
-    // Function to get username from cookies
+    // Function to get username from cookies using safe parser
     const getUserFromCookie = () => {
-        if (!document.cookie) return null;
-        const match = document.cookie.match(new RegExp('(^| )username=([^;]+)'));
-        return match ? decodeURIComponent(match[2]) : null;
+        return safeCookieParser.getUserEmail();
     };
 
     useEffect(() => {

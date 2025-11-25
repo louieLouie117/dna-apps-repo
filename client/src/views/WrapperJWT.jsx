@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
+import { safeCookieParser } from '../utils/cookieUtils';
 
 export default function WrapperJWT({ children }) {
   const [loading, setLoading] = useState(true);
@@ -43,12 +44,12 @@ export default function WrapperJWT({ children }) {
           setUser(data.user);
           setUserId(data.user.id);
          
-          try {
-            document.cookie = `userId=${data.user.id}; path=/;`;
-            // console log cookie for debugging
-            console.log('Set userId cookie:', document.cookie);
-          } catch (error) {
-            console.warn('Error setting userId cookie:', error);
+          // Use safe cookie setter
+          const cookieSet = safeCookieParser.setCookie('userId', data.user.id);
+          if (cookieSet) {
+            console.log('Set userId cookie successfully');
+          } else {
+            console.warn('Failed to set userId cookie');
           }
        
         } else {
