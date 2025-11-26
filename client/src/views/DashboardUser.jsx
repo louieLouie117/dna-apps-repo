@@ -164,9 +164,8 @@ const DashboardUser = () => {
                         </aside>
 
                                  <main>
-                <p>Username: {username}</p>
-                {/* user id: {userId} */}
-                <p> user id: {userId}</p>
+                {/* <p>Username: {username}</p>
+                <p> user id: {userId}</p> */}
 
 
                 <AccountStatus/>
