@@ -11,7 +11,8 @@ const DashboardUser = () => {
     const [reportContainer, setReportContainer] = useState(false);
 
     // Get username from cookie using safe parser
-    const username = safeCookieParser.getUserEmail();
+    const username = safeCookieParser.getUserEmail('userEmail');
+    const userId = safeCookieParser.getCookie('userId');
 
      const handleReportIssue = async () => {
             setReportContainer(true);
@@ -163,7 +164,9 @@ const DashboardUser = () => {
                         </aside>
 
                                  <main>
-                {/* <p>Username: {username}</p> */}
+                {/* <p>Username: {username}</p>
+                <p> user id: {userId}</p> */}
+
 
                 <AccountStatus/>
             </main>

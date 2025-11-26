@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import supabase from '../config/SupaBaseClient';
 import emailjs from '@emailjs/browser';
 import PageHeader from './PageHeader';
+import safeCookieParser from '../utils/cookieUtils';
 
 const RegAllApps = () => {
   const [userList, setUserList] = useState([]);
@@ -24,23 +25,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
         // console.log('Current URL:', currentUrl);
     }, [currentUrl]);
 
-  // useeffect to fetch existing users can be added here if needed
-  React.useEffect(() => {
-    console.log('API Base URL:', API_BASE_URL);
-    
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/users`);
-        const data = await response.json();
-        setUserList(data.data || []);
-        console.log('Fetched users:', data.data);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      }
-    };
 
-    fetchUsers();
-  }, []);
 
   const [formData, setFormData] = useState({
     username: '',
@@ -194,7 +179,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
           const { data: authData, error: authError } = await supabase.auth.signUp({
             email: formData.username,
             password: formData.password,
-          });
+          });         
 
           if (authError) {
             if (
@@ -211,20 +196,23 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
           }
 
           // 2. Insert into Users table
-          const userId = authData?.user?.id;
           const { error: tableError } = await supabase
             .from('Users')
             .insert([{ 
               email: formData.username, 
               status: 'Active', 
-              auth_uid: userId,
+              // auth_uid: userId,
               payment_method: paymentMethod,
             }]);
 
           if (tableError) {
             setError(`Table Error: ${tableError.message}`);
+            alert('Error creating user account. Please try again.');
             return;
           }
+
+          // const cookieSet = safeCookieParser.setCookie('username', formData.username);
+          // console.log('Cookie set:', cookieSet);
 
           // 3. Send notification email to support
           try {
@@ -308,6 +296,9 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
       setLoading(false);
     }
   };
+
+
+
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this user?')) {
       return;
