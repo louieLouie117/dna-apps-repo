@@ -4,6 +4,11 @@ import emailjs from '@emailjs/browser';
 import PageHeader from './PageHeader';
 import safeCookieParser from '../utils/cookieUtils';
 
+/*
+=== SUBSCRIPTION URL REFERENCES ===
+
+*/
+
 const RegAllApps = () => {
   const [userList, setUserList] = useState([]);
 
@@ -14,25 +19,61 @@ const RegAllApps = () => {
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const currentUrl = window.location.href;
-    const [paymentMethod, setPaymentMethod] = useState(''); // Track payment method
+    const [paymentMethod, setPaymentMethod] = useState('Stripe'); // Track payment method
+    const [SubscriptTypeBaseOnUrl, setSubscriptTypeBaseOnUrl] = useState('All App Access');
 
     React.useEffect(() => {
-        if (currentUrl.includes('/stripe-all-app-access-account')) {
-            setPaymentMethod('stripe');
-        } else if (currentUrl.includes('/paypal-all-app-access-account')) {
-            setPaymentMethod('paypal');
+        // Determine subscription type based on URL - run only once on mount
+        let detectedType = 'All App Access';
+        let logMessage = 'Default: All App Access';
+
+        if (currentUrl.includes('student-membership')) {
+            detectedType = 'All App Access';
+            logMessage = 'Detected Student Subscription URL';
+        } else if (currentUrl.includes('all-app-subscription')) {
+            detectedType = 'All App Access';
+            logMessage = 'Detected All App Access Subscription URL';
+        } else if (currentUrl.includes('budget-monthly') || currentUrl.includes('MyBudgetMonthly')) {
+            detectedType = 'My Budget Monthly';
+            logMessage = 'Detected My Budget Monthly Subscription URL';
+        } else if (currentUrl.includes('locked-passwords') || currentUrl.includes('MyLockedPasswords')) {
+            detectedType = 'My Locked Passwords';
+            logMessage = 'Detected My Locked Passwords Subscription URL';
+        } else if (currentUrl.includes('flashcards') || currentUrl.includes('MyFlashcards')) {
+            detectedType = 'My Flashcards';
+            logMessage = 'Detected My Flashcards Subscription URL';
+        } else if (currentUrl.includes('todo-list') || currentUrl.includes('MyTodoList')) {
+            detectedType = 'My Todo List';
+            logMessage = 'Detected My Todo List Subscription URL';
         }
-        // console.log('Current URL:', currentUrl);
-    }, [currentUrl]);
 
-
+        setSubscriptTypeBaseOnUrl(detectedType);
+        
+        // Single console log with correct detected type
+        console.log('🔍 URL Detection:', {
+            url: currentUrl,
+            detectedSubscriptionType: detectedType,
+            message: logMessage
+        });
+        
+    }, []); // Empty dependency array - run only once
 
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    subscriptionType: '1234567',
+    subscriptionType: SubscriptTypeBaseOnUrl || '1234567',
     expired: ''
   });
+
+  // Update formData when SubscriptTypeBaseOnUrl changes
+  React.useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      subscriptionType: SubscriptTypeBaseOnUrl
+    }));
+  }, [SubscriptTypeBaseOnUrl]);
+
+  
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -433,26 +474,11 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
                         <strong>Important:</strong> <br /> You must must use the <span style={{ color: '#1976d2' }}>same email</span> that was used during your subscription process.
                     </div>
 
-                      <div>
-         
-          <select 
-            className='hidden'
-            id="subscriptionType"
-            name="subscriptionType"
-            value={formData.subscriptionType}
-            onChange={handleChange}
-            required
-            style={{
-              width: '100%',
-              padding: '8px',
-              border: '1px solid #ccc',
-              borderRadius: '4px'
-            }}
-          >
-            <option value="1234567">All App Access</option>
-            <option value="135">Student Access</option>
-          </select>
-        </div>
+                      <div style={{ marginTop: '15px', padding: '10px', background: '#f0f8ff', borderRadius: '4px', border: '1px solid #007bff' }}>
+            <p style={{ margin: '0', color: '#007bff', fontWeight: 'bold' }}>
+              📦 Subscription Type: {SubscriptTypeBaseOnUrl}
+            </p>
+          </div>
       </form>
       {/* loading indicator */}
                    
