@@ -2,19 +2,26 @@ import {useState} from 'react';
 import Backgound from '../assets/img/AllAppAccess.png'; // Assuming this is the correct path to your image
 import PageHeader from '../components/PageHeader';
 import StripePaymentCard from '../assets/img/StripePaymentCard.png'; // Adjust the path as needed
-import AppLogosFooter from '../components/AppLogosFooter'; // Import the new component
 import PayPalLog from '../assets/img/sPayPal.png'; // Assuming you have a PayPal logo image
 
 
 const StudentSub = () => {
 const [isOn, setIsOn] = useState(true);
+const [selectedApp, setSelectedApp] = useState('');
 
-    const handleToggle = () => {
-        setIsOn(prev => {
-            const newState = !prev;
-            console.log(`button was changed to ${newState ? 'on' : 'off'}`);
-            return newState;
-        });
+    // Mapping of apps to their Stripe subscription URLs
+    const appSubscriptionUrls = {
+        'MyBudgetMonthly': 'https://buy.stripe.com/budget-monthly-url',
+        'MyLockedPasswords': 'https://buy.stripe.com/locked-passwords-url',
+        'MyFlashcards': 'https://buy.stripe.com/flashcards-url',
+        'MyTodoList': 'https://buy.stripe.com/todo-list-url'
+    };
+
+   
+
+    const handleAppSelection = (event) => {
+        setSelectedApp(event.target.value);
+        console.log('Selected app:', event.target.value);
     };
 
     return (
@@ -23,13 +30,11 @@ const [isOn, setIsOn] = useState(true);
             <PageHeader />
 
             </header>
-            <h1>Membership/Subscription</h1>
             <main>
                 <img src={Backgound} alt="Description of image" />
                 <div>
-                     <h2>All App Access</h2>
-                <p>Enjoy full access instantly to all apps with all the benefits of new updates, app privacy, no in-app purchases, and no advertisements.</p>
-
+                     <h2>App Access for Students</h2>
+                
                 </div>
                
 
@@ -39,36 +44,56 @@ const [isOn, setIsOn] = useState(true);
                 <h3>Single App Access</h3>
 
                 <div>
-
-                     <ul>
-                        <li>My Flashcards</li>
-                      
-                    </ul>
+                    <select 
+                        value={selectedApp}
+                        onChange={handleAppSelection}
+                        style={{
+                        width: '100%',
+                        padding: '10px',
+                        fontSize: '16px',
+                        borderRadius: '5px',
+                        border: '2px solid #ddd',
+                        backgroundColor: '#f9f9f9',
+                        marginBottom: '20px'
+                    }}>
+                        <option value="">Select an app</option>
+                        <option value="MyBudgetMonthly">My Budget Monthly - $3.99/month</option>
+                        <option value="MyLockedPasswords">My Locked Passwords - $3.99/month</option>
+                        <option value="MyFlashcards">My Flashcards - $3.99/month</option>
+                        <option value="MyTodoList">My Todo List - $3.99/month</option>
+                    </select>
                      {isOn ? (
                     <footer>
-                            <a href="https://buy.stripe.com/aFaaEWfCYeSOelX1pGeIw01">
-                        <button className='main-btn'>Subscribe</button>
+                            <a href={selectedApp ? appSubscriptionUrls[selectedApp] : '#'} 
+                               onClick={(e) => {
+                                   if (!selectedApp) {
+                                       e.preventDefault();
+                                       alert('Subscribe');
+                                   }
+                               }}>
+                        <button 
+                            className='main-btn' 
+                            disabled={!selectedApp}
+                            style={{
+                                backgroundColor: selectedApp ? '#007bff' : '#ccc',
+                                cursor: selectedApp ? 'pointer' : 'not-allowed',
+                                opacity: selectedApp ? 1 : 0.6,
+                                transition: 'all 0.3s ease'
+                            }}
+                        >
+                            {selectedApp ? `Subscribe` : 'Subscribe'}
+                        </button>
                         </a>
                         
                         <a href="https://stripe.com/" target='_blank' rel="noopener noreferrer">
                         <img src={StripePaymentCard} alt="" />
                         </a>
-                        <p>$1.00/m billed annually.</p>
+                        <p>$3.99/month.</p>
 
                 </footer>
                         ) : (
                             <>
-                            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                            <input type="hidden" name="cmd" value="_s-xclick" />
-                            <input type="hidden" name="hosted_button_id" value="3QAJPKNCNE6Q8" />
-                            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" />
-                            <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1" />
-                            </form>
-                             <a href="https://paypal.com/" target='_blank' rel="noopener noreferrer">
-                                <img src={PayPalLog} alt="PayPal" />
-                            </a>
-                        <p>$1.00/m billed annually.</p>
-
+                            {/* not needed */}
                             </>
                         )}
 
@@ -81,11 +106,10 @@ const [isOn, setIsOn] = useState(true);
                 <h3 className='mainSale'>All App Access</h3>
                 <div>
                     <ul>
-                        <li>My Flashcards</li>
                         <li>My To-do List</li>
+                        <li>My Flashcards</li>
                         <li>My Monthly Budget</li>
                         <li>My Locked Passwords​</li>
-                        <li>My Receipts</li>
                         <li>My PenCal</li>
                         <li>+Any future app released</li>
                     </ul>
@@ -100,7 +124,7 @@ const [isOn, setIsOn] = useState(true);
                 <img src={StripePaymentCard} alt="" />
 
                 </a>
-                <p>$2.99/month.</p>
+                <p>$6.99/month.</p>
         </footer>
         ) : (
                             <>
@@ -113,7 +137,7 @@ const [isOn, setIsOn] = useState(true);
                              <a href="https://paypal.com/" target='_blank' rel="noopener noreferrer">
                                 <img src={PayPalLog} alt="PayPal" />
                             </a>
-                                       <p>$2.99/month.</p>
+                                       <p>$3.99/month.</p>
 
 
                             </>
@@ -124,59 +148,17 @@ const [isOn, setIsOn] = useState(true);
               
 
             </aside>
-             <aside>
-                <h3>Triple App Acess</h3>
-                <div>
-                <ul>
-                        <li>My Flashcards</li>
-                        <li>My To-do List</li>
-                        <li>My Monthly Budget</li>
-                     
-                    </ul>
-                    {isOn ? (
-                    <footer>
-                      <a href="https://buy.stripe.com/00wbJ0cqM11Y2Df5FWeIw03">
-                <button className='main-btn'>Subscribe</button>
-                </a>
-                
-                <a href="https://stripe.com/" target='_blank' rel="noopener noreferrer">
-                <img src={StripePaymentCard} alt="" />
-
-                </a>
-                <p>$1.30/m billed annually.</p>
-
-            </footer>
-            ) : (
-                            <>
-                          <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                                <input type="hidden" name="cmd" value="_s-xclick" />
-                                <input type="hidden" name="hosted_button_id" value="38D69L7SEG3C2" />
-                                <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" />
-                        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1" />
-                            </form>
-                             <a href="https://paypal.com/" target='_blank' rel="noopener noreferrer">
-                                <img src={PayPalLog} alt="PayPal" />
-                            </a>
-                                                   <p>$1.30/m billed annually.</p>
-
-
-
-                            </>
-                        )}
-                </div>
-              
-
-            </aside>
+            
            
 
 
             </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '-100px', columnGap: '10px', marginBottom: '20px' }}>
+              {/* <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '-100px', columnGap: '10px', marginBottom: '20px' }}>
                    <p>
-  {isOn
-    ? "Current payment method: Stripe — switch to PayPal"
-    : "Current payment method: PayPal — switch to Stripe"}
-</p>
+            {isOn
+                ? "Current payment method: Stripe — switch to PayPal"
+                : "Current payment method: PayPal — switch to Stripe"}
+            </p>
 
 
                 <button
@@ -210,9 +192,8 @@ const [isOn, setIsOn] = useState(true);
                         }}
                     />
                 </button>
-            </div>
+            </div> */}
             
-            <AppLogosFooter /> {/* Use the new component here */}
         </div>
     );
 };

@@ -5,7 +5,7 @@ import StripePaymentCard from '../assets/img/StripePaymentCard.png'; // Adjust t
 import PayPalLog from '../assets/img/sPayPal.png'; // Assuming you have a PayPal logo image
 
 
-const StudentSub = () => {
+const SubPage = () => {
 const [isOn, setIsOn] = useState(true);
 const [selectedApp, setSelectedApp] = useState('');
 
@@ -30,7 +30,6 @@ const [selectedApp, setSelectedApp] = useState('');
             <PageHeader />
 
             </header>
-            <h1>Membership/Subscription</h1>
             <main>
                 <img src={Backgound} alt="Description of image" />
                 <div>
@@ -69,10 +68,21 @@ const [selectedApp, setSelectedApp] = useState('');
                                onClick={(e) => {
                                    if (!selectedApp) {
                                        e.preventDefault();
-                                       alert('Please select an app first');
+                                       alert('Subscribe');
                                    }
                                }}>
-                        <button className='main-btn' disabled={!selectedApp}>Subscribe</button>
+                        <button 
+                            className='main-btn' 
+                            disabled={!selectedApp}
+                            style={{
+                                backgroundColor: selectedApp ? '#007bff' : '#ccc',
+                                cursor: selectedApp ? 'pointer' : 'not-allowed',
+                                opacity: selectedApp ? 1 : 0.6,
+                                transition: 'all 0.3s ease'
+                            }}
+                        >
+                            {selectedApp ? `Subscribe` : 'Subscribe'}
+                        </button>
                         </a>
                         
                         <a href="https://stripe.com/" target='_blank' rel="noopener noreferrer">
@@ -198,4 +208,4 @@ const [selectedApp, setSelectedApp] = useState('');
     );
 };
 
-export default StudentSub;
+export default SubPage;

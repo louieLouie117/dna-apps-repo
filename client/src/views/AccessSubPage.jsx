@@ -29,7 +29,7 @@ const AccessSubPage = () => {
                 </div>
             </main>
             <div className="sub-container">
- <aside>
+            <aside>
                 <h3>Start Your Free Month</h3>
                 <div>
                     {isOn ? (
