@@ -58,10 +58,11 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
         
     }, []); // Empty dependency array - run only once
 
+  // Template form data state
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    subscriptionType: SubscriptTypeBaseOnUrl || '1234567',
+    subscriptionType: '',
     expired: ''
   });
 

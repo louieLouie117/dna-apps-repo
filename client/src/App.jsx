@@ -49,10 +49,10 @@ function App() {
         {/* new Sub url base on single app or sub  */}
         <Route path="/all-app-subscription" element={<RegAllApps />} />
         <Route path="/student-membership" element={<RegAllApps />} />
-        <Route path="/budget-monthly" element={<RegAllApps />} />
-        <Route path="/locked-passwords" element={<RegAllApps />} />
-        <Route path="/flashcards" element={<RegAllApps />} />
-        <Route path="/todo-list" element={<RegAllApps />} />
+        <Route path="/budget-monthly-subscription" element={<RegAllApps />} />
+        <Route path="/locked-passwords-subscription" element={<RegAllApps />} />
+        <Route path="/flashcards-subscription" element={<RegAllApps />} />
+        <Route path="/todo-list-subscription" element={<RegAllApps />} />
 
 
 
