@@ -5,6 +5,7 @@ import IssueReporting from '../components/IssueReporting';
 import PageHeader from '../components/PageHeader';
 import AccountStatus from '../components/AccountStatus';
 import AppLogosFooter from '../components/AppLogosFooter';
+import UserInfo from '../components/UserInfo';
 import { safeCookieParser } from '../utils/cookieUtils';
 
 const DashboardUser = () => {
@@ -164,9 +165,7 @@ const DashboardUser = () => {
                         </aside>
 
                                  <main>
-                {/* <p>Username: {username}</p>
-                <p> user id: {userId}</p> */}
-
+                <UserInfo />
 
                 <AccountStatus/>
             </main>

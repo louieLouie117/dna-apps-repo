@@ -25,6 +25,7 @@ import DashboardUser from './views/DashboardUser'
 import LoginTest from './components/LoginTest';
 import RequestPasswordReset from './components/RequestPasswordReset';
 import ConfirmPasswordReset from './components/ConfirmPasswordReset';
+import SubPage from './views/SubPage';
 
 
 function App() {
@@ -43,6 +44,8 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/student-access-subscription" element={<StudentSub />} />
         <Route path="/all-app-access-subscription" element={<AccessSubPage />} />
+        <Route path="/subscription" element={<SubPage />} />
+
         <Route path="/privacy-policy.html" element={<Policy />} />
         <Route path='/terms-of-service.html' element={<Terms />} />
 
