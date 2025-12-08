@@ -6,7 +6,6 @@ import PayPalLog from '../assets/img/sPayPal.png'; // Assuming you have a PayPal
 
 
 const SubPage = () => {
-const [isOn, setIsOn] = useState(true);
 const [selectedApp, setSelectedApp] = useState('');
 
     // Mapping of apps to their Stripe subscription URLs
@@ -62,7 +61,6 @@ const [selectedApp, setSelectedApp] = useState('');
                         <option value="MyFlashcards">My Flashcards - $5.99/month</option>
                         <option value="MyTodoList">My Todo List - $5.99/month</option>
                     </select>
-                     {isOn ? (
                     <footer>
                             <a href={selectedApp ? appSubscriptionUrls[selectedApp] : '#'} 
                                onClick={(e) => {
@@ -91,22 +89,7 @@ const [selectedApp, setSelectedApp] = useState('');
                         <p>$5.99/month.</p>
 
                 </footer>
-                        ) : (
-                            <>
-                            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                            <input type="hidden" name="cmd" value="_s-xclick" />
-                            <input type="hidden" name="hosted_button_id" value="3QAJPKNCNE6Q8" />
-                            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" />
-                            <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1" />
-                            </form>
-                             <a href="https://paypal.com/" target='_blank' rel="noopener noreferrer">
-                                <img src={PayPalLog} alt="PayPal" />
-                            </a>
-                        <p>$1.00/m billed annually.</p>
-
-                            </>
-                        )}
-
+                           
                 </div>
 
               
@@ -124,7 +107,7 @@ const [selectedApp, setSelectedApp] = useState('');
                         <li>+Any future app released</li>
                     </ul>
 
-                    {isOn ? (
+                    
                     <footer>
                       <a href="https://buy.stripe.com/00w8wO3UgeSOgu52tKeIw02">
                 <button className='main-btn'>Subscribe</button>
@@ -136,22 +119,8 @@ const [selectedApp, setSelectedApp] = useState('');
                 </a>
                 <p>$10.99/month.</p>
         </footer>
-        ) : (
-                            <>
-                          <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                        <input type="hidden" name="cmd" value="_s-xclick" />
-                        <input type="hidden" name="hosted_button_id" value="NWLM7RBYBU2QS" />
-                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" />
-                        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1" />
-                            </form>
-                             <a href="https://paypal.com/" target='_blank' rel="noopener noreferrer">
-                                <img src={PayPalLog} alt="PayPal" />
-                            </a>
-                                       <p>$5.99/month.</p>
-
-
-                            </>
-                        )}
+        
+                         
 
 
                 </div>
@@ -163,46 +132,7 @@ const [selectedApp, setSelectedApp] = useState('');
 
 
             </div>
-              {/* <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '-100px', columnGap: '10px', marginBottom: '20px' }}>
-                   <p>
-            {isOn
-                ? "Current payment method: Stripe — switch to PayPal"
-                : "Current payment method: PayPal — switch to Stripe"}
-            </p>
-
-
-                <button
-                    onClick={handleToggle}
-                    style={{
-                        width: '40px',
-                        height: '24px',
-                        borderRadius: '12px',
-                        background: isOn ? '#FFC439' : '#0074D4',
-                        border: 'none',
-                        position: 'relative',
-                        cursor: 'pointer',
-                        outline: 'none',
-                        display: 'inline-block',
-                        verticalAlign: 'middle',
-                        transition: 'background 0.2s'
-                    }}
-                    aria-label="Toggle switch"
-                >
-                    <span
-                        style={{
-                            display: 'block',
-                            width: '18px',
-                            height: '18px',
-                            borderRadius: '50%',
-                            background: '#fff',
-                            position: 'absolute',
-                            top: '3px',
-                            left: isOn ? '19px' : '3px',
-                            transition: 'left 0.2s'
-                        }}
-                    />
-                </button>
-            </div> */}
+           
             
         </div>
     );

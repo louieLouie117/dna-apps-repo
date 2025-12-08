@@ -6,7 +6,6 @@ import PayPalLog from '../assets/img/sPayPal.png'; // Assuming you have a PayPal
 
 
 const StudentSub = () => {
-const [isOn, setIsOn] = useState(true);
 const [selectedApp, setSelectedApp] = useState('');
 
     // Mapping of apps to their Stripe subscription URLs
@@ -62,7 +61,6 @@ const [selectedApp, setSelectedApp] = useState('');
                         <option value="MyFlashcards">My Flashcards - $3.99/month</option>
                         <option value="MyTodoList">My Todo List - $3.99/month</option>
                     </select>
-                     {isOn ? (
                     <footer>
                             <a href={selectedApp ? appSubscriptionUrls[selectedApp] : '#'} 
                                onClick={(e) => {
@@ -91,12 +89,7 @@ const [selectedApp, setSelectedApp] = useState('');
                         <p>$3.99/month.</p>
 
                 </footer>
-                        ) : (
-                            <>
-                            {/* not needed */}
-                            </>
-                        )}
-
+                       
                 </div>
 
               
@@ -114,7 +107,6 @@ const [selectedApp, setSelectedApp] = useState('');
                         <li>+Any future app released</li>
                     </ul>
 
-                    {isOn ? (
                     <footer>
                       <a href="https://buy.stripe.com/00w8wO3UgeSOgu52tKeIw02">
                 <button className='main-btn'>Subscribe</button>
@@ -126,22 +118,7 @@ const [selectedApp, setSelectedApp] = useState('');
                 </a>
                 <p>$6.99/month.</p>
         </footer>
-        ) : (
-                            <>
-                          <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                        <input type="hidden" name="cmd" value="_s-xclick" />
-                        <input type="hidden" name="hosted_button_id" value="NWLM7RBYBU2QS" />
-                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" />
-                        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1" />
-                            </form>
-                             <a href="https://paypal.com/" target='_blank' rel="noopener noreferrer">
-                                <img src={PayPalLog} alt="PayPal" />
-                            </a>
-                                       <p>$3.99/month.</p>
-
-
-                            </>
-                        )}
+                        
 
 
                 </div>
