@@ -2,19 +2,26 @@ import {useState} from 'react';
 import Backgound from '../assets/img/AllAppAccess.png'; // Assuming this is the correct path to your image
 import PageHeader from '../components/PageHeader';
 import StripePaymentCard from '../assets/img/StripePaymentCard.png'; // Adjust the path as needed
-import AppLogosFooter from '../components/AppLogosFooter'; // Import the new component
 import PayPalLog from '../assets/img/sPayPal.png'; // Assuming you have a PayPal logo image
 
 
 const StudentSub = () => {
 const [isOn, setIsOn] = useState(true);
+const [selectedApp, setSelectedApp] = useState('');
 
-    const handleToggle = () => {
-        setIsOn(prev => {
-            const newState = !prev;
-            console.log(`button was changed to ${newState ? 'on' : 'off'}`);
-            return newState;
-        });
+    // Mapping of apps to their Stripe subscription URLs
+    const appSubscriptionUrls = {
+        'MyBudgetMonthly': 'https://buy.stripe.com/budget-monthly-url',
+        'MyLockedPasswords': 'https://buy.stripe.com/locked-passwords-url',
+        'MyFlashcards': 'https://buy.stripe.com/flashcards-url',
+        'MyTodoList': 'https://buy.stripe.com/todo-list-url'
+    };
+
+   
+
+    const handleAppSelection = (event) => {
+        setSelectedApp(event.target.value);
+        console.log('Selected app:', event.target.value);
     };
 
     return (
@@ -38,7 +45,10 @@ const [isOn, setIsOn] = useState(true);
                 <h3>Single App Access</h3>
 
                 <div>
-                    <select style={{
+                    <select 
+                        value={selectedApp}
+                        onChange={handleAppSelection}
+                        style={{
                         width: '100%',
                         padding: '10px',
                         fontSize: '16px',
@@ -55,8 +65,14 @@ const [isOn, setIsOn] = useState(true);
                     </select>
                      {isOn ? (
                     <footer>
-                            <a href="https://buy.stripe.com/aFaaEWfCYeSOelX1pGeIw01">
-                        <button className='main-btn'>Subscribe</button>
+                            <a href={selectedApp ? appSubscriptionUrls[selectedApp] : '#'} 
+                               onClick={(e) => {
+                                   if (!selectedApp) {
+                                       e.preventDefault();
+                                       alert('Please select an app first');
+                                   }
+                               }}>
+                        <button className='main-btn' disabled={!selectedApp}>Subscribe</button>
                         </a>
                         
                         <a href="https://stripe.com/" target='_blank' rel="noopener noreferrer">
@@ -90,8 +106,8 @@ const [isOn, setIsOn] = useState(true);
                 <h3 className='mainSale'>All App Access</h3>
                 <div>
                     <ul>
-                        <li>My Flashcards</li>
                         <li>My To-do List</li>
+                        <li>My Flashcards</li>
                         <li>My Monthly Budget</li>
                         <li>My Locked Passwords​</li>
                         <li>My PenCal</li>
@@ -108,7 +124,7 @@ const [isOn, setIsOn] = useState(true);
                 <img src={StripePaymentCard} alt="" />
 
                 </a>
-                <p>$8.99/month.</p>
+                <p>$10.99/month.</p>
         </footer>
         ) : (
                             <>
@@ -178,7 +194,6 @@ const [isOn, setIsOn] = useState(true);
                 </button>
             </div> */}
             
-            <AppLogosFooter /> {/* Use the new component here */}
         </div>
     );
 };
