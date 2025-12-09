@@ -86,7 +86,7 @@ const LandingPage = () => {
                         )}
                     </aside>
                 <div className="sub-actions">
-                    <h2>All App Access</h2>
+                    <h2>App Access</h2>
                     <div>
                         <a href="/student-access-subscription">
                         <button className='main-btn'>Student</button>
@@ -95,7 +95,7 @@ const LandingPage = () => {
                         <button className='main-btn'>Free Month</button>
                         </a>
                         <p>Membership</p>
-                        <p>Membership</p>
+                        <p>Subscription</p>
 
                     </div>
 

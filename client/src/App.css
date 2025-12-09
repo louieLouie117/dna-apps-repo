@@ -167,7 +167,7 @@ p {
 .access-sub-page > main > div > p,
 .student-sub-page > main > div > p {
   color: white;
-  font: 1.5em sans-serif;
+  font: 2em sans-serif;
   text-align: center;
   padding: 0px;
 }
@@ -180,7 +180,7 @@ p {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 330px;
   text-align: center;
-  margin-top: -160px;
+  margin-top: -340px;
   margin-bottom: 90px;
 }
 
@@ -188,10 +188,9 @@ p {
 
 .student-sub-page>div  {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   column-gap: 30px;
   align-items: flex-start;
-  margin-top: -150px;
 }
 
 .student-sub-page>div ul {
@@ -212,8 +211,8 @@ p {
 
 .student-sub-page > div > aside > div {
   display: grid;
+  align-content: flex-start;
   padding: 20px;
-  height: 500px;
 }
 
 .access-sub-page > aside > div > a > img,

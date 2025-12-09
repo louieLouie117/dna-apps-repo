@@ -28,6 +28,7 @@ const AccessSubPage = () => {
                     <p>Enjoy full access instantly to all apps with all the benefits of new updates, app privacy, no in-app purchases, and no advertisements.</p>
                 </div>
             </main>
+            <div className="sub-container">
             <aside>
                 <h3>Start Your Free Month</h3>
                 <div>
@@ -58,12 +59,45 @@ const AccessSubPage = () => {
                     <p>All Apps Access $5.99/month.</p>
                 </div>
             </aside>
+
+             <aside>
+                <h3>Start Your Free Month</h3>
+                <div>
+                    {isOn ? (
+                        <>
+                            <a href="https://buy.stripe.com/6oU6oG0I44ea6Tv4BSeIw00">
+                                <button className='main-btn'>Subscribe</button>
+                            </a>
+                            <a href="https://stripe.com/" target='_blank' rel="noopener noreferrer">
+                                <img src={StripePaymentCard} alt="Stripe" />
+                            </a>
+                        </>
+                    ) : (
+                        <>
+                        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" style={{ display: 'inline-block' }}>
+                            <input type="hidden" name="cmd" value="_s-xclick" />
+                            <input type="hidden" name="hosted_button_id" value="DV58328B2WDFS" />
+                            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" />
+                            <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+                        </form>
+                         <a href="https://paypal.com/" target='_blank' rel="noopener noreferrer">
+                                <img src={PayPalLog} alt="PayPal" />
+                            </a>
+                        </>                      
+
+                        
+                    )}
+                    <p>All Apps Access $5.99/month.</p>
+                </div>
+            </aside>
+            </div>
+           
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '-100px', columnGap: '10px', marginBottom: '20px' }}>
-      <p>
-  {isOn
-    ? "Current payment method: Stripe — switch to PayPal"
-    : "Current payment method: PayPal — switch to Stripe"}
-</p>
+                <p>
+            {isOn
+                ? "Current payment method: Stripe — switch to PayPal"
+                : "Current payment method: PayPal — switch to Stripe"}
+            </p>
 
 
                 <button

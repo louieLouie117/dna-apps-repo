@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import LandingPage from './views/LandingPage'
 import Footer from './components/Footer'
 import StudentSub from './views/StudentSub'
-import AccessSubPage from './views/AccessSubPage'
+// import AccessSubPage from './views/AccessSubPage' //old all app access subscription page
 import Policy from './views/Policy'
 import Terms from './views/Terms'
 import supabase from './config/SupaBaseClient';
@@ -25,6 +25,7 @@ import DashboardUser from './views/DashboardUser'
 import LoginTest from './components/LoginTest';
 import RequestPasswordReset from './components/RequestPasswordReset';
 import ConfirmPasswordReset from './components/ConfirmPasswordReset';
+import SubPage from './views/SubPage';
 
 
 function App() {
@@ -42,7 +43,22 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/student-access-subscription" element={<StudentSub />} />
-        <Route path="/all-app-access-subscription" element={<AccessSubPage />} />
+        <Route path="/all-app-access-subscription" element={<SubPage />} />
+        <Route path="/subscription" element={<SubPage />} />
+
+        {/* new Sub url base on single app or sub  */}
+        <Route path="/all-app-access-registration" element={<RegAllApps />} />
+        <Route path="/budget-monthly-registration" element={<RegAllApps />} />
+        <Route path="/locked-passwords-registration" element={<RegAllApps />} />
+        <Route path="/flashcards-registration" element={<RegAllApps />} />
+        <Route path="/todo-list-registration" element={<RegAllApps />} />
+
+
+        <Route path="/student-membership" element={<RegAllApps />} />
+
+
+
+
         <Route path="/privacy-policy.html" element={<Policy />} />
         <Route path='/terms-of-service.html' element={<Terms />} />
 
