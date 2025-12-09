@@ -86,7 +86,8 @@ const [selectedApp, setSelectedApp] = useState('');
                         <a href="https://stripe.com/" target='_blank' rel="noopener noreferrer">
                         <img src={StripePaymentCard} alt="" />
                         </a>
-                        <p>$3.99/month.</p>
+                    <p>{selectedApp ? '$3.99/month' : ''}</p>
+
 
                 </footer>
                        
@@ -108,7 +109,7 @@ const [selectedApp, setSelectedApp] = useState('');
                     </ul>
 
                     <footer>
-                      <a href="https://buy.stripe.com/00w8wO3UgeSOgu52tKeIw02">
+                      <a href="https://buy.stripe.com/dRm7sK4YkdOK91Db0geIw06?prefilled_promo_code=Student24MonthsOff">
                 <button className='main-btn'>Subscribe</button>
                 </a>
                 
@@ -116,7 +117,84 @@ const [selectedApp, setSelectedApp] = useState('');
                 <img src={StripePaymentCard} alt="" />
 
                 </a>
-                <p>$6.99/month.</p>
+                <div style={{
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    borderRadius: '12px',
+                    padding: '20px',
+                    margin: '15px 0',
+                    color: 'white',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    boxShadow: '0 8px 25px rgba(102, 126, 234, 0.3)'
+                }}>
+                    {/* Student Badge */}
+                    <div style={{
+                        position: 'absolute',
+                        top: '7px',
+                        right: '-5px',
+                        background: '#ff6b6b',
+                        color: 'white',
+                        padding: '8px 16px',
+                        borderRadius: '20px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        transform: 'rotate(15deg)',
+                        boxShadow: '0 4px 12px rgba(255, 107, 107, 0.4)'
+                    }}>
+                        🎓 STUDENT
+                    </div>
+                    
+                    {/* Pricing Content */}
+                    <div style={{ position: 'relative', zIndex: 2 }}>
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            marginBottom: '8px'
+                        }}>
+                            <span style={{
+                                fontSize: '28px',
+                                fontWeight: 'bold',
+                                color: '#ffd700'
+                            }}>$4.99</span>
+                            <span style={{
+                                fontSize: '16px',
+                                opacity: 0.9
+                            }}>/month</span>
+                            <span style={{
+                                fontSize: '18px',
+                                textDecoration: 'line-through',
+                                opacity: 0.7,
+                                color: '#ffcccb'
+                            }}>$7.99</span>
+                        </div>
+                        
+                        <div style={{
+                            background: 'rgba(255, 255, 255, 0.15)',
+                            borderRadius: '8px',
+                            padding: '12px',
+                            backdropFilter: 'blur(10px)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)'
+                        }}>
+                            <p style={{
+                                margin: 0,
+                                fontSize: '14px',
+                                fontWeight: '500',
+                                lineHeight: '1.4'
+                            }}>
+                                🎯 <strong>Student Discount:</strong> Save 37% for 24 months<br/>
+                                {/* 💝 Use code: <code style={{
+                                    background: 'rgba(255, 255, 255, 0.2)',
+                                    padding: '2px 6px',
+                                    borderRadius: '4px',
+                                    fontWeight: 'bold'
+                                }}>Student24MonthsOff</code> */}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+
         </footer>
                         
 

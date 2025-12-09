@@ -2,7 +2,6 @@ import {useState} from 'react';
 import Backgound from '../assets/img/AllAppAccess.png'; // Assuming this is the correct path to your image
 import PageHeader from '../components/PageHeader';
 import StripePaymentCard from '../assets/img/StripePaymentCard.png'; // Adjust the path as needed
-import PayPalLog from '../assets/img/sPayPal.png'; // Assuming you have a PayPal logo image
 
 
 const SubPage = () => {
@@ -10,7 +9,7 @@ const [selectedApp, setSelectedApp] = useState('');
 
     // Mapping of apps to their Stripe subscription URLs
     const appSubscriptionUrls = {
-        'MyBudgetMonthly': 'https://buy.stripe.com/budget-monthly-url',
+        'MyBudgetMonthly': 'https://buy.stripe.com/9B6dR862oh0W3Hj4BSeIw07', // ready for production
         'MyLockedPasswords': 'https://buy.stripe.com/locked-passwords-url',
         'MyFlashcards': 'https://buy.stripe.com/flashcards-url',
         'MyTodoList': 'https://buy.stripe.com/todo-list-url'
@@ -56,10 +55,10 @@ const [selectedApp, setSelectedApp] = useState('');
                         marginBottom: '20px'
                     }}>
                         <option value="">Select an app</option>
-                        <option value="MyBudgetMonthly">My Budget Monthly - $5.99/month</option>
-                        <option value="MyLockedPasswords">My Locked Passwords - $5.99/month</option>
-                        <option value="MyFlashcards">My Flashcards - $5.99/month</option>
-                        <option value="MyTodoList">My Todo List - $5.99/month</option>
+                        <option value="MyBudgetMonthly">My Budget Monthly - $3.99/month</option>
+                        <option value="MyLockedPasswords">My Locked Passwords - $3.99/month</option>
+                        <option value="MyFlashcards">My Flashcards - $3.99/month</option>
+                        <option value="MyTodoList">My Todo List - $3.99/month</option>
                     </select>
                     <footer>
                             <a href={selectedApp ? appSubscriptionUrls[selectedApp] : '#'} 
@@ -86,7 +85,8 @@ const [selectedApp, setSelectedApp] = useState('');
                         <a href="https://stripe.com/" target='_blank' rel="noopener noreferrer">
                         <img src={StripePaymentCard} alt="" />
                         </a>
-                        <p>$5.99/month.</p>
+                        {/* render pricing on selected item */}
+                        <p>{selectedApp ? '$3.99/month' : ''}</p>
 
                 </footer>
                            
@@ -109,7 +109,7 @@ const [selectedApp, setSelectedApp] = useState('');
 
                     
                     <footer>
-                      <a href="https://buy.stripe.com/00w8wO3UgeSOgu52tKeIw02">
+                      <a href="https://buy.stripe.com/dRm7sK4YkdOK91Db0geIw06">
                 <button className='main-btn'>Subscribe</button>
                 </a>
                 
@@ -117,7 +117,7 @@ const [selectedApp, setSelectedApp] = useState('');
                 <img src={StripePaymentCard} alt="" />
 
                 </a>
-                <p>$10.99/month.</p>
+                <p>$7.99/month.</p>
         </footer>
         
                          
