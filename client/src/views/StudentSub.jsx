@@ -2,20 +2,18 @@ import {useState} from 'react';
 import Backgound from '../assets/img/AllAppAccess.png'; // Assuming this is the correct path to your image
 import PageHeader from '../components/PageHeader';
 import StripePaymentCard from '../assets/img/StripePaymentCard.png'; // Adjust the path as needed
-import PayPalLog from '../assets/img/sPayPal.png'; // Assuming you have a PayPal logo image
 
 
 const StudentSub = () => {
 const [selectedApp, setSelectedApp] = useState('');
 
     // Mapping of apps to their Stripe subscription URLs
-    const appSubscriptionUrls = {
-        'MyBudgetMonthly': 'https://buy.stripe.com/budget-monthly-url',
-        'MyLockedPasswords': 'https://buy.stripe.com/locked-passwords-url',
-        'MyFlashcards': 'https://buy.stripe.com/flashcards-url',
-        'MyTodoList': 'https://buy.stripe.com/todo-list-url'
+ const appSubscriptionUrls = {
+        'MyBudgetMonthly': 'https://buy.stripe.com/9B6dR862oh0W3Hj4BSeIw07', // ready for production
+        'MyLockedPasswords': 'https://buy.stripe.com/aFa6oG76sdOKgu57O4eIw09', // ready for production
+        'MyFlashcards': 'https://buy.stripe.com/aFa8wOfCY9yub9L8S8eIw0a', // ready for production
+        'MyTodoList': 'https://buy.stripe.com/4gMdR80I4262a5H9WceIw0b' // ready for production
     };
-
    
 
     const handleAppSelection = (event) => {
