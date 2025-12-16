@@ -1,0 +1,625 @@
+.coming-soon-container {
+    display: flex;
+    width: 93vw;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    border-radius: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Modern Abstract Geometric Objects */
+.coming-soon-container::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    border-radius: 50%;
+    animation: float-slow 8s ease-in-out infinite;
+    z-index: 1;
+}
+
+.coming-soon-container::after {
+    content: '';
+    position: absolute;
+    top: 60%;
+    right: -80px;
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent);
+    border-radius: 50% 20% 50% 20%;
+    transform: rotate(45deg);
+    animation: rotate-slow 12s linear infinite;
+    z-index: 1;
+}
+
+/* Additional abstract shapes */
+.coming-soon-container .abstract-shape-1 {
+    position: absolute;
+    top: 20%;
+    right: 10%;
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(60deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.12));
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    animation: pulse-glow 6s ease-in-out infinite;
+    z-index: 1;
+}
+
+.coming-soon-container .abstract-shape-2 {
+    position: absolute;
+    bottom: 15%;
+    left: 8%;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    transform: rotate(45deg);
+    animation: bounce-subtle 5s ease-in-out infinite;
+    z-index: 1;
+}
+
+.coming-soon-container .abstract-shape-3 {
+    position: absolute;
+    top: 45%;
+    left: 5%;
+    width: 60px;
+    height: 150px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent);
+    border-radius: 30px;
+    transform: rotate(-20deg);
+    animation: sway 7s ease-in-out infinite;
+    z-index: 1;
+}
+
+/* Ensure content appears above abstract shapes */
+.coming-soon-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* Animations for abstract objects */
+@keyframes float-slow {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px);
+    }
+    33% {
+        transform: translateY(-20px) translateX(10px);
+    }
+    66% {
+        transform: translateY(-10px) translateX(-5px);
+    }
+}
+
+@keyframes rotate-slow {
+    0% {
+        transform: rotate(45deg);
+    }
+    100% {
+        transform: rotate(405deg);
+    }
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+@keyframes bounce-subtle {
+    0%, 100% {
+        transform: rotate(45deg) translateY(0px);
+    }
+    50% {
+        transform: rotate(45deg) translateY(-15px);
+    }
+}
+
+@keyframes sway {
+    0%, 100% {
+        transform: rotate(-20deg);
+    }
+    50% {
+        transform: rotate(-10deg);
+    }
+}
+
+.app-item{
+    display: grid;
+    max-width: 250px;
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}   
+
+.app-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.app-logo img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1.3);
+    margin-bottom: 1rem;
+}
+.app-budget{
+    background-color: #4DB5A5;
+}
+.app-flashcards{
+    background-color: #007A76;
+}
+
+.app-lockedPasswords{
+    background-color: #0045D0;
+}
+
+.app-todo-list{
+    background-color: #FFC20F;
+}
+
+.qr-code-container img {
+    width: 200px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+.coming-soon-title {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, #fff, #e0e0e0);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: fadeInUp 1s ease-out;
+}
+
+.coming-soon-subtitle {
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    animation: fadeInUp 1s ease-out 0.2s both;
+}
+
+.coming-soon-description {
+    font-size: 1.1rem;
+    max-width: 600px;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+    opacity: 0.8;
+    animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+.countdown-timer {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    animation: fadeInUp 1s ease-out 0.6s both;
+}
+
+.countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.countdown-number {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.countdown-label {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+}
+
+.notify-form {
+    display: flex;
+    gap: 1rem;
+    max-width: 400px;
+    width: 100%;
+    animation: fadeInUp 1s ease-out 0.8s both;
+}
+
+.notify-input {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+}
+
+.notify-button {
+    padding: 1rem 2rem;
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.notify-button:hover {
+    background: #ff5252;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .coming-soon-title {
+        font-size: 2.5rem;
+    }
+    
+    .countdown-timer {
+        gap: 1rem;
+    }
+    
+    .countdown-item {
+        padding: 1rem;
+    }
+    
+    .countdown-number {
+        font-size: 2rem;
+    }
+    
+    .notify-form {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .coming-soon-title {
+        font-size: 2rem;
+    }
+    
+    .coming-soon-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .countdown-timer {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* Modern App Cards Layout */
+.apps-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 2rem auto;
+}
+
+.apps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.app-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.app-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.app-logo-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.app-logo-item.active {
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
+
+.app-logo-item img {
+    width: 60px;
+    border-radius: 12px;
+    margin-bottom: 0.5rem;
+    transition: transform 0.3s ease;
+}
+
+.app-logo-item:hover img {
+    transform: scale(1.1);
+}
+
+.app-logo-item h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+}
+
+.qr-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.qr-code {
+    border-radius: 15px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.qr-instruction {
+    font-size: 0.9rem;
+    color: white;
+    font-weight: 500;
+    margin: 0;
+    opacity: 0.8;
+}
+
+.app-item h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+.qr-code img {
+    width: 160px;
+    height: 160px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    filter: contrast(1.1);
+}
+
+.app-card:hover .qr-code img {
+    transform: scale(1.03);
+    filter: contrast(1.2);
+}
+
+.app-item p {
+    font-size: 1.1rem;
+    color: #666;
+    font-weight: 500;
+    margin-top: 1rem;
+}
+
+/* Navigation Controls */
+.carousel-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.carousel-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-btn:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+}
+
+.carousel-btn:active {
+    transform: translateY(0) scale(0.95);
+}
+
+.carousel-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.carousel-btn:hover::before {
+    left: 100%;
+}
+
+/* Dots Indicator */
+.carousel-dots {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.dot.active {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    transform: scale(1.3);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.dot:hover {
+    background: rgba(255, 255, 255, 0.7);
+    transform: scale(1.1);
+}
+
+/* App-specific accent colors */
+.app-card.app-budget::before {
+    background: linear-gradient(90deg, #4DB5A5, #5bc0b0);
+}
+
+.app-card.app-flashcards::before {
+    background: linear-gradient(90deg, #007A76, #00a19c);
+}
+
+.app-card.app-lockedPasswords::before {
+    background: linear-gradient(90deg, #0045D0, #0056ff);
+}
+
+.app-card.app-todo-list::before {
+    background: linear-gradient(90deg, #FFC20F, #ffd93d);
+}
+
+/* Subtle app-specific background tints */
+.app-card.app-budget {
+    background: #4DB5A5;
+}
+
+.app-card.app-flashcards {
+    background: #007A76;
+}
+
+.app-card.app-lockedPasswords {
+    background: #0045D0;
+}
+
+.app-card.app-todo-list {
+    background: #FFC20F;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .apps-container {
+        max-width: 95%;
+        margin: 1rem auto;
+    }
+
+    .apps-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .app-card {
+        padding: 1.5rem;
+    }
+
+    .app-logo img {
+        width: 35px;
+        height: 35px;
+    }
+
+    .app-name {
+        font-size: 1rem;
+    }
+
+    .qr-code img {
+        width: 140px;
+        height: 140px;
+    }
+}
+
+@media (max-width: 480px) {
+    .apps-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0.5rem;
+    }
+
+    .app-card {
+        padding: 1.2rem;
+    }
+
+    .app-header {
+        gap: 0.8rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .app-logo img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .app-name {
+        font-size: 0.9rem;
+    }
+
+    .qr-code img {
+        width: 120px;
+        height: 120px;
+    }
+
+    .qr-instruction {
+        font-size: 0.8rem;
+    }
+}
