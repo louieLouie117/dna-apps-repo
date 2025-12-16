@@ -18,10 +18,15 @@ const LandingPage = () => {
             <header>
                 <nav>
                 <PageHeader />
+                   {/* <a href="/dashboard">
+                    <button>Dashboard</button>
+                </a> */}
 
                     <a href="/sign-in">
-                    <button>Sign In</button>
+                    <button style={{background: '#0074D4', color: 'white'}}>Sign In</button>
                 </a>
+
+                 
 
                 </nav>
                 
