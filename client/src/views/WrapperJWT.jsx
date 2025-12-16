@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import { safeCookieParser } from '../utils/cookieUtils';
+import ComingSoon from '../components/ComingSoon';
+import './WrapperJWT.css';
 
 export default function WrapperJWT({ children }) {
   const [loading, setLoading] = useState(true);
@@ -104,32 +106,11 @@ export default function WrapperJWT({ children }) {
   // Show loading spinner while checking authentication
   if (loading) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        fontSize: '1.2rem',
-        color: '#666'
-      }}>
+      <div className="loading-container">
         <div>
-          <div style={{
-            width: '40px',
-            height: '40px',
-            border: '4px solid #f3f3f3',
-            borderTop: '4px solid #3498db',
-            borderRadius: '50%',
-            animation: 'spin 1s linear infinite',
-            margin: '0 auto 16px'
-          }}></div>
+          <div className="loading-spinner"></div>
           Checking authentication...
         </div>
-        <style>{`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}</style>
       </div>
     );
   }
@@ -151,13 +132,13 @@ export default function WrapperJWT({ children }) {
           };
         case 'NO_TOKEN':
           return {
-            title: 'Your account has been created.',
-            message: 'Please sign in to access your account.'
+            title: 'Welcome!',
+            message: 'Manage your account in your dashboard.'
           };
         default:
           return {
-            title: 'Your account has been created.',
-            message: 'Please log in to continue.'
+            title: 'Welcome!',
+            message: 'Manage your account in your dashboard.'
           };
       }
     };
@@ -165,31 +146,26 @@ export default function WrapperJWT({ children }) {
     const authMessage = getAuthMessage();
 
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        flexDirection: 'column',
-        gap: '20px'
-      }}>
-        <PageHeader />
+      <>
+      <div className="auth-layout">
+        
+        <div className="auth-content">
+          <PageHeader />
         <h2>{authMessage.title}</h2>
         <p>{authMessage.message}</p>
         <button 
           onClick={() => navigate('/login')}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: '#3498db',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer'
-          }}
+          className="dashboard-button"
         >
-          Go to sign in page.
+          Dashboard
         </button>
+        </div>
+         {/* render component here */}
+        <ComingSoon />
       </div>
+     
+      </>
+      
     );
   }
 
@@ -200,24 +176,9 @@ export default function WrapperJWT({ children }) {
 
   // Fallback: if authenticated but missing user data, show loading
   return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '100vh',
-      fontSize: '1.2rem',
-      color: '#666'
-    }}>
+    <div className="fallback-loading">
       <div>
-        <div style={{
-          width: '40px',
-          height: '40px',
-          border: '4px solid #f3f3f3',
-          borderTop: '4px solid #3498db',
-          borderRadius: '50%',
-          animation: 'spin 1s linear infinite',
-          margin: '0 auto 16px'
-        }}></div>
+        <div className="loading-spinner"></div>
         Loading user data...
       </div>
     </div>
