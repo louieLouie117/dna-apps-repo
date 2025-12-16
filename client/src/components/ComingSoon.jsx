@@ -46,6 +46,11 @@ const ComingSoon = () => {
 
     return (
         <div className="coming-soon-container">
+            {/* Abstract geometric shapes */}
+            {/* <div className="abstract-shape-1"></div> */}
+            <div className="abstract-shape-2"></div>
+            <div className="abstract-shape-3"></div>
+            
             <div className="coming-soon-content">
                 <h1 className="coming-soon-title">Mobile Apps Coming Soon!</h1>
                 <p className="coming-soon-message">

@@ -157,7 +157,7 @@ export default function WrapperJWT({ children }) {
           onClick={() => navigate('/login')}
           className="dashboard-button"
         >
-          Dashboard
+          Go to Dashboard
         </button>
         </div>
          {/* render component here */}
