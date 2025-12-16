@@ -48,9 +48,9 @@ const AppSection = () => {
     return (
         <div className="app-container">
             {appItems.map((item, index) => (
-                <div key={index} className="app-item">
+                <div key={index} >
                     <div className="image-container">
-                        <img src={item.src} alt={item.alt} className="app-image" />
+                        <img src={item.src} alt={item.alt}  />
                     </div>
                     <a href={item.url} target="_blank" rel="noopener noreferrer" className="app-link">
                         <button>Learn More</button>
