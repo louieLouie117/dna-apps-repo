@@ -13,8 +13,6 @@ import AppLogoTodoList from '../assets/AppLogos/app-logo-todolist.png'; // Place
 import QrTodoList from '../assets/QrCodes/qrcode_mytodolist.png'; // Placeholder image path
 
 const ComingSoon = () => {
-    const [currentApp, setCurrentApp] = useState(0);
-    
     const apps = [
         {
             id: 0,
@@ -46,8 +44,6 @@ const ComingSoon = () => {
         }
     ];
 
-    // No additional functions needed - just click handling
-
     return (
         <div className="coming-soon-container">
             <div className="coming-soon-content">
@@ -60,23 +56,28 @@ const ComingSoon = () => {
                 </p>
 
                 <div className="apps-container">
-                    {/* App Logos Grid */}
-                    <div className="app-logos-grid">
-                        {apps.map((app, index) => (
+                    <div className="apps-grid">
+                        {apps.map((app) => (
                             <div 
                                 key={app.id} 
-                                className={`app-logo-item ${app.className} ${index === currentApp ? 'active' : ''}`}
-                                onClick={() => setCurrentApp(index)}
+                                className={`app-card ${app.className}`}
                             >
-                                <img src={app.logo} alt={`${app.name} App Logo`} />
-                                <h3>{app.name}</h3>
-                                {/* render qr code img */}
-                                <img src={app.qrCode} alt="" />
+                                <div className="app-header">
+                                    <h3 className="app-name">{app.name}</h3>
+
+                                    <div className="app-logo">
+                                        <img src={app.logo} alt={`${app.name} App Logo`} />
+                                    </div>
+                                </div>
+                                <div className="qr-section">
+                                    <div className="qr-code">
+                                        <img src={app.qrCode} alt={`${app.name} QR Code`} />
+                                    </div>
+                                    <p className="qr-instruction">Scan to use app on your phone.</p>
+                                </div>
                             </div>
                         ))}
                     </div>
-
-                   
                 </div>
                 
                

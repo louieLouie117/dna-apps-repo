@@ -200,36 +200,44 @@
     }
 }
 
-/* App Logo Grid and QR Display */
+/* Modern App Cards Layout */
 .apps-container {
     width: 100%;
-    max-width: 800px;
+    max-width: 1000px;
     margin: 2rem auto;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
 }
 
-/* App Logos Grid */
-.app-logos-grid {
+.apps-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
     padding: 1rem;
 }
 
-.app-logo-item {
+.app-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1.5rem;
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 2px solid transparent;
-    cursor: pointer;
-    transition: all 0.3s ease;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.app-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
 }
 
 .app-logo-item:hover {
@@ -263,27 +271,25 @@
     margin: 0;
 }
 
-/* QR Display Container */
-.qr-display-container {
+.qr-section {
+    width: 100%;
     display: flex;
-    justify-content: center;
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    flex-direction: column;
+    align-items: center;
 }
 
-.qr-content {
-    text-align: center;
-    color: #333;
+.qr-code {
+    border-radius: 15px;
+    padding: 1rem;
+    margin-bottom: 1rem;
 }
 
-.qr-content h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
+.qr-instruction {
+    font-size: 0.9rem;
     color: white;
+    font-weight: 500;
+    margin: 0;
+    opacity: 0.8;
 }
 
 .app-item h2 {
@@ -293,30 +299,17 @@
     color: #333;
 }
 
-.qr-code-container {
-    margin: 1.5rem 0;
-    display: flex;
-    justify-content: center;
+.qr-code img {
+    width: 160px;
+    height: 160px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    filter: contrast(1.1);
 }
 
-.qr-code-container img {
-    width: 200px;
-    height: 200px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
-    border: 3px solid rgba(255, 255, 255, 0.8);
-}
-
-.qr-code-container img:hover {
-    transform: scale(1.05);
-}
-
-.qr-content p {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.9);
-    font-weight: 500;
-    margin-top: 1rem;
+.app-card:hover .qr-code img {
+    transform: scale(1.03);
+    filter: contrast(1.2);
 }
 
 .app-item p {
@@ -405,42 +398,38 @@
     transform: scale(1.1);
 }
 
-/* App-specific backgrounds for logo items */
-.app-logo-item.app-budget {
-    background: linear-gradient(135deg, rgba(77, 181, 165, 0.2), rgba(255, 255, 255, 0.1));
+/* App-specific accent colors */
+.app-card.app-budget::before {
+    background: linear-gradient(90deg, #4DB5A5, #5bc0b0);
 }
 
-.app-logo-item.app-flashcards {
-    background: linear-gradient(135deg, rgba(0, 122, 118, 0.2), rgba(255, 255, 255, 0.1));
+.app-card.app-flashcards::before {
+    background: linear-gradient(90deg, #007A76, #00a19c);
 }
 
-.app-logo-item.app-lockedPasswords {
-    background: linear-gradient(135deg, rgba(0, 69, 208, 0.2), rgba(255, 255, 255, 0.1));
+.app-card.app-lockedPasswords::before {
+    background: linear-gradient(90deg, #0045D0, #0056ff);
 }
 
-.app-logo-item.app-todo-list {
-    background: linear-gradient(135deg, rgba(255, 194, 15, 0.2), rgba(255, 255, 255, 0.1));
+.app-card.app-todo-list::before {
+    background: linear-gradient(90deg, #FFC20F, #ffd93d);
 }
 
-/* Enhanced active states */
-.app-logo-item.app-budget.active {
-    background: linear-gradient(135deg, rgba(77, 181, 165, 0.3), rgba(255, 255, 255, 0.2));
-    border-color: rgba(77, 181, 165, 0.5);
+/* Subtle app-specific background tints */
+.app-card.app-budget {
+    background: #4DB5A5;
 }
 
-.app-logo-item.app-flashcards.active {
-    background: linear-gradient(135deg, rgba(0, 122, 118, 0.3), rgba(255, 255, 255, 0.2));
-    border-color: rgba(0, 122, 118, 0.5);
+.app-card.app-flashcards {
+    background: #007A76;
 }
 
-.app-logo-item.app-lockedPasswords.active {
-    background: linear-gradient(135deg, rgba(0, 69, 208, 0.3), rgba(255, 255, 255, 0.2));
-    border-color: rgba(0, 69, 208, 0.5);
+.app-card.app-lockedPasswords {
+    background: #0045D0;
 }
 
-.app-logo-item.app-todo-list.active {
-    background: linear-gradient(135deg, rgba(255, 194, 15, 0.3), rgba(255, 255, 255, 0.2));
-    border-color: rgba(255, 194, 15, 0.5);
+.app-card.app-todo-list {
+    background: #FFC20F;
 }
 
 /* Responsive Design */
@@ -450,64 +439,61 @@
         margin: 1rem auto;
     }
 
-    .app-logos-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
+    .apps-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
     }
 
-    .app-logo-item {
-        padding: 1rem;
+    .app-card {
+        padding: 1.5rem;
     }
 
-    .app-logo-item img {
-        width: 50px;
-        height: 50px;
+    .app-logo img {
+        width: 35px;
+        height: 35px;
     }
 
-    .app-logo-item h3 {
-        font-size: 0.8rem;
+    .app-name {
+        font-size: 1rem;
     }
 
-    .qr-content h2 {
-        font-size: 1.5rem;
-    }
-
-    .qr-code-container img {
-        width: 150px;
-        height: 150px;
+    .qr-code img {
+        width: 140px;
+        height: 140px;
     }
 }
 
 @media (max-width: 480px) {
-    .app-logos-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.8rem;
+    .apps-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
         padding: 0.5rem;
     }
 
-    .app-logo-item {
-        padding: 0.8rem;
+    .app-card {
+        padding: 1.2rem;
     }
 
-    .app-logo-item img {
-        width: 40px;
-        height: 40px;
+    .app-header {
+        gap: 0.8rem;
+        margin-bottom: 1.5rem;
     }
 
-    .app-logo-item h3 {
-        font-size: 0.7rem;
+    .app-logo img {
+        width: 30px;
+        height: 30px;
     }
 
-    .qr-content h2 {
-        font-size: 1.3rem;
+    .app-name {
+        font-size: 0.9rem;
     }
 
-    .qr-code-container img {
+    .qr-code img {
         width: 120px;
         height: 120px;
     }
 
-    .qr-display-container {
-        padding: 1rem;
+    .qr-instruction {
+        font-size: 0.8rem;
     }
 }
