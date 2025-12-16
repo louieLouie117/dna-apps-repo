@@ -199,3 +199,315 @@
         justify-content: center;
     }
 }
+
+/* App Logo Grid and QR Display */
+.apps-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* App Logos Grid */
+.app-logos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+.app-logo-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.app-logo-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.app-logo-item.active {
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
+
+.app-logo-item img {
+    width: 60px;
+    border-radius: 12px;
+    margin-bottom: 0.5rem;
+    transition: transform 0.3s ease;
+}
+
+.app-logo-item:hover img {
+    transform: scale(1.1);
+}
+
+.app-logo-item h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+}
+
+/* QR Display Container */
+.qr-display-container {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.qr-content {
+    text-align: center;
+    color: #333;
+}
+
+.qr-content h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: white;
+}
+
+.app-item h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+.qr-code-container {
+    margin: 1.5rem 0;
+    display: flex;
+    justify-content: center;
+}
+
+.qr-code-container img {
+    width: 200px;
+    height: 200px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    border: 3px solid rgba(255, 255, 255, 0.8);
+}
+
+.qr-code-container img:hover {
+    transform: scale(1.05);
+}
+
+.qr-content p {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    margin-top: 1rem;
+}
+
+.app-item p {
+    font-size: 1.1rem;
+    color: #666;
+    font-weight: 500;
+    margin-top: 1rem;
+}
+
+/* Navigation Controls */
+.carousel-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.carousel-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-btn:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+}
+
+.carousel-btn:active {
+    transform: translateY(0) scale(0.95);
+}
+
+.carousel-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.carousel-btn:hover::before {
+    left: 100%;
+}
+
+/* Dots Indicator */
+.carousel-dots {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.dot.active {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    transform: scale(1.3);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.dot:hover {
+    background: rgba(255, 255, 255, 0.7);
+    transform: scale(1.1);
+}
+
+/* App-specific backgrounds for logo items */
+.app-logo-item.app-budget {
+    background: linear-gradient(135deg, rgba(77, 181, 165, 0.2), rgba(255, 255, 255, 0.1));
+}
+
+.app-logo-item.app-flashcards {
+    background: linear-gradient(135deg, rgba(0, 122, 118, 0.2), rgba(255, 255, 255, 0.1));
+}
+
+.app-logo-item.app-lockedPasswords {
+    background: linear-gradient(135deg, rgba(0, 69, 208, 0.2), rgba(255, 255, 255, 0.1));
+}
+
+.app-logo-item.app-todo-list {
+    background: linear-gradient(135deg, rgba(255, 194, 15, 0.2), rgba(255, 255, 255, 0.1));
+}
+
+/* Enhanced active states */
+.app-logo-item.app-budget.active {
+    background: linear-gradient(135deg, rgba(77, 181, 165, 0.3), rgba(255, 255, 255, 0.2));
+    border-color: rgba(77, 181, 165, 0.5);
+}
+
+.app-logo-item.app-flashcards.active {
+    background: linear-gradient(135deg, rgba(0, 122, 118, 0.3), rgba(255, 255, 255, 0.2));
+    border-color: rgba(0, 122, 118, 0.5);
+}
+
+.app-logo-item.app-lockedPasswords.active {
+    background: linear-gradient(135deg, rgba(0, 69, 208, 0.3), rgba(255, 255, 255, 0.2));
+    border-color: rgba(0, 69, 208, 0.5);
+}
+
+.app-logo-item.app-todo-list.active {
+    background: linear-gradient(135deg, rgba(255, 194, 15, 0.3), rgba(255, 255, 255, 0.2));
+    border-color: rgba(255, 194, 15, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .apps-container {
+        max-width: 95%;
+        margin: 1rem auto;
+    }
+
+    .app-logos-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .app-logo-item {
+        padding: 1rem;
+    }
+
+    .app-logo-item img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .app-logo-item h3 {
+        font-size: 0.8rem;
+    }
+
+    .qr-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .qr-code-container img {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .app-logos-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+        padding: 0.5rem;
+    }
+
+    .app-logo-item {
+        padding: 0.8rem;
+    }
+
+    .app-logo-item img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .app-logo-item h3 {
+        font-size: 0.7rem;
+    }
+
+    .qr-content h2 {
+        font-size: 1.3rem;
+    }
+
+    .qr-code-container img {
+        width: 120px;
+        height: 120px;
+    }
+
+    .qr-display-container {
+        padding: 1rem;
+    }
+}

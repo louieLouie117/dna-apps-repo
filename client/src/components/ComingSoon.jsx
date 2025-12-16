@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './ComingSoon.css';
 import AppLogoBudget from '../assets/AppLogos/app-logo-budget.png'; // Placeholder image path
 import QrMybudget from '../assets/QrCodes/qrcode_mybudget.png'; // Placeholder image path
@@ -13,6 +13,41 @@ import AppLogoTodoList from '../assets/AppLogos/app-logo-todolist.png'; // Place
 import QrTodoList from '../assets/QrCodes/qrcode_mytodolist.png'; // Placeholder image path
 
 const ComingSoon = () => {
+    const [currentApp, setCurrentApp] = useState(0);
+    
+    const apps = [
+        {
+            id: 0,
+            name: "My Budget Monthly",
+            logo: AppLogoBudget,
+            qrCode: QrMybudget,
+            className: "app-budget"
+        },
+        {
+            id: 1,
+            name: "My Flashcards",
+            logo: AppLogoFlashcards,
+            qrCode: QrFlashcards,
+            className: "app-flashcards"
+        },
+        {
+            id: 2,
+            name: "My Todo List",
+            logo: AppLogoTodoList,
+            qrCode: QrTodoList,
+            className: "app-todo-list"
+        },
+        {
+            id: 3,
+            name: "My Locked Passwords",
+            logo: AppLogoLockedPassword,
+            qrCode: QrLockedPassword,
+            className: "app-lockedPasswords"
+        }
+    ];
+
+    // No additional functions needed - just click handling
+
     return (
         <div className="coming-soon-container">
             <div className="coming-soon-content">
@@ -25,51 +60,23 @@ const ComingSoon = () => {
                 </p>
 
                 <div className="apps-container">
-                    <ul>
-                        <li className="app-item app-budget">
-                            <h2>My Budget Monthly</h2>
-                            <div className="app-logo">
-                                <img src={AppLogoBudget} alt="My Budget Monthly App Logo" />
+                    {/* App Logos Grid */}
+                    <div className="app-logos-grid">
+                        {apps.map((app, index) => (
+                            <div 
+                                key={app.id} 
+                                className={`app-logo-item ${app.className} ${index === currentApp ? 'active' : ''}`}
+                                onClick={() => setCurrentApp(index)}
+                            >
+                                <img src={app.logo} alt={`${app.name} App Logo`} />
+                                <h3>{app.name}</h3>
+                                {/* render qr code img */}
+                                <img src={app.qrCode} alt="" />
                             </div>
-                            <div className="qr-code-container">
-                                <img src={QrMybudget} alt="My Budget Monthly QR Code" />
-                            </div>
-                            <p>Scan to use app on your phone.</p>
-                        </li>
-                        <li className="app-item app-flashcards">
-                            <h2>My Flashcards</h2>
-                             <div className="app-logo">
-                                <img src={AppLogoFlashcards} alt="My Flashcards App Logo" />
-                            </div>
-                            <div className="qr-code-container">
-                                <img src={QrFlashcards} alt="My Flashcards QR Code" />
-                            </div>
-                            <p>Scan to use app on your phone.</p>
-                        </li>
-                        
-                        <li className="app-item app-todo-list">
-                            <h2>My Todo List</h2>
-                             <div className="app-logo">
-                                <img src={AppLogoTodoList} alt="My Todo List App Logo" />
-                            </div>
-                            <div className="qr-code-container">
-                                <img src={QrTodoList} alt="My Todo List QR Code" />
-                            </div>
-                            <p>Scan to use app on your phone.</p>
-                        </li>
-                        <li className="app-item app-lockedPasswords">
-                            <h2>My Locked Passwords</h2>
-                            <div className="app-logo">
-                                <img src={AppLogoLockedPassword} alt="My Locked Passwords App Logo" />
-                            </div>
-                            <div className="qr-code-container">
-                                <img src={QrLockedPassword} alt="My Locked Passwords QR Code" />
-                            </div>
-                            <p>Scan to use app on your phone.</p>
-                        </li>
-                    </ul>
+                        ))}
+                    </div>
 
-                
+                   
                 </div>
                 
                
