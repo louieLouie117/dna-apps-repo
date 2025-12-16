@@ -35,7 +35,6 @@
 .auth-layout {
   display: grid;
   align-items: center;
-  height: 100vh;
     margin: 0 auto;
   gap: 20px;
 }
