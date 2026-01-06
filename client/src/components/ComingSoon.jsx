@@ -14,35 +14,42 @@ import QrTodoList from '../assets/QrCodes/qrcode_mytodolist.png'; // Placeholder
 
 const ComingSoon = () => {
     const apps = [
-        {
-            id: 0,
-            name: "My Budget Monthly",
-            logo: AppLogoBudget,
-            qrCode: QrMybudget,
-            className: "app-budget"
-        },
+      
         {
             id: 1,
             name: "My Flashcards",
             logo: AppLogoFlashcards,
             qrCode: QrFlashcards,
-            className: "app-flashcards"
+            className: "app-flashcards",
+            signInUrl: "https://myflashcardsapp.com/"
         },
         {
             id: 2,
             name: "My Todo List",
             logo: AppLogoTodoList,
             qrCode: QrTodoList,
-            className: "app-todo-list"
+            className: "app-todo-list",
+            signInUrl: "https://mytodolist-app.com/"
         },
         {
             id: 3,
             name: "My Locked Passwords",
             logo: AppLogoLockedPassword,
             qrCode: QrLockedPassword,
-            className: "app-lockedPasswords"
+            className: "app-lockedPasswords",
+            signInUrl: "https://mylockedpasswords.com/"
         }
     ];
+
+    const AvailableNow = [  
+        {
+                id: 0,
+                name: "My Budget Monthly",
+                logo: AppLogoBudget,
+                qrCode: QrMybudget,
+                className: "app-budget",
+                signInUrl: "https://mybudgetmonthly.com/"
+            }]; // Placeholder for future use
 
     return (
         <div className="coming-soon-container">
@@ -52,16 +59,53 @@ const ComingSoon = () => {
             <div className="abstract-shape-3"></div>
             
             <div className="coming-soon-content">
-                <h1 className="coming-soon-title">Mobile Apps Coming Soon!</h1>
-                <p className="coming-soon-message">
+                <h1 className='coming-soon-title'>Mobile Apps</h1>
+
+                 <div className="apps-container">
+                    <h2>Available Now</h2>
+                 <div className="apps-grid">
+                        {AvailableNow.map((AvailableNow) => (
+                            <div 
+                                key={AvailableNow.id} 
+                                className={`app-card ${AvailableNow.className}`}
+                            >
+                                <div className="app-header">
+                                    <h3 className="app-name">{AvailableNow.name}</h3>   
+                                    <div className="app-logo">
+                                        <img src={AvailableNow.logo} alt={`${AvailableNow.name} App Logo`} />
+                                    </div>
+                                    {/* sign in button */}
+                                    <a href={AvailableNow.signInUrl} target="_blank" rel="noopener noreferrer" className="sign-in-button">
+                                        <button>Sign In</button>
+                                    </a>
+                                </div>
+
+                                <div className="qr-section">
+
+                                    <div className="qr-code">
+
+                                        <img src={AvailableNow.qrCode} alt={`${AvailableNow.name} QR Code`} />
+                                    </div>
+                                    <p className="qr-instruction"> scan qr-code to use app on your phone.</p>
+
+                                </div>
+                            </div>
+                        ))}
+                        
+                    </div>
+                </div>
+           
+
+                <div className="apps-container">
+                        <h2>Coming Soon</h2>
+                                        <p className="coming-soon-message">
                     Our mobile applications are currently in development and will be available soon.
                 </p>
                 <p className="coming-soon-subtitle">
                     Stay tuned! You'll be able to access our apps by scanning the QR code for each application.
                 </p>
 
-                <div className="apps-container">
-                    <div className="apps-grid">
+                      <div className="apps-grid">
                         {apps.map((app) => (
                             <div 
                                 key={app.id} 
@@ -73,6 +117,9 @@ const ComingSoon = () => {
                                     <div className="app-logo">
                                         <img src={app.logo} alt={`${app.name} App Logo`} />
                                     </div>
+                                    <a href={app.signInUrl} target="_blank" rel="noopener noreferrer" className="sign-in-button">
+                                        <button>Sign In</button>
+                                    </a>
                                 </div>
                                 <div className="qr-section">
                                     <div className="qr-code">
@@ -82,6 +129,7 @@ const ComingSoon = () => {
                                 </div>
                             </div>
                         ))}
+                        
                     </div>
                 </div>
                 

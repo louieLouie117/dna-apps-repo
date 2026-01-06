@@ -5,8 +5,8 @@ import IssueReporting from '../components/IssueReporting';
 import PageHeader from '../components/PageHeader';
 import AccountStatus from '../components/AccountStatus';
 import AppLogosFooter from '../components/AppLogosFooter';
-import UserInfo from '../components/UserInfo';
 import { safeCookieParser } from '../utils/cookieUtils';
+import CommingSoon from '../components/ComingSoon';
 
 const DashboardUser = () => {
     const [reportContainer, setReportContainer] = useState(false);
@@ -165,10 +165,12 @@ const DashboardUser = () => {
                         </aside>
 
                                  <main>
-                <UserInfo />
 
                 <AccountStatus/>
             </main>
+            <aside>
+                <CommingSoon />
+            </aside>
             <footer style={{display: 'grid', justifyItems: 'center'}}>
             <h3>Apps available in the Microsoft Store with your subscription.</h3>
 
