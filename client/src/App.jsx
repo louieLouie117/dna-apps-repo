@@ -26,6 +26,7 @@ import LoginTest from './components/LoginTest';
 import RequestPasswordReset from './components/RequestPasswordReset';
 import ConfirmPasswordReset from './components/ConfirmPasswordReset';
 import SubPage from './views/SubPage';
+// import NewLandingPage from './views/NewLandingPage'
 
 
 function App() {
@@ -42,6 +43,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        {/* <Route path="/" element={<NewLandingPage />} /> */}
+
         <Route path="/student-access-subscription" element={<StudentSub />} />
         <Route path="/all-app-access-subscription" element={<SubPage />} />
         <Route path="/subscription" element={<SubPage />} />
