@@ -1,0 +1,168 @@
+Only styles for the new App Access section
+.subscription-actions {
+    color: white;
+    margin-top: 2rem;
+}
+
+.actions-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.button-group {
+    text-align: center;
+    position: relative;
+    padding: 1.5rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    min-width: 200px;
+}
+
+.button-group:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-5px);
+}
+
+.button-group.featured {
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.action-link {
+    text-decoration: none;
+}
+
+.action-btn {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+}
+
+.action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(40, 167, 69, 0.4);
+}
+
+.student-btn {
+    background: linear-gradient(135deg, #6f42c1 0%, #5a67d8 100%);
+    box-shadow: 0 8px 25px rgba(111, 66, 193, 0.3);
+}
+
+.student-btn:hover {
+    box-shadow: 0 12px 35px rgba(111, 66, 193, 0.4);
+}
+
+.premium-btn {
+    background: linear-gradient(135deg, #fd7e14 0%, #e83e8c 100%);
+    box-shadow: 0 8px 25px rgba(253, 126, 20, 0.3);
+}
+
+.premium-btn:hover {
+    box-shadow: 0 12px 35px rgba(253, 126, 20, 0.4);
+}
+
+.btn-icon {
+    font-size: 1.3rem;
+}
+
+.btn-text {
+    font-weight: 600;
+}
+
+.btn-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    font-weight: 400;
+}
+
+.popular-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Mobile responsive for just the new section */
+@media (max-width: 768px) {
+    .actions-title {
+        font-size: 1.5rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .button-group {
+        padding: 1rem;
+        min-width: 250px;
+    }
+
+    .action-btn {
+        padding: 14px 20px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .actions-title {
+        font-size: 1.3rem;
+    }
+
+    .button-group {
+        min-width: 200px;
+        padding: 0.8rem;
+    }
+
+    .action-btn {
+        padding: 12px 18px;
+        font-size: 0.9rem;
+    }
+
+    .btn-icon {
+        font-size: 1.1rem;
+    }
+
+    .popular-badge {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+    }
+}
