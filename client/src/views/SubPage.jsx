@@ -6,7 +6,7 @@ import './SubPage.css';
 
 const SubPage = () => {
     const [selectedApp, setSelectedApp] = useState('');
-    const [subscriptionType, setSubscriptionType] = useState('single'); // 'single' or 'all'
+    const [subscriptionType, setSubscriptionType] = useState('all'); // 'single' or 'all'
 
     // Mapping of apps to their Stripe subscription URLs
     const appSubscriptionUrls = {
