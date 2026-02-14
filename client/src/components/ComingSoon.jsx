@@ -23,16 +23,9 @@ const ComingSoon = () => {
             className: "app-flashcards",
             signInUrl: "https://myflashcardsapp.com/"
         },
+       
         {
             id: 2,
-            name: "My Todo List",
-            logo: AppLogoTodoList,
-            qrCode: QrTodoList,
-            className: "app-todo-list",
-            signInUrl: "https://mytodolist-app.com/"
-        },
-        {
-            id: 3,
             name: "My Locked Passwords",
             logo: AppLogoLockedPassword,
             qrCode: QrLockedPassword,
@@ -49,7 +42,16 @@ const ComingSoon = () => {
                 qrCode: QrMybudget,
                 className: "app-budget",
                 signInUrl: "https://mybudgetmonthly.com/"
-            }]; // Placeholder for future use
+            },
+             {
+            id: 1,
+            name: "My Todo List",
+            logo: AppLogoTodoList,
+            qrCode: QrTodoList,
+            className: "app-todo-list",
+            signInUrl: "https://mytodolist-app.com/"
+        },
+        ]; // Placeholder for future use
 
     return (
         <div className="coming-soon-container">
