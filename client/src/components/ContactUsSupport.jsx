@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { safeCookieParser } from '../utils/cookieUtils';
 import './ContactUsSupport.css';
-
+import PageHeader from './PageHeader';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const ContactUsSupport = () => {
@@ -66,6 +66,8 @@ const ContactUsSupport = () => {
 
     return (
         <div className="contact-support">
+            {/* logo header */}
+                    <PageHeader />
             <div className="contact-support__card">
                 <div className="contact-support__header">
                     <h2 className="contact-support__title">Contact Support</h2>
