@@ -26,6 +26,7 @@ import LoginTest from './components/LoginTest';
 import RequestPasswordReset from './components/RequestPasswordReset';
 import ConfirmPasswordReset from './components/ConfirmPasswordReset';
 import SubPage from './views/SubPage';
+import ContactUsSupport from './components/ContactUsSupport'
 // import NewLandingPage from './views/NewLandingPage'
 
 
@@ -70,7 +71,7 @@ function App() {
         <Route path='/paypal-all-app-access-account' element={<RegAllApps />} />
 
      
-        <Route path='/contact-us-1.html' element={<ContactUs />} />
+        <Route path='/contact-us-1.html' element={<ContactUsSupport />} />
         <Route path='/unsubscribe' element={<Unsubscribe />} />
 
         <Route path='/request-password-reset' element={<RequestPasswordReset />} />
