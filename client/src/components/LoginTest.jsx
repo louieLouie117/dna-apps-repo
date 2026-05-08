@@ -35,6 +35,11 @@ export default function LoginTest() {
         // Set username cookie using safe setter
         const cookieSet = safeCookieParser.setCookie('username', data.user.username);
                
+        // Store token in localStorage so Authorization header works on all pages
+        if (data.token) {
+          localStorage.setItem('authToken', data.token);
+        }
+
         console.log('Login response:', data);
         console.log('Username cookie set:', cookieSet ? 'Success' : 'Failed');
         
@@ -63,13 +68,15 @@ export default function LoginTest() {
     try {
       setMessage('🔄 Checking session status...');
       setMessageType('info');
+
+      const token = localStorage.getItem('authToken');
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
       
       const response = await fetch(`${API_BASE_URL}/api/session/status`, {
         method: 'GET',
         credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        }
+        headers,
       });
 
       const data = await response.json();
@@ -78,7 +85,11 @@ export default function LoginTest() {
       if (data.authenticated) {
         setMessage('✅ Authentication verified! Redirecting to dashboard...');
         setMessageType('success');
-        setTimeout(() => navigate('/dashboard'), 2000);
+        console.log('[LoginTest] session user:', data.user);
+        const sub = (data.user?.subscriptionType ?? '').trim().toLowerCase();
+        const destination = sub === 'admin' ? '/dashboard-sql-admin' : '/dashboard';
+        console.log('[LoginTest] subscriptionType:', sub, '→ redirecting to', destination);
+        setTimeout(() => navigate(destination), 2000);
       } else {
         setMessage(`⚠️ Session Status: ${data.status} - ${data.message}`);
         setMessageType('error');
