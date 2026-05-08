@@ -7,6 +7,7 @@ import AccountStatus from '../components/AccountStatus';
 import AppLogosFooter from '../components/AppLogosFooter';
 import { safeCookieParser } from '../utils/cookieUtils';
 import CommingSoon from '../components/ComingSoon';
+import AccountStripeStatus from '../components/AccountStripeStatus';
 
 const DashboardUser = () => {
     const [reportContainer, setReportContainer] = useState(false);
@@ -169,6 +170,7 @@ const DashboardUser = () => {
                                  <main>
 
                 <AccountStatus/>
+                <AccountStripeStatus />
             </main>
             <aside>
                 <CommingSoon />
