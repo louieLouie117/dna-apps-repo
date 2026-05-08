@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import supabase from '../config/SupaBaseClient';
 import { safeCookieParser } from '../utils/cookieUtils';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+
 const AccountStatus = () => {
     const [status, setStatus] = useState(null);
     const [username, setUsername] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [subscriptionType, setSubscriptionType] = useState(null);
 
     // Get user data from cookies using safe parser
     const getUserFromCookie = () => {
@@ -55,6 +58,25 @@ const AccountStatus = () => {
 
     useEffect(() => {
         fetchUserInfo();
+
+        // Fetch subscriptionType from DB via /api/check-admin
+        const fetchSubscriptionType = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                const headers = { 'Content-Type': 'application/json' };
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+                const res = await fetch(`${API_BASE_URL}/api/check-admin`, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers,
+                });
+                const data = await res.json();
+                if (data.success) setSubscriptionType(data.subscriptionType ?? null);
+            } catch (err) {
+                console.error('Error fetching subscriptionType:', err);
+            }
+        };
+        fetchSubscriptionType();
         
         // Set up an interval to refresh status periodically
         const interval = setInterval(fetchUserInfo, 30000); // Refresh every 30 seconds
@@ -224,6 +246,23 @@ const AccountStatus = () => {
                         }}>
                             {status || 'Unknown'}
                         </span>
+                        {subscriptionType && (
+                            <span style={{
+                                display: 'inline-block',
+                                padding: '4px 12px',
+                                borderRadius: '20px',
+                                fontSize: '0.75rem',
+                                fontWeight: '600',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.5px',
+                                width: 'fit-content',
+                                background: '#f0f4ff',
+                                color: '#4338ca',
+                                border: '1px solid #c7d2fe',
+                            }}>
+                                {subscriptionType === '1234567' ? 'All App Access' : subscriptionType}
+                            </span>
+                        )}
                     </div>
                 </div>
 
