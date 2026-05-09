@@ -239,13 +239,7 @@ const AccountStatus = () => {
                     </div>
                     <div style={styles.titleContainer}>
                         <h3 style={styles.title}>Account Status</h3>
-                        <span style={{
-                            ...styles.statusBadge,
-                            backgroundColor: config.color,
-                            color: config.bgColor
-                        }}>
-                            {status || 'Unknown'}
-                        </span>
+                      
                         {subscriptionType && (
                             <span style={{
                                 display: 'inline-block',
@@ -266,12 +260,7 @@ const AccountStatus = () => {
                     </div>
                 </div>
 
-                {/* Status Message */}
-                <div style={styles.messageContainer}>
-                    <p style={styles.message}>
-                        {config.message}
-                    </p>
-                </div>
+               
 
                 {/* User Info */}
                 {username && (
