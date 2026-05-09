@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
@@ -50,7 +50,13 @@ export default function AccountStripeStatus() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [actionLoading, setActionLoading] = useState(false);
-    const [actionMessage, setActionMessage] = useState(null); // { type: 'success'|'error', text }
+    const [actionMessage, setActionMessage] = useState(null);
+
+    // Cancellation modal state
+    const [showCancelModal, setShowCancelModal] = useState(false);
+    const [cancelReason, setCancelReason] = useState('');
+    const [cancelReasonOther, setCancelReasonOther] = useState('');
+    const modalRef = useRef(null);
 
     const authHeaders = () => {
         const token = localStorage.getItem('authToken');
@@ -80,9 +86,18 @@ export default function AccountStripeStatus() {
 
     useEffect(() => { fetchStatus(); }, []);
 
-    const handleCancel = async () => {
+    // Close modal on backdrop click
+    const handleBackdropClick = (e) => {
+        if (modalRef.current && !modalRef.current.contains(e.target)) {
+            setShowCancelModal(false);
+        }
+    };
+
+    const handleCancelSubmit = async () => {
         if (!data?.subscription?.id) return;
-        if (!window.confirm('Are you sure you want to cancel your subscription? It will remain active until the end of the current billing period.')) return;
+        const finalReason = cancelReason === 'Other'
+            ? (cancelReasonOther.trim() || 'Other')
+            : (cancelReason || null);
 
         setActionLoading(true);
         setActionMessage(null);
@@ -91,11 +106,17 @@ export default function AccountStripeStatus() {
                 method: 'POST',
                 credentials: 'include',
                 headers: authHeaders(),
-                body: JSON.stringify({ subscriptionId: data.subscription.id }),
+                body: JSON.stringify({
+                    subscriptionId: data.subscription.id,
+                    reason: finalReason,
+                }),
             });
             const json = await res.json();
             if (!json.success) throw new Error(json.error);
             setActionMessage({ type: 'success', text: json.message });
+            setShowCancelModal(false);
+            setCancelReason('');
+            setCancelReasonOther('');
             await fetchStatus();
         } catch (err) {
             setActionMessage({ type: 'error', text: err.message });
@@ -163,99 +184,159 @@ export default function AccountStripeStatus() {
     const { customer, subscription } = data;
 
     return (
-        <div style={styles.card}>
-            <h3 style={styles.cardTitle}>Stripe Subscription</h3>
+        <>
+            {/* ── Cancellation Feedback Modal ──────────────────────────────────── */}
+            {showCancelModal && (
+                <div style={styles.backdrop} onMouseDown={handleBackdropClick}>
+                    <div ref={modalRef} style={styles.modal}>
+                        <h3 style={styles.modalTitle}>Cancel Subscription</h3>
+                        <p style={styles.modalSubtitle}>
+                            We're sorry to see you go. 
+                            Please let us know why you're canceling so we can improve our service.
+                        </p>
 
-            {/* Customer row */}
-            <div style={styles.row}>
-                <span style={styles.label}>Billing Email</span>
-                <span style={styles.value}>{customer.email}</span>
-            </div>
+                        <label style={styles.modalLabel}>
+                            What's your reason for canceling? <span style={{ color: '#9ca3af', fontWeight: 400 }}>(optional)</span>
+                        </label>
+                        <select
+                            style={styles.modalSelect}
+                            value={cancelReason}
+                            onChange={e => setCancelReason(e.target.value)}
+                        >
+                            <option value="">Select a reason...</option>
+                            <option value="Too expensive">Too expensive</option>
+                            <option value="Not using it enough">Not using it enough</option>
+                            <option value="Missing features I need">Missing features I need</option>
+                            <option value="Switching to another service">Switching to another service</option>
+                            <option value="Technical issues">Technical issues</option>
+                            <option value="Other">Other</option>
+                        </select>
 
-            {subscription ? (
-                <>
-                    {/* Status */}
-                    <div style={styles.row}>
-                        <span style={styles.label}>Status</span>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <StatusBadge status={subscription.status} />
-                            {subscription.cancelAtPeriodEnd && (
-                                <span style={styles.cancelWarning}>Cancels at period end</span>
-                            )}
-                        </div>
-                    </div>
+                        {cancelReason === 'Other' && (
+                            <textarea
+                                style={styles.modalTextarea}
+                                placeholder="Tell us more..."
+                                maxLength={255}
+                                value={cancelReasonOther}
+                                onChange={e => setCancelReasonOther(e.target.value)}
+                            />
+                        )}
 
-                    {/* Product */}
-                    {subscription.items?.[0]?.productName && (
-                        <div style={styles.row}>
-                            <span style={styles.label}>Plan</span>
-                            <span style={styles.value}>{subscription.items[0].productName}</span>
-                        </div>
-                    )}
-
-                    {/* Price */}
-                    <div style={styles.row}>
-                        <span style={styles.label}>Price</span>
-                        <span style={styles.value}>
-                            {formatAmount(subscription.items?.[0]?.amount, subscription.items?.[0]?.currency)}
-                            {subscription.items?.[0]?.interval ? ` / ${subscription.items[0].interval}` : ''}
-                        </span>
-                    </div>
-
-                    {/* Period */}
-                    <div style={styles.row}>
-                        <span style={styles.label}>Current Period</span>
-                        <span style={styles.value}>
-                            {formatDate(subscription.currentPeriodStart)} – {formatDate(subscription.currentPeriodEnd)}
-                        </span>
-                    </div>
-
-                    {subscription.canceledAt && (
-                        <div style={styles.row}>
-                            <span style={styles.label}>Canceled On</span>
-                            <span style={{ ...styles.value, color: '#dc2626' }}>{formatDate(subscription.canceledAt)}</span>
-                        </div>
-                    )}
-
-                    {/* Action message */}
-                    {actionMessage && (
-                        <div style={{
-                            ...styles.actionMsg,
-                            background: actionMessage.type === 'success' ? '#ecfdf5' : '#fef2f2',
-                            color: actionMessage.type === 'success' ? '#065f46' : '#991b1b',
-                            borderColor: actionMessage.type === 'success' ? '#a7f3d0' : '#fca5a5',
-                        }}>
-                            {actionMessage.text}
-                        </div>
-                    )}
-
-                    {/* Action buttons */}
-                    <div style={styles.actions}>
-                        {subscription.cancelAtPeriodEnd || subscription.status === 'canceled' ? (
+                        <div style={styles.modalActions}>
                             <button
-                                style={{ ...styles.btn, ...styles.btnGreen }}
-                                onClick={handleReactivate}
+                                style={{ ...styles.btn, ...styles.btnGhost }}
+                                onClick={() => { setShowCancelModal(false); setCancelReason(''); setCancelReasonOther(''); }}
                                 disabled={actionLoading}
                             >
-                                {actionLoading ? 'Processing...' : 'Reactivate Subscription'}
+                                Keep Subscription
                             </button>
-                        ) : (
-                            subscription.status !== 'canceled' && (
+                            <button
+                                style={{ ...styles.btn, ...styles.btnRed }}
+                                onClick={handleCancelSubmit}
+                                disabled={actionLoading}
+                            >
+                                {actionLoading ? 'Processing...' : 'Send Feedback & Cancel'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ── Main Card ─────────────────────────────────────────────────────── */}
+            <div style={styles.card}>
+                <h3 style={styles.cardTitle}>Stripe Subscription</h3>
+
+                {/* Customer row */}
+                <div style={styles.row}>
+                    <span style={styles.label}>Billing Email</span>
+                    <span style={styles.value}>{customer.email}</span>
+                </div>
+
+                {subscription ? (
+                    <>
+                        {/* Status */}
+                        <div style={styles.row}>
+                            <span style={styles.label}>Status</span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <StatusBadge status={subscription.status} />
+                                {subscription.cancelAtPeriodEnd && (
+                                    <span style={styles.cancelWarning}>Cancels at period end</span>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Product */}
+                        {subscription.items?.[0]?.productName && (
+                            <div style={styles.row}>
+                                <span style={styles.label}>Plan</span>
+                                <span style={styles.value}>{subscription.items[0].productName}</span>
+                            </div>
+                        )}
+
+                        {/* Price */}
+                        <div style={styles.row}>
+                            <span style={styles.label}>Price</span>
+                            <span style={styles.value}>
+                                {formatAmount(subscription.items?.[0]?.amount, subscription.items?.[0]?.currency)}
+                                {subscription.items?.[0]?.interval ? ` / ${subscription.items[0].interval}` : ''}
+                            </span>
+                        </div>
+
+                        {/* Period */}
+                        <div style={styles.row}>
+                            <span style={styles.label}>Current Period</span>
+                            <span style={styles.value}>
+                                {formatDate(subscription.currentPeriodStart)} – {formatDate(subscription.currentPeriodEnd)}
+                            </span>
+                        </div>
+
+                        {subscription.canceledAt && (
+                            <div style={styles.row}>
+                                <span style={styles.label}>Canceled On</span>
+                                <span style={{ ...styles.value, color: '#dc2626' }}>{formatDate(subscription.canceledAt)}</span>
+                            </div>
+                        )}
+
+                        {/* Action message */}
+                        {actionMessage && (
+                            <div style={{
+                                ...styles.actionMsg,
+                                background: actionMessage.type === 'success' ? '#ecfdf5' : '#fef2f2',
+                                color: actionMessage.type === 'success' ? '#065f46' : '#991b1b',
+                                borderColor: actionMessage.type === 'success' ? '#a7f3d0' : '#fca5a5',
+                            }}>
+                                {actionMessage.text}
+                            </div>
+                        )}
+
+                        {/* Action buttons */}
+                        <div style={styles.actions}>
+                            {subscription.cancelAtPeriodEnd || subscription.status === 'canceled' ? (
                                 <button
-                                    style={{ ...styles.btn, ...styles.btnRed }}
-                                    onClick={handleCancel}
+                                    style={{ ...styles.btn, ...styles.btnGreen }}
+                                    onClick={handleReactivate}
                                     disabled={actionLoading}
                                 >
-                                    {actionLoading ? 'Processing...' : 'Cancel Subscription'}
+                                    {actionLoading ? 'Processing...' : 'Reactivate Subscription'}
                                 </button>
-                            )
-                        )}
-                    </div>
-                </>
-            ) : (
-                <p style={styles.mutedText}>No active subscription found.</p>
-            )}
-        </div>
+                            ) : (
+                                subscription.status !== 'canceled' && (
+                                    <button
+                                        style={{ ...styles.btn, ...styles.btnRed }}
+                                        onClick={() => setShowCancelModal(true)}
+                                        disabled={actionLoading}
+                                    >
+                                        Cancel Subscription
+                                    </button>
+                                )
+                            )}
+                        </div>
+                    </>
+                ) : (
+                    <p style={styles.mutedText}>No active subscription found.</p>
+                )}
+            </div>
+        </>
     );
 }
 
@@ -334,6 +415,83 @@ const styles = {
         background: '#dcfce7',
         color: '#16a34a',
         border: '1px solid #86efac',
+    },
+    btnGhost: {
+        background: '#f9fafb',
+        color: '#374151',
+        border: '1px solid #d1d5db',
+    },
+    // ── Modal ──────────────────────────────────────────────────────────────────
+    backdrop: {
+        position: 'fixed',
+        inset: 0,
+        background: 'rgba(0,0,0,0.45)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 1000,
+        padding: '16px',
+    },
+    modal: {
+        background: '#fff',
+        borderRadius: '18px',
+        padding: '32px 28px 24px',
+        width: '100%',
+        maxWidth: '460px',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
+        boxSizing: 'border-box',
+    },
+    modalTitle: {
+        margin: '0 0 8px',
+        fontSize: '1.15rem',
+        fontWeight: '700',
+        color: '#111827',
+    },
+    modalSubtitle: {
+        margin: '0 0 20px',
+        fontSize: '0.875rem',
+        color: '#6b7280',
+        lineHeight: 1.55,
+    },
+    modalLabel: {
+        display: 'block',
+        fontSize: '0.82rem',
+        fontWeight: '600',
+        color: '#374151',
+        marginBottom: 8,
+    },
+    modalSelect: {
+        width: '100%',
+        padding: '10px 12px',
+        border: '1.5px solid #d1d5db',
+        borderRadius: '10px',
+        fontSize: '0.9rem',
+        color: '#111827',
+        background: '#f9fafb',
+        outline: 'none',
+        marginBottom: 16,
+        boxSizing: 'border-box',
+        cursor: 'pointer',
+    },
+    modalTextarea: {
+        width: '100%',
+        padding: '10px 12px',
+        border: '1.5px solid #d1d5db',
+        borderRadius: '10px',
+        fontSize: '0.9rem',
+        color: '#111827',
+        background: '#f9fafb',
+        outline: 'none',
+        resize: 'vertical',
+        minHeight: 80,
+        marginBottom: 16,
+        boxSizing: 'border-box',
+        fontFamily: 'inherit',
+    },
+    modalActions: {
+        display: 'flex',
+        gap: 12,
+        marginTop: 4,
     },
     actionMsg: {
         marginTop: 16,
