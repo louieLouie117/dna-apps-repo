@@ -14,18 +14,10 @@ import QrTodoList from '../assets/QrCodes/qrcode_mytodolist.png'; // Placeholder
 
 const ComingSoon = () => {
     const apps = [
-      
-        {
-            id: 1,
-            name: "My Flashcards",
-            logo: AppLogoFlashcards,
-            qrCode: QrFlashcards,
-            className: "app-flashcards",
-            signInUrl: "https://myflashcardsapp.com/"
-        },
+    
        
         {
-            id: 2,
+            id: 1,
             name: "My Locked Passwords",
             logo: AppLogoLockedPassword,
             qrCode: QrLockedPassword,
@@ -50,6 +42,15 @@ const ComingSoon = () => {
             qrCode: QrTodoList,
             className: "app-todo-list",
             signInUrl: "https://mytodolist-app.com/"
+        },
+          
+        {
+            id: 3,
+            name: "My Flashcards",
+            logo: AppLogoFlashcards,
+            qrCode: QrFlashcards,
+            className: "app-flashcards",
+            signInUrl: "https://myflashcardsapp.com/"
         },
         ]; // Placeholder for future use
 

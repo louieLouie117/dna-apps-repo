@@ -20,7 +20,9 @@ import Wrapper from './views/Wrapper';
 import AdminWrapper from './views/AdminWrapper';
 import RegAllApps from './components/RegAllApps';
 import DashboardAdmin from './views/DashboardAdmin'
+import DashboardSqlAdmin from './views/DashboardSqlAdmin'
 import WrapperJWT from './views/WrapperJWT';
+import WrapperJwtAdmin from './views/WrapperJwtAdmin';
 import DashboardUser from './views/DashboardUser'
 import LoginTest from './components/LoginTest';
 import RequestPasswordReset from './components/RequestPasswordReset';
@@ -114,6 +116,12 @@ function App() {
           <AdminWrapper>
             <DashboardAdmin />
           </AdminWrapper>
+        } />
+
+        <Route path='/dashboard-sql-admin' element={
+          <WrapperJwtAdmin>
+            <DashboardSqlAdmin />
+          </WrapperJwtAdmin>
         } />
     
         <Route

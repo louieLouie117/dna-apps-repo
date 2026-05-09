@@ -29,13 +29,17 @@ export default function WrapperJWT({ children }) {
 
   const checkAuthentication = async () => {
     try {
+      // Send Authorization header from localStorage (preferred by session.mjs),
+      // with cookie as automatic fallback via credentials: 'include'
+      const token = localStorage.getItem('authToken');
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
       // Check session status using the session API
       const response = await fetch(`${API_BASE_URL}/api/session/status`, {
         method: 'GET',
         credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        }
+        headers,
       });
 
       if (response.ok) {
