@@ -1,4 +1,5 @@
 import CustomerSupportTable from '../components/CustomerSupportTable';
+import CancellationFeedbackTable from '../components/CancellationFeedbackTable';
 
 export default function DashboardSqlAdmin() {
     return (
@@ -6,6 +7,7 @@ export default function DashboardSqlAdmin() {
             <div style={styles.inner}>
                 <h1 style={styles.title}>Admin Dashboard</h1>
                 <CustomerSupportTable />
+                <CancellationFeedbackTable />
             </div>
         </div>
     );
