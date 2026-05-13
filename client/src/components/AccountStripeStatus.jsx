@@ -176,7 +176,8 @@ export default function AccountStripeStatus() {
         return (
             <div style={styles.card}>
                 <h3 style={styles.cardTitle}>Stripe Subscription</h3>
-                <p style={styles.mutedText}>No Stripe account found for your email address.</p>
+                <p style={styles.mutedText}>No Stripe account found for your email address. Please contact support for assistance if you used PayPal or you feel this is an error.</p>
+                <a href="/contact-us-1.html">Contact Support</a>
             </div>
         );
     }
