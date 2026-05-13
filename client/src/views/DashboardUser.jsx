@@ -94,11 +94,7 @@ const DashboardUser = () => {
             <aside>
                 <CommingSoon />
             </aside>
-            <footer style={{display: 'grid', justifyItems: 'center'}}>
-            <h3>Apps available in the Microsoft Store with your subscription.</h3>
-
-                <AppLogosFooter />
-            </footer>
+            
 
             </div>
         </div>
