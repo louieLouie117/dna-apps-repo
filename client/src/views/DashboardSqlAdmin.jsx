@@ -2,6 +2,7 @@ import { useState } from 'react';
 import CustomerSupportTable from '../components/CustomerSupportTable';
 import CancellationFeedbackTable from '../components/CancellationFeedbackTable';
 import AppFeedbackTable from '../components/AppFeedbackTable';
+import './DashboardSqlAdmin.css';
 
 const TABS = [
     { key: 'support',      label: 'Support Tickets' },
@@ -13,11 +14,11 @@ export default function DashboardSqlAdmin() {
     const [activeTab, setActiveTab] = useState('support');
 
     return (
-        <div style={styles.page}>
+        <div style={styles.page} className="dsa-page">
             <div style={styles.inner}>
-                <h1 style={styles.title}>Admin Dashboard</h1>
+                <h1 style={styles.title} className="dsa-title">Admin Dashboard</h1>
 
-                <div style={styles.content}>
+                <div style={styles.content} className="dsa-content">
                     {activeTab === 'support'      && <CustomerSupportTable />}
                     {activeTab === 'cancellation' && <CancellationFeedbackTable />}
                     {activeTab === 'feedback'     && <AppFeedbackTable />}
@@ -25,11 +26,12 @@ export default function DashboardSqlAdmin() {
             </div>
 
             {/* Bottom nav */}
-            <nav style={styles.nav}>
+            <nav style={styles.nav} className="dsa-nav">
                 {TABS.map(tab => (
                     <button
                         key={tab.key}
                         onClick={() => setActiveTab(tab.key)}
+                        className="dsa-nav-btn"
                         style={{
                             ...styles.navBtn,
                             ...(activeTab === tab.key ? styles.navBtnActive : {}),
