@@ -29,14 +29,13 @@ export default function LandingPageModern() {
                 <div className="lpm-hero-content">
                     {/* Left: headline + access cards */}
                     <div className="lpm-hero-left">
-                        <p className="lpm-eyebrow">Productivity Suite</p>
+                        <p className="lpm-eyebrow">Productivity Apps</p>
                         <h1 className="lpm-headline">
-                            Your Apps.<br />
-                            <span className="lpm-accent">Your Way.</span>
+                            Less chaos.<br />
+                            <span className="lpm-accent">More done.</span>
                         </h1>
                         <p className="lpm-subheadline">
-                            Pick just the app you need, or unlock everything at once —
-                            budget tracking, flashcards, secure passwords, and more.
+                            A suite of apps that help you manage your life — built to fit into your daily routine.
                         </p>
 
                         {/* Mobile-only video (laptop hidden on small screens) */}
@@ -79,7 +78,7 @@ export default function LandingPageModern() {
                                         <h3 className="lpm-plan-name">Student</h3>
                                         <p className="lpm-plan-desc">Special rate for students</p>
                                     </div>
-                                    <a href="/student-access-subscription" className="lpm-plan-link">
+                                    <a href="https://buy.stripe.com/6oU4gy76s6mi6TvecseIw0c" className="lpm-plan-link">
                                         <button className="lpm-plan-btn lpm-btn-student">
                                             Get Access
                                         </button>
@@ -93,9 +92,10 @@ export default function LandingPageModern() {
                                     <div className="lpm-plan-body">
                                         <h3 className="lpm-plan-name">All Apps</h3>
                                         <p className="lpm-plan-desc">Every app, every update</p>
+                                        <div className="lpm-plan-price">$7.99<span>/mo</span></div>
                                         <p className="lpm-plan-note">First month FREE</p>
                                     </div>
-                                    <a href="/all-app-access-subscription" className="lpm-plan-link">
+                                    <a href="https://buy.stripe.com/dRm7sK4YkdOK91Db0geIw06" target="_blank" rel="noopener noreferrer" className="lpm-plan-link">
                                         <button className="lpm-plan-btn lpm-btn-premium">
                                             Start Free Trial
                                         </button>
