@@ -29,7 +29,7 @@ export default function LandingPageModern() {
                 <div className="lpm-hero-content">
                     {/* Left: text + video */}
                     <div className="lpm-hero-left">
-                        <p className="lpm-eyebrow">Windows 11 Productivity Apps</p>
+                        <p className="lpm-eyebrow">Windows 10/11 Productivity Apps</p>
                     <h1 className="lpm-headline">
                         Simple apps for<br />
                         <span className="lpm-accent">everyday life.</span>
@@ -37,8 +37,8 @@ export default function LandingPageModern() {
                         <p className="lpm-subheadline">
                             A suite of apps that help you manage your life — built to fit into your daily routine.
                         </p>
-
-                        {/* Mobile-only flat video */}
+                    {/* Mobile-only flat video */}
+                    {/* need to keep for mobile versions */}
                         <div className="lpm-mobile-video">
                             {!videoError ? (
                                 <iframe
@@ -58,6 +58,7 @@ export default function LandingPageModern() {
                                 </a>
                             )}
                         </div>
+              
 
                         {/* Desktop laptop video */}
                         <div className="lpm-laptop-wrap">

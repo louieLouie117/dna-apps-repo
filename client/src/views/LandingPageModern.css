@@ -412,7 +412,6 @@
 
     .lpm-hero-right {
         flex: 1 1 100%;
-        order: -1;
         width: 100%;
     }
 
@@ -429,6 +428,13 @@
 
 /* Mobile — 640px and below */
 @media (max-width: 640px) {
+    /* Let hero grow to fit all stacked content on mobile */
+    .lpm-hero {
+        height: auto;
+        min-height: unset;
+        overflow: visible;
+    }
+
     .lpm-nav {
         padding: 10px 16px;
     }
@@ -447,13 +453,22 @@
         max-width: 100%;
     }
 
-    /* Hide laptop frame — show flat video instead */
-    .lpm-hero-right {
+    /* Hide desktop laptop frame — show flat mobile video instead */
+    .lpm-laptop-wrap {
         display: none;
     }
 
     .lpm-mobile-video {
         display: block;
+    }
+
+    /* Access cards stack full-width below the text on mobile */
+    .lpm-hero-right {
+        width: 100%;
+    }
+
+    .lpm-access-container {
+        width: 100%;
     }
 
     .lpm-eyebrow {
