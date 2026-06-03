@@ -16,14 +16,7 @@ const ComingSoon = () => {
     const apps = [
     
        
-        {
-            id: 1,
-            name: "My Locked Passwords",
-            logo: AppLogoLockedPassword,
-            qrCode: QrLockedPassword,
-            className: "app-lockedPasswords",
-            signInUrl: "https://mylockedpasswords.com/"
-        }
+      
     ];
 
     const AvailableNow = [  
@@ -52,6 +45,15 @@ const ComingSoon = () => {
             className: "app-flashcards",
             signInUrl: "https://myflashcardsapp.com/"
         },
+
+          {
+            id: 4,
+            name: "My Locked Passwords",
+            logo: AppLogoLockedPassword,
+            qrCode: QrLockedPassword,
+            className: "app-lockedPasswords",
+            signInUrl: "https://mylockedpasswords.com/"
+        }
         ]; // Placeholder for future use
 
     return (
