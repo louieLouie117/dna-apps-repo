@@ -1,6 +1,6 @@
 .coming-soon-container {
     display: flex;
-    width: 93vw;
+    /* width: 93vw; */
     flex-direction: column;
     align-items: center;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
