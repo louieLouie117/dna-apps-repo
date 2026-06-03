@@ -3,7 +3,7 @@ import heroBackground from '../assets/img/heroBackground.png';
 import Laptop from '../assets/img/Laptop.png';
 import videoScreenshot from '../assets/img/videoScreenshot.png';
 import PageHeader from '../components/PageHeader';
-import ComingSoon from '../components/ComingSoon';
+import SingleAppAccess from '../components/SingleAppAccess';
 import './LandingPageModern.css';
 
 export default function LandingPageModern() {
@@ -109,11 +109,12 @@ export default function LandingPageModern() {
                                         <h3 className="lpm-plan-name">Single App</h3>
                                         <p className="lpm-plan-desc">Subscribe to just one app</p>
                                     </div>
-                                    <a href="/sign-in" className="lpm-plan-link">
-                                        <button className="lpm-plan-btn lpm-btn-single">
-                                            Browse Apps
-                                        </button>
-                                    </a>
+                                    <button
+                                        className="lpm-plan-btn lpm-btn-single"
+                                        onClick={() => document.getElementById('apps-section').scrollIntoView({ behavior: 'smooth' })}
+                                    >
+                                        Browse Apps
+                                    </button>
                                 </div>
 
                             </div>
@@ -165,8 +166,8 @@ export default function LandingPageModern() {
             </header>
 
             {/* ── Apps Available Section ───────────────────────────────────── */}
-            <section className="lpm-apps-section">
-                <ComingSoon />
+            <section id="apps-section" className="lpm-apps-section">               
+                 <SingleAppAccess />                
             </section>
 
         </div>
