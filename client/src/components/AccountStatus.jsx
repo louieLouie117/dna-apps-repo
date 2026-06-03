@@ -279,13 +279,13 @@ const AccountStatus = () => {
                     </div>
                 )}
 
-                {status === 'Active' && (
+                {/* {status === 'Active' && (
                     <div style={styles.actionContainer}>
-                        <button style={styles.secondaryButton}>
-                            Manage Subscription
-                        </button>
+                        <d style={styles.secondaryButton}>
+                            Active
+                        </d>
                     </div>
-                )}
+                )} */}
             </div>
 
             {/* CSS for animations */}
