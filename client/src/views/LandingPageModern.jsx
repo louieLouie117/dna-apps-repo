@@ -27,18 +27,18 @@ export default function LandingPageModern() {
                 <div className="lpm-hero-overlay" />
 
                 <div className="lpm-hero-content">
-                    {/* Left: headline + access cards */}
+                    {/* Left: text + video */}
                     <div className="lpm-hero-left">
-                        <p className="lpm-eyebrow">Productivity Apps</p>
-                        <h1 className="lpm-headline">
-                            Less chaos.<br />
-                            <span className="lpm-accent">More done.</span>
-                        </h1>
+                        <p className="lpm-eyebrow">Windows 11 Productivity Apps</p>
+                    <h1 className="lpm-headline">
+                        Simple apps for<br />
+                        <span className="lpm-accent">everyday life.</span>
+                    </h1>
                         <p className="lpm-subheadline">
                             A suite of apps that help you manage your life — built to fit into your daily routine.
                         </p>
 
-                        {/* Mobile-only video (laptop hidden on small screens) */}
+                        {/* Mobile-only flat video */}
                         <div className="lpm-mobile-video">
                             {!videoError ? (
                                 <iframe
@@ -52,24 +52,43 @@ export default function LandingPageModern() {
                                     className="lpm-mobile-iframe"
                                 />
                             ) : (
-                                <a
-                                    href="https://www.youtube.com/watch?v=5F1kflY5V4s"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="lpm-video-fallback"
-                                >
+                                <a href="https://www.youtube.com/watch?v=5F1kflY5V4s" target="_blank" rel="noopener noreferrer" className="lpm-video-fallback">
                                     <img src={videoScreenshot} alt="Click to watch demo on YouTube" className="lpm-thumb" />
                                     <div className="lpm-play-btn">▶</div>
                                 </a>
                             )}
                         </div>
 
-                        {/* ── App Access Container ────────────────────────── */}
+                        {/* Desktop laptop video */}
+                        <div className="lpm-laptop-wrap">
+                            <img src={Laptop} alt="App interface on laptop" className="lpm-laptop-img" />
+                            <div className="lpm-video-screen">
+                                {!videoError ? (
+                                    <iframe
+                                        src="https://www.youtube.com/embed/5F1kflY5V4s?rel=0&modestbranding=1&showinfo=0"
+                                        title="DNA App Demo Video"
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        allowFullScreen
+                                        referrerPolicy="strict-origin-when-cross-origin"
+                                        onError={() => setVideoError(true)}
+                                        className="lpm-iframe"
+                                    />
+                                ) : (
+                                    <a href="https://www.youtube.com/watch?v=5F1kflY5V4s" target="_blank" rel="noopener noreferrer" className="lpm-video-fallback">
+                                        <img src={videoScreenshot} alt="Click to watch demo on YouTube" className="lpm-thumb" />
+                                        <div className="lpm-play-btn">▶</div>
+                                    </a>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Right: access cards */}
+                    <div className="lpm-hero-right">
                         <div className="lpm-access-container">
                             <h2 className="lpm-access-title">Get Access</h2>
                             <div className="lpm-plans">
-
-                               
 
                                 {/* Student */}
                                 <div className="lpm-plan lpm-plan-student">
@@ -79,9 +98,7 @@ export default function LandingPageModern() {
                                         <p className="lpm-plan-desc">Special rate for students</p>
                                     </div>
                                     <a href="https://buy.stripe.com/6oU4gy76s6mi6TvecseIw0c" className="lpm-plan-link">
-                                        <button className="lpm-plan-btn lpm-btn-student">
-                                            Get Access
-                                        </button>
+                                        <button className="lpm-plan-btn lpm-btn-student">Get Access</button>
                                     </a>
                                 </div>
 
@@ -96,13 +113,11 @@ export default function LandingPageModern() {
                                         <p className="lpm-plan-note">First month FREE</p>
                                     </div>
                                     <a href="https://buy.stripe.com/dRm7sK4YkdOK91Db0geIw06" target="_blank" rel="noopener noreferrer" className="lpm-plan-link">
-                                        <button className="lpm-plan-btn lpm-btn-premium">
-                                            Start Free Trial
-                                        </button>
+                                        <button className="lpm-plan-btn lpm-btn-premium">Start Free Trial</button>
                                     </a>
                                 </div>
 
-                                 {/* Single App */}
+                                {/* Single App */}
                                 <div className="lpm-plan lpm-plan-single">
                                     <div className="lpm-plan-icon">📱</div>
                                     <div className="lpm-plan-body">
@@ -124,41 +139,6 @@ export default function LandingPageModern() {
                                 <span>🔒 Secure Payment</span>
                                 <span>⚡ Instant Access</span>
                                 <span>❌ Cancel Anytime</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Right: demo video */}
-                    <div className="lpm-hero-right">
-                        <div className="lpm-laptop-wrap">
-                            <img src={Laptop} alt="App interface on laptop" className="lpm-laptop-img" />
-                            <div className="lpm-video-screen">
-                                {!videoError ? (
-                                    <iframe
-                                        src="https://www.youtube.com/embed/5F1kflY5V4s?rel=0&modestbranding=1&showinfo=0"
-                                        title="DNA App Demo Video"
-                                        frameBorder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                        allowFullScreen
-                                        referrerPolicy="strict-origin-when-cross-origin"
-                                        onError={() => setVideoError(true)}
-                                        className="lpm-iframe"
-                                    />
-                                ) : (
-                                    <a
-                                        href="https://www.youtube.com/watch?v=5F1kflY5V4s"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="lpm-video-fallback"
-                                    >
-                                        <img
-                                            src={videoScreenshot}
-                                            alt="Click to watch demo on YouTube"
-                                            className="lpm-thumb"
-                                        />
-                                        <div className="lpm-play-btn">▶</div>
-                                    </a>
-                                )}
                             </div>
                         </div>
                     </div>

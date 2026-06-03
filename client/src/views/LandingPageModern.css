@@ -82,6 +82,7 @@
     padding: 28px 48px 32px;
     display: flex;
     align-items: flex-start;
+    justify-content: center;
     gap: 48px;
     flex-wrap: wrap;
 }
@@ -288,7 +289,7 @@
 
 /* ── Right column ─────────────────────────────────────────────────────────── */
 .lpm-hero-right {
-    flex: 1 1 440px;
+    flex: 0 1 400px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
