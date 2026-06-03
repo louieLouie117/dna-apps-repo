@@ -31,12 +31,12 @@ export default function LandingPageModern() {
                     <div className="lpm-hero-left">
                         <p className="lpm-eyebrow">Productivity Suite</p>
                         <h1 className="lpm-headline">
-                            One Subscription.<br />
-                            <span className="lpm-accent">All Your Apps.</span>
+                            Your Apps.<br />
+                            <span className="lpm-accent">Your Way.</span>
                         </h1>
                         <p className="lpm-subheadline">
-                            Budget tracking, flashcards, secure passwords, and more —
-                            built for students and busy professionals.
+                            Pick just the app you need, or unlock everything at once —
+                            budget tracking, flashcards, secure passwords, and more.
                         </p>
 
                         {/* Mobile-only video (laptop hidden on small screens) */}
@@ -67,8 +67,10 @@ export default function LandingPageModern() {
 
                         {/* ── App Access Container ────────────────────────── */}
                         <div className="lpm-access-container">
-                            <h2 className="lpm-access-title">App Access</h2>
+                            <h2 className="lpm-access-title">Get Access</h2>
                             <div className="lpm-plans">
+
+                               
 
                                 {/* Student */}
                                 <div className="lpm-plan lpm-plan-student">
@@ -76,9 +78,6 @@ export default function LandingPageModern() {
                                     <div className="lpm-plan-body">
                                         <h3 className="lpm-plan-name">Student</h3>
                                         <p className="lpm-plan-desc">Special rate for students</p>
-                                        {/* <div className="lpm-plan-price">
-                                            $4.99<span>/mo</span>
-                                        </div> */}
                                     </div>
                                     <a href="/student-access-subscription" className="lpm-plan-link">
                                         <button className="lpm-plan-btn lpm-btn-student">
@@ -87,21 +86,32 @@ export default function LandingPageModern() {
                                     </a>
                                 </div>
 
-                                {/* All App */}
+                                {/* All Apps */}
                                 <div className="lpm-plan lpm-plan-premium">
-                                    <span className="lpm-badge">🔥 Popular</span>
+                                    <span className="lpm-badge">🔥 Best Value</span>
                                     <div className="lpm-plan-icon">🚀</div>
                                     <div className="lpm-plan-body">
-                                        <h3 className="lpm-plan-name">All App Access</h3>
+                                        <h3 className="lpm-plan-name">All Apps</h3>
                                         <p className="lpm-plan-desc">Every app, every update</p>
-                                        {/* <div className="lpm-plan-price">
-                                            $7.99<span>/mo</span>
-                                        </div> */}
                                         <p className="lpm-plan-note">First month FREE</p>
                                     </div>
                                     <a href="/all-app-access-subscription" className="lpm-plan-link">
                                         <button className="lpm-plan-btn lpm-btn-premium">
                                             Start Free Trial
+                                        </button>
+                                    </a>
+                                </div>
+
+                                 {/* Single App */}
+                                <div className="lpm-plan lpm-plan-single">
+                                    <div className="lpm-plan-icon">📱</div>
+                                    <div className="lpm-plan-body">
+                                        <h3 className="lpm-plan-name">Single App</h3>
+                                        <p className="lpm-plan-desc">Subscribe to just one app</p>
+                                    </div>
+                                    <a href="/sign-in" className="lpm-plan-link">
+                                        <button className="lpm-plan-btn lpm-btn-single">
+                                            Browse Apps
                                         </button>
                                     </a>
                                 </div>
