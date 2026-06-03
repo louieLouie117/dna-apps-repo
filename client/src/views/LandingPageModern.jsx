@@ -38,7 +38,7 @@ export default function LandingPageModern() {
                             A suite of apps that help you manage your life — built to fit into your daily routine.
                         </p>
                     {/* Mobile-only flat video */}
-                    {/* need to keep for mobile versions */}
+                    {/* need to keep for mobile versions with out it it will no render*/}
                         <div className="lpm-mobile-video">
                             {!videoError ? (
                                 <iframe
