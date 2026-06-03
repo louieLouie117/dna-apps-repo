@@ -1,0 +1,23 @@
+/* Get This App button */
+.saa-get-btn-link {
+    text-decoration: none;
+}
+
+.saa-get-btn {
+    width: 100%;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.saa-get-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}

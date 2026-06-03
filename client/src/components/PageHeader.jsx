@@ -1,5 +1,6 @@
 import React from 'react';
 import logo from '../assets/img/logo.png'; // Adjust the path as needed
+import './PageHeader.css';
 
 const PageHeader = () => (
     <div className="logo">

@@ -30,6 +30,7 @@ import ConfirmPasswordReset from './components/ConfirmPasswordReset';
 import SubPage from './views/SubPage';
 import ContactUsSupport from './components/ContactUsSupport'
 // import NewLandingPage from './views/NewLandingPage'
+import LandingPageModern from './views/LandingPageModern'
 
 
 function App() {
@@ -45,8 +46,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        {/* <Route path="/" element={<LandingPage />} /> */}
         {/* <Route path="/" element={<NewLandingPage />} /> */}
+        <Route path="/" element={<LandingPageModern />} />
 
         <Route path="/student-access-subscription" element={<StudentSub />} />
         <Route path="/all-app-access-subscription" element={<SubPage />} />

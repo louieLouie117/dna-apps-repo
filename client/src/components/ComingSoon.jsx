@@ -16,14 +16,7 @@ const ComingSoon = () => {
     const apps = [
     
        
-        {
-            id: 1,
-            name: "My Locked Passwords",
-            logo: AppLogoLockedPassword,
-            qrCode: QrLockedPassword,
-            className: "app-lockedPasswords",
-            signInUrl: "https://mylockedpasswords.com/"
-        }
+      
     ];
 
     const AvailableNow = [  
@@ -52,6 +45,15 @@ const ComingSoon = () => {
             className: "app-flashcards",
             signInUrl: "https://myflashcardsapp.com/"
         },
+
+          {
+            id: 4,
+            name: "My Locked Passwords",
+            logo: AppLogoLockedPassword,
+            qrCode: QrLockedPassword,
+            className: "app-lockedPasswords",
+            signInUrl: "https://mylockedpasswords.com/"
+        }
         ]; // Placeholder for future use
 
     return (
@@ -62,10 +64,10 @@ const ComingSoon = () => {
             <div className="abstract-shape-3"></div>
             
             <div className="coming-soon-content">
-                <h1 className='coming-soon-title'>Mobile Apps</h1>
+                <h1 className='coming-soon-title'>Apps Available Now</h1>
 
                  <div className="apps-container">
-                    <h2>Available Now</h2>
+                    <h2>Start Using your Apps</h2>
                  <div className="apps-grid">
                         {AvailableNow.map((AvailableNow) => (
                             <div 
@@ -99,7 +101,7 @@ const ComingSoon = () => {
                 </div>
            
 
-                <div className="apps-container">
+                {/* <div className="apps-container">
                         <h2>Coming Soon</h2>
                                         <p className="coming-soon-message">
                     Our mobile applications are currently in development and will be available soon.
@@ -134,7 +136,7 @@ const ComingSoon = () => {
                         ))}
                         
                     </div>
-                </div>
+                </div> */}
                 
                
             </div>
