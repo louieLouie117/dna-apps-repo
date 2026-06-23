@@ -19,6 +19,9 @@ import GetUsers from './components/GetUsers';
 import Wrapper from './views/Wrapper';
 import AdminWrapper from './views/AdminWrapper';
 import RegAllApps from './components/RegAllApps';
+import RegFlashcardsGuest from './components/RegFlashcardsGuest';
+import GuestUpgradePage from './components/GuestUpgradePage';
+import GuestUpgradeSuccess from './components/GuestUpgradeSuccess';
 import DashboardAdmin from './views/DashboardAdmin'
 import DashboardSqlAdmin from './views/DashboardSqlAdmin'
 import WrapperJWT from './views/WrapperJWT';
@@ -60,6 +63,13 @@ function App() {
         <Route path="/locked-passwords-registration" element={<RegAllApps />} />
         <Route path="/flashcards-registration" element={<RegAllApps />} />
         <Route path="/todo-list-registration" element={<RegAllApps />} />
+
+        {/* Guest registration — for users who purchased without an account */}
+        <Route path="/flashcards-guest-registration" element={<RegFlashcardsGuest />} />
+
+        {/* Guest upgrade — lets Guest accounts subscribe to a paid plan */}
+        <Route path="/guest-upgrade" element={<GuestUpgradePage />} />
+        <Route path="/guest-upgrade-success" element={<GuestUpgradeSuccess />} />
 
 
         <Route path="/student-membership" element={<RegAllApps />} />
