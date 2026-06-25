@@ -22,6 +22,7 @@ import RegAllApps from './components/RegAllApps';
 import RegFlashcardsGuest from './components/RegFlashcardsGuest';
 import GuestUpgradePage from './components/GuestUpgradePage';
 import GuestUpgradeSuccess from './components/GuestUpgradeSuccess';
+import GuestAccountPage from './components/GuestAccountPage';
 import DashboardAdmin from './views/DashboardAdmin'
 import DashboardSqlAdmin from './views/DashboardSqlAdmin'
 import WrapperJWT from './views/WrapperJWT';
@@ -70,6 +71,9 @@ function App() {
         {/* Guest upgrade — lets Guest accounts subscribe to a paid plan */}
         <Route path="/guest-upgrade" element={<GuestUpgradePage />} />
         <Route path="/guest-upgrade-success" element={<GuestUpgradeSuccess />} />
+
+        {/* Guest account — pre-purchase account creation for flashcard buyers */}
+        <Route path="/guest-account" element={<GuestAccountPage />} />
 
 
         <Route path="/student-membership" element={<RegAllApps />} />
