@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PageHeader from './PageHeader';
+import flashcardsLogo from '../assets/AppLogos/app-logo-flashcards.png';
 
 // ─── GuestAccountPage ─────────────────────────────────────────────────────────
 // Pre-purchase guest registration page at /guest-account.
@@ -113,7 +114,12 @@ export default function GuestAccountPage() {
 
                     {/* Hero */}
                     <div style={s.hero}>
-                        <div style={s.heroIcon}>🔐</div>
+                        <img
+                            src={flashcardsLogo}
+                            alt="My FlashCards"
+                            style={s.appLogo}
+                        />
+                        {/* <div style={s.heroIcon}>🔐</div> */}
                         <h1 style={s.title}>Create Your Free Account</h1>
                         <p style={s.body}>
                             No subscription required. Your account is used to save
@@ -268,6 +274,14 @@ const s = {
         alignItems: 'center',
         gap: 8,
         textAlign: 'center',
+    },
+    appLogo: {
+        width: 72,
+        height: 72,
+        borderRadius: 16,
+        objectFit: 'contain',
+        boxShadow: '0 4px 16px rgba(0,122,118,0.18)',
+        marginBottom: 4,
     },
     heroIcon: {
         fontSize: '2.5rem',
