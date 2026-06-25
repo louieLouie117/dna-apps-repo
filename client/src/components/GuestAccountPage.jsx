@@ -302,7 +302,6 @@ const s = {
     },
     featureList: {
         listStyle: 'none',
-        padding: 0,
         margin: 0,
         background: '#f0faf9',
         border: '1px solid #a7f3d0',
