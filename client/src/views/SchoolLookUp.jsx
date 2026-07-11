@@ -3,7 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import './SchoolLookUp.css';
 
-const NCES_API = 'https://educationdata.urban.org/api/v1/schools/ccd/directory/2024/';
+const NCES_API = 'https://educationdata.urban.org/api/v1/college-university/ipeds/directory/2023/';
+
+// FIPS codes are the only documented state filter the IPEDS API accepts
+const STATE_FIPS = {
+    AL:1, AK:2, AZ:4, AR:5, CA:6, CO:8, CT:9, DE:10, DC:11,
+    FL:12, GA:13, HI:15, ID:16, IL:17, IN:18, IA:19, KS:20,
+    KY:21, LA:22, ME:23, MD:24, MA:25, MI:26, MN:27, MS:28,
+    MO:29, MT:30, NE:31, NV:32, NH:33, NJ:34, NM:35, NY:36,
+    NC:37, ND:38, OH:39, OK:40, OR:41, PA:42, RI:44, SC:45,
+    SD:46, TN:47, TX:48, UT:49, VT:50, VA:51, WA:53, WV:54,
+    WI:55, WY:56,
+};
 
 const US_STATES = [
     ['AL','Alabama'],['AK','Alaska'],['AZ','Arizona'],['AR','Arkansas'],
@@ -25,6 +36,7 @@ export default function SchoolLookUp() {
     const navigate = useNavigate();
     const [query, setQuery] = useState('');
     const [stateFilter, setStateFilter] = useState('');
+    const [cityFilter, setCityFilter] = useState('');
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -33,7 +45,7 @@ export default function SchoolLookUp() {
 
     const handleSearch = async (e) => {
         e.preventDefault();
-        if (!query.trim()) return;
+        if (!stateFilter) return;
         setLoading(true);
         setError('');
         setResults([]);
@@ -41,18 +53,32 @@ export default function SchoolLookUp() {
         setSearched(true);
 
         try {
+            const fips = STATE_FIPS[stateFilter];
             const params = new URLSearchParams({
-                school_name: query.trim(),
-                per_page: 25,
+                fips,
+                per_page: 500, // fetch all institutions in the state
             });
-            if (stateFilter) params.set('state_location', stateFilter);
 
             const res = await fetch(`${NCES_API}?${params.toString()}`);
             if (!res.ok) throw new Error(`Search failed (${res.status}). Please try again.`);
             const json = await res.json();
-            setResults(json.results || []);
+
+            // Filter by city client-side (API doesn't support city filter)
+            let institutions = json.results || [];
+            if (cityFilter.trim()) {
+                const city = cityFilter.trim().toLowerCase();
+                institutions = institutions.filter(s =>
+                    (s.city || '').toLowerCase().includes(city)
+                );
+            }
+
+            // Sort A–Z
+            institutions.sort((a, b) =>
+                (a.inst_name || '').localeCompare(b.inst_name || '')
+            );
+            setResults(institutions);
         } catch (err) {
-            setError(err.message || 'Could not reach the school database. Please try again.');
+            setError(err.message || 'Could not reach the college database. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -73,37 +99,37 @@ export default function SchoolLookUp() {
                 {/* Intro */}
                 <div className="slu-hero">
                     <span className="slu-hero-icon">🎓</span>
-                    <h1 className="slu-title">Verify Your School</h1>
+                    <h1 className="slu-title">Find Your College or University</h1>
                     <p className="slu-subtitle">
-                        Find your school below to unlock the student discount.
-                        Search by school name and optionally filter by state.
+                        Select your state and optionally enter your city to find your
+                        college or university and unlock the student discount.
                     </p>
                 </div>
 
                 {/* Search form */}
                 <form className="slu-form" onSubmit={handleSearch}>
                     <div className="slu-inputs">
-                        <input
-                            className="slu-input"
-                            type="text"
-                            placeholder="School name (e.g. Lincoln High School)"
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                            required
-                        />
                         <select
-                            className="slu-select"
+                            className="slu-select slu-select-state"
                             value={stateFilter}
                             onChange={(e) => setStateFilter(e.target.value)}
+                            required
                         >
-                            <option value="">All states</option>
+                            <option value="">Select a state…</option>
                             {US_STATES.map(([code, name]) => (
                                 <option key={code} value={code}>{name}</option>
                             ))}
                         </select>
+                        <input
+                            className="slu-input"
+                            type="text"
+                            placeholder="City (optional)"
+                            value={cityFilter}
+                            onChange={(e) => setCityFilter(e.target.value)}
+                        />
                     </div>
-                    <button className="slu-search-btn" type="submit" disabled={loading}>
-                        {loading ? 'Searching…' : 'Search Schools'}
+                    <button className="slu-search-btn" type="submit" disabled={loading || !stateFilter}>
+                        {loading ? 'Searching…' : 'Find Colleges & Universities'}
                     </button>
                 </form>
 
@@ -115,19 +141,19 @@ export default function SchoolLookUp() {
                     <div className="slu-results-section">
                         {results.length === 0 ? (
                             <p className="slu-no-results">
-                                No schools found for <strong>"{query}"</strong>
-                                {stateFilter ? ` in ${stateFilter}` : ''}.
-                                Try a shorter name or remove the state filter.
+                                No colleges found in <strong>{stateFilter}</strong>
+                                {cityFilter ? ` near “${cityFilter}”` : ''}.
+                                Try removing the city or choosing a different state.
                             </p>
                         ) : (
                             <>
                                 <p className="slu-results-count">
-                                    {results.length} school{results.length !== 1 ? 's' : ''} found
-                                    {stateFilter ? ` in ${stateFilter}` : ''} — click yours to select it.
+                                    {results.length} institution{results.length !== 1 ? 's' : ''} in <strong>{stateFilter}</strong>
+                                    {cityFilter ? ` — ${cityFilter}` : ''} — click yours to select it.
                                 </p>
                                 <ul className="slu-results-list">
                                     {results.map((school, i) => {
-                                        const id = `${school.school_name}-${school.city_location}-${i}`;
+                                        const id = `${school.inst_name}-${school.city}-${i}`;
                                         const isSelected = selected && selected._id === id;
                                         return (
                                             <li
@@ -135,14 +161,13 @@ export default function SchoolLookUp() {
                                                 className={`slu-result-item${isSelected ? ' selected' : ''}`}
                                                 onClick={() => setSelected({ ...school, _id: id })}
                                             >
-                                                <div className="slu-result-name">{school.school_name}</div>
+                                                <div className="slu-result-name">{school.inst_name}</div>
                                                 <div className="slu-result-meta">
-                                                    {school.lea_name && <span>{school.lea_name}</span>}
-                                                    {school.city_location && (
+                                                    {school.city && (
                                                         <span>
-                                                            {school.city_location}
-                                                            {school.state_location ? `, ${school.state_location}` : ''}
-                                                            {school.zip_mailing ? ` ${school.zip_mailing}` : ''}
+                                                            {school.city}
+                                                            {school.state_abbr ? `, ${school.state_abbr}` : ''}
+                                                            {school.zip ? ` ${school.zip}` : ''}
                                                         </span>
                                                     )}
                                                 </div>
@@ -162,10 +187,10 @@ export default function SchoolLookUp() {
                         <div className="slu-confirm-school">
                             <span className="slu-confirm-icon">🏫</span>
                             <div>
-                                <div className="slu-confirm-name">{selected.school_name}</div>
+                                <div className="slu-confirm-name">{selected.institution_name}</div>
                                 <div className="slu-confirm-location">
                                     {selected.city_location}
-                                    {selected.state_location ? `, ${selected.state_location}` : ''}
+                                    {selected.state_abbr ? `, ${selected.state_abbr}` : ''}
                                 </div>
                             </div>
                         </div>
@@ -173,7 +198,7 @@ export default function SchoolLookUp() {
                             Continue to Student Subscription →
                         </button>
                         <p className="slu-confirm-note">
-                            Not your school? Click a different result above.
+                            Not your institution? Click a different result above.
                         </p>
                     </div>
                 )}

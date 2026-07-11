@@ -33,9 +33,9 @@ const StudentSub = () => {
                     </p>
                     {school && (
                         <span className="ss-school-badge">
-                            🏫 {school.school_name}
-                            {school.city_location ? `, ${school.city_location}` : ''}
-                            {school.state_location ? `, ${school.state_location}` : ''}
+                            🏫 {school.inst_name}
+                            {school.city ? `, ${school.city}` : ''}
+                            {school.state_abbr ? `, ${school.state_abbr}` : ''}
                         </span>
                     )}
                 </div>

@@ -85,6 +85,10 @@
     padding-right: 34px;
 }
 
+.slu-select-state {
+    flex: 1.4; /* slightly wider — it's the primary field */
+}
+
 .slu-select:focus {
     outline: none;
     border-color: #6366f1;
