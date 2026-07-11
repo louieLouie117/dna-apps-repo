@@ -32,6 +32,7 @@ import LoginTest from './components/LoginTest';
 import RequestPasswordReset from './components/RequestPasswordReset';
 import ConfirmPasswordReset from './components/ConfirmPasswordReset';
 import SubPage from './views/SubPage';
+import SchoolLookUp from './views/SchoolLookUp';
 import ContactUsSupport from './components/ContactUsSupport'
 // import NewLandingPage from './views/NewLandingPage'
 import LandingPageModern from './views/LandingPageModern'
@@ -55,6 +56,7 @@ function App() {
         <Route path="/" element={<LandingPageModern />} />
 
         <Route path="/student-access-subscription" element={<StudentSub />} />
+        <Route path="/school-lookup" element={<SchoolLookUp />} />
         <Route path="/all-app-access-subscription" element={<SubPage />} />
         <Route path="/subscription" element={<SubPage />} />
 

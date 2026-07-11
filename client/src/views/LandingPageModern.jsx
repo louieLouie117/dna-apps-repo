@@ -98,7 +98,7 @@ export default function LandingPageModern() {
                                         <h3 className="lpm-plan-name">Student</h3>
                                         <p className="lpm-plan-desc">Special rate for students</p>
                                     </div>
-                                    <a href="https://buy.stripe.com/6oU4gy76s6mi6TvecseIw0c" className="lpm-plan-link">
+                                    <a href="/school-lookup" className="lpm-plan-link">
                                         <button className="lpm-plan-btn lpm-btn-student">Get Student Access</button>
                                     </a>
                                 </div>
