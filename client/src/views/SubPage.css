@@ -360,6 +360,172 @@
     opacity: 1;
 }
 
+/* Value pitch */
+.value-pitch {
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto 40px;
+    padding: 0 16px;
+}
+
+.pitch-lead {
+    font-size: 1.05rem;
+    color: #444;
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+.trust-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.trust-item {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 50px;
+    padding: 6px 16px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #444;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+/* Recommended tag inside switch btn */
+.recommended-tag {
+    background: #fbbf24;
+    color: #78350f;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+/* Popular banner */
+.popular-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 8px;
+    margin: -40px -40px 24px -40px;
+    letter-spacing: 0.04em;
+}
+
+/* Price block */
+.price-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 10px;
+}
+
+.price-compare {
+    font-size: 0.82rem;
+    color: #888;
+    text-decoration: line-through;
+}
+
+/* Card pitch */
+.card-pitch {
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+/* Feature descriptions */
+.feature-desc {
+    margin: 2px 0 0;
+    font-size: 0.82rem;
+    color: #666;
+}
+
+/* Cancel note */
+.cancel-note {
+    font-size: 0.8rem;
+    color: #888;
+    margin: 8px 0 16px;
+    text-align: center;
+}
+
+/* Upsell nudge */
+.upsell-nudge {
+    font-size: 0.85rem;
+    color: #555;
+    margin: 8px 0 0;
+}
+
+.inline-switch-btn {
+    background: none;
+    border: none;
+    color: #667eea;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+}
+
+/* Reassurance section */
+.reassurance-section {
+    margin-top: 60px;
+    text-align: center;
+    padding: 0 16px 40px;
+}
+
+.reassurance-section h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 28px;
+    font-weight: 700;
+}
+
+.reassurance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.reassurance-item {
+    background: white;
+    border-radius: 16px;
+    padding: 24px 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    text-align: center;
+}
+
+.reassurance-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.reassurance-item h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0 0 8px;
+}
+
+.reassurance-item p {
+    font-size: 0.88rem;
+    color: #666;
+    line-height: 1.55;
+    margin: 0;
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
     .sub-page-main {

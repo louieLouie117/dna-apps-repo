@@ -110,11 +110,11 @@ export default function LandingPageModern() {
                                     <div className="lpm-plan-body">
                                         <h3 className="lpm-plan-name">All Apps</h3>
                                         <p className="lpm-plan-desc">Every app, every update</p>
-                                        <div className="lpm-plan-price">$7.99<span>/mo</span></div>
+                                        {/* <div className="lpm-plan-price">$7.99<span>/mo</span></div> */}
                                         <p className="lpm-plan-note">First month FREE</p>
                                     </div>
-                                    <a href="https://buy.stripe.com/dRm7sK4YkdOK91Db0geIw06" target="_blank" rel="noopener noreferrer" className="lpm-plan-link">
-                                        <button className="lpm-plan-btn lpm-btn-premium">Start Free Trial</button>
+                                    <a href="/all-app-access-subscription" className="lpm-plan-link">
+                                        <button className="lpm-plan-btn lpm-btn-premium">View All App Access</button>
                                     </a>
                                 </div>
 
