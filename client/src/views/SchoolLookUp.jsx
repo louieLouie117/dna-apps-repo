@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import './SchoolLookUp.css';
@@ -34,16 +34,45 @@ const US_STATES = [
 
 export default function SchoolLookUp() {
     const navigate = useNavigate();
-    const [query, setQuery] = useState('');
     const [stateFilter, setStateFilter] = useState('');
     const [cityFilter, setCityFilter] = useState('');
-    const [results, setResults] = useState([]);
+    const [allResults, setAllResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [searched, setSearched] = useState(false);
     const [selected, setSelected] = useState(null);
     const [fallbackEmail, setFallbackEmail] = useState('');
-    const [fallbackSubmitted, setFallbackSubmitted] = useState(false);
+
+    // Auto-fetch when state changes
+    useEffect(() => {
+        if (!stateFilter) { setAllResults([]); return; }
+        const fetchSchools = async () => {
+            setLoading(true);
+            setError('');
+            setAllResults([]);
+            setSelected(null);
+            setCityFilter('');
+            try {
+                const fips = STATE_FIPS[stateFilter];
+                const res = await fetch(`${NCES_API}?fips=${fips}&per_page=500`);
+                if (!res.ok) throw new Error(`Search failed (${res.status}). Please try again.`);
+                const json = await res.json();
+                const sorted = (json.results || []).sort((a, b) =>
+                    (a.inst_name || '').localeCompare(b.inst_name || '')
+                );
+                setAllResults(sorted);
+            } catch (err) {
+                setError(err.message || 'Could not reach the college database. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchSchools();
+    }, [stateFilter]);
+
+    // Client-side city filter applied on top of fetched results
+    const results = cityFilter.trim()
+        ? allResults.filter(s => (s.city || '').toLowerCase().includes(cityFilter.trim().toLowerCase()))
+        : allResults;
 
     const handleFallbackSubmit = (e) => {
         e.preventDefault();
@@ -51,47 +80,6 @@ export default function SchoolLookUp() {
         navigate('/student-access-subscription', {
             state: { school: { inst_name: fallbackEmail, fromEmail: true } },
         });
-    };
-
-    const handleSearch = async (e) => {
-        e.preventDefault();
-        if (!stateFilter) return;
-        setLoading(true);
-        setError('');
-        setResults([]);
-        setSelected(null);
-        setSearched(true);
-
-        try {
-            const fips = STATE_FIPS[stateFilter];
-            const params = new URLSearchParams({
-                fips,
-                per_page: 500, // fetch all institutions in the state
-            });
-
-            const res = await fetch(`${NCES_API}?${params.toString()}`);
-            if (!res.ok) throw new Error(`Search failed (${res.status}). Please try again.`);
-            const json = await res.json();
-
-            // Filter by city client-side (API doesn't support city filter)
-            let institutions = json.results || [];
-            if (cityFilter.trim()) {
-                const city = cityFilter.trim().toLowerCase();
-                institutions = institutions.filter(s =>
-                    (s.city || '').toLowerCase().includes(city)
-                );
-            }
-
-            // Sort A–Z
-            institutions.sort((a, b) =>
-                (a.inst_name || '').localeCompare(b.inst_name || '')
-            );
-            setResults(institutions);
-        } catch (err) {
-            setError(err.message || 'Could not reach the college database. Please try again.');
-        } finally {
-            setLoading(false);
-        }
     };
 
     const handleContinue = () => {
@@ -116,47 +104,49 @@ export default function SchoolLookUp() {
                     </p>
                 </div>
 
-                {/* Search form */}
-                <form className="slu-form" onSubmit={handleSearch}>
-                    <div className="slu-inputs">
-                        <select
-                            className="slu-select slu-select-state"
-                            value={stateFilter}
-                            onChange={(e) => setStateFilter(e.target.value)}
-                            required
-                        >
-                            <option value="">Select a state…</option>
-                            {US_STATES.map(([code]) => (
-                                <option key={code} value={code}>{code}</option>
-                            ))}
-                        </select>
-                        <input
-                            className="slu-input"
-                            type="text"
-                            placeholder="Type city to narrow search (optional)"
-                            value={cityFilter}
-                            onChange={(e) => setCityFilter(e.target.value)}
-                        />
-                    </div>
-                    <button className="slu-search-btn" type="submit" disabled={loading || !stateFilter}>
-                        {loading ? 'Searching…' : 'Find Colleges & Universities'}
-                    </button>
-                </form>
+                {/* State picker */}
+                <div className="slu-form">
+                    <select
+                        className="slu-select slu-select-state-full"
+                        value={stateFilter}
+                        onChange={(e) => setStateFilter(e.target.value)}
+                    >
+                        <option value="">Select your state…</option>
+                        {US_STATES.map(([code]) => (
+                            <option key={code} value={code}>{code}</option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* Loading */}
+                {loading && <p className="slu-loading">Loading schools in {stateFilter}…</p>}
 
                 {/* Error */}
                 {error && <p className="slu-error">⚠️ {error}</p>}
 
                 {/* Results */}
-                {searched && !loading && (
+                {!loading && allResults.length > 0 && (
                     <div className="slu-results-section">
+                        {/* Narrow by city */}
+                        <div className="slu-narrow-row">
+                            <input
+                                className="slu-input slu-narrow-input"
+                                type="text"
+                                placeholder="Narrow by city…"
+                                value={cityFilter}
+                                onChange={(e) => setCityFilter(e.target.value)}
+                            />
+                            <span className="slu-results-count">
+                                {results.length} school{results.length !== 1 ? 's' : ''}
+                                {cityFilter ? ` in "${cityFilter}"` : ` in ${stateFilter}`}
+                            </span>
+                        </div>
+
                         {results.length === 0 ? (
                             <div className="slu-no-results">
-                                <p className="slu-no-results-msg">
-                                    No colleges found in <strong>{stateFilter}</strong>
-                                    {cityFilter ? ` near "${cityFilter}"` : ''}.
-                                </p>
+                                <p className="slu-no-results-msg">No schools match "{cityFilter}" in {stateFilter}.</p>
                                 <p className="slu-no-results-hint">
-                                    Don't see your school? Enter your school email below and we'll still get you access.
+                                    Don't see your school? Enter your school email and we'll still get you access.
                                 </p>
                                 <form className="slu-fallback-form" onSubmit={handleFallbackSubmit}>
                                     <input
@@ -173,37 +163,31 @@ export default function SchoolLookUp() {
                                 </form>
                             </div>
                         ) : (
-                            <>
-                                <p className="slu-results-count">
-                                    {results.length} institution{results.length !== 1 ? 's' : ''} in <strong>{stateFilter}</strong>
-                                    {cityFilter ? ` — ${cityFilter}` : ''} — click yours to select it.
-                                </p>
-                                <ul className="slu-results-list">
-                                    {results.map((school, i) => {
-                                        const id = `${school.inst_name}-${school.city}-${i}`;
-                                        const isSelected = selected && selected._id === id;
-                                        return (
-                                            <li
-                                                key={id}
-                                                className={`slu-result-item${isSelected ? ' selected' : ''}`}
-                                                onClick={() => setSelected({ ...school, _id: id })}
-                                            >
-                                                <div className="slu-result-name">{school.inst_name}</div>
-                                                <div className="slu-result-meta">
-                                                    {school.city && (
-                                                        <span>
-                                                            {school.city}
-                                                            {school.state_abbr ? `, ${school.state_abbr}` : ''}
-                                                            {school.zip ? ` ${school.zip}` : ''}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                                {isSelected && <span className="slu-selected-check">✅ Selected</span>}
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                            </>
+                            <ul className="slu-results-list">
+                                {results.map((school, i) => {
+                                    const id = `${school.inst_name}-${school.city}-${i}`;
+                                    const isSelected = selected && selected._id === id;
+                                    return (
+                                        <li
+                                            key={id}
+                                            className={`slu-result-item${isSelected ? ' selected' : ''}`}
+                                            onClick={() => setSelected({ ...school, _id: id })}
+                                        >
+                                            <div className="slu-result-name">{school.inst_name}</div>
+                                            <div className="slu-result-meta">
+                                                {school.city && (
+                                                    <span>
+                                                        {school.city}
+                                                        {school.state_abbr ? `, ${school.state_abbr}` : ''}
+                                                        {school.zip ? ` ${school.zip}` : ''}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            {isSelected && <span className="slu-selected-check">✅ Selected</span>}
+                                        </li>
+                                    );
+                                })}
+                            </ul>
                         )}
                     </div>
                 )}
