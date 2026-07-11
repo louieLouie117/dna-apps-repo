@@ -9,6 +9,7 @@ const StudentSub = () => {
     const school = state?.school;
 
     const [selectedApp, setSelectedApp] = useState('');
+    const [plan, setPlan] = useState('all'); // 'all' = Student Discount, 'single' = Single App
 
     const appSubscriptionUrls = {
         'MyBudgetMonthly':   'https://buy.stripe.com/9B6dR862oh0W3Hj4BSeIw07',
@@ -39,10 +40,29 @@ const StudentSub = () => {
                     )}
                 </div>
 
+                {/* Plan toggle */}
+                <div className="ss-switch">
+                    <div className="ss-switch-inner">
+                        <button
+                            className={`ss-switch-btn${plan === 'all' ? ' active' : ''}`}
+                            onClick={() => setPlan('all')}
+                        >
+                            🎓 Student Discount
+                        </button>
+                        <button
+                            className={`ss-switch-btn${plan === 'single' ? ' active' : ''}`}
+                            onClick={() => { setPlan('single'); setSelectedApp(''); }}
+                        >
+                            📱 Single App
+                        </button>
+                    </div>
+                </div>
+
                 {/* Plans */}
                 <div className="ss-plans">
 
                     {/* ── Single App ── */}
+                    {plan === 'single' && (
                     <div className="ss-card">
                         <h2 className="ss-card-title">Single App</h2>
 
@@ -51,7 +71,7 @@ const StudentSub = () => {
                                 <span className="ss-price">$3.99</span>
                                 <span className="ss-period">/month</span>
                             </div>
-                            <p className="ss-original-price">Standard $3.99/mo</p>
+                            {/* <p className="ss-original-price">Standard $3.99/mo</p> */}
                         </div>
 
                         <div className="ss-app-selector">
@@ -94,8 +114,10 @@ const StudentSub = () => {
                             </a>
                         </div>
                     </div>
+                    )}
 
                     {/* ── All Apps (Student) ── */}
+                    {plan === 'all' && (
                     <div className="ss-card ss-card-popular">
                         <div className="ss-popular-banner">⭐ BEST VALUE FOR STUDENTS</div>
 
@@ -133,6 +155,7 @@ const StudentSub = () => {
                             </a>
                         </div>
                     </div>
+                    )}
 
                 </div>
 
