@@ -116,14 +116,14 @@ export default function SchoolLookUp() {
                             required
                         >
                             <option value="">Select a state…</option>
-                            {US_STATES.map(([code, name]) => (
-                                <option key={code} value={code}>{name}</option>
+                            {US_STATES.map(([code]) => (
+                                <option key={code} value={code}>{code}</option>
                             ))}
                         </select>
                         <input
                             className="slu-input"
                             type="text"
-                            placeholder="City (optional)"
+                            placeholder="Type city to narrow search (optional)"
                             value={cityFilter}
                             onChange={(e) => setCityFilter(e.target.value)}
                         />
