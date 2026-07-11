@@ -44,23 +44,12 @@ const SubPage = () => {
                 <div className='hero-section'>
                     <img src={Backgound} alt="All App Access" className='hero-image' />
                     <div className='hero-content'>
-                        <h2>Your Whole Life, One Subscription</h2>
-                        <p>Budget · Passwords · Flashcards · Todo — all for less than a coffee a week</p>
+                        <h2>All Apps Access</h2>
+                        {/* <p>Budget · Passwords · Flashcards · Todo — all for less than a coffee a week</p> */}
                     </div>
                 </div>
 
-                {/* Value pitch */}
-                <div className='value-pitch'>
-                    <p className='pitch-lead'>
-                        Stop juggling separate apps and separate bills. DNA Apps gives you everything you need to stay organized, secure, and productive — built for Windows 10/11 and designed to actually fit into your day.
-                    </p>
-                    <div className='trust-row'>
-                        <span className='trust-item'>🔒 Secure &amp; private</span>
-                        <span className='trust-item'>💳 Cancel anytime</span>
-                        <span className='trust-item'>🎁 First month FREE</span>
-                        <span className='trust-item'>🚀 Every future app included</span>
-                    </div>
-                </div>
+                
 
                 {/* Plan toggle */}
                 <div className='subscription-switch'>
@@ -141,6 +130,8 @@ const SubPage = () => {
                                 </div>
                             </div>
 
+                            
+
                             <div className='card-footer'>
                                 <a href="https://buy.stripe.com/dRm7sK4YkdOK91Db0geIw06" className='subscribe-link'>
                                     <button className='subscribe-btn primary'>
@@ -199,6 +190,8 @@ const SubPage = () => {
                                 )}
                             </div>
 
+                            
+
                             <div className='card-footer'>
                                 <a
                                     href={selectedApp ? appSubscriptionUrls[selectedApp] : '#'}
@@ -229,14 +222,16 @@ const SubPage = () => {
                     )}
                 </div>
 
+                
+
                 {/* Bottom reassurance */}
                 <div className='reassurance-section'>
                     <h3>Why people love DNA Apps</h3>
                     <div className='reassurance-grid'>
                         <div className='reassurance-item'>
                             <span className='reassurance-icon'>🏠</span>
-                            <h4>Runs on your PC</h4>
-                            <p>Your data stays local — no cloud required, no privacy trade-offs.</p>
+                            <h4>Runs on your Mobile and PC</h4>
+                            <p>Access your apps seamlessly on both mobile and PC.</p>
                         </div>
                         <div className='reassurance-item'>
                             <span className='reassurance-icon'>⚡</span>
@@ -253,6 +248,19 @@ const SubPage = () => {
                             <h4>Real support</h4>
                             <p>Questions? You're talking to the developer — fast, friendly responses.</p>
                         </div>
+                    </div>
+                </div>
+
+                {/* Value pitch */}
+                <div className='value-pitch'>
+                    <p className='pitch-lead'>
+                        Stop juggling separate apps and separate subscriptions. DNA Apps gives you everything you need to stay organized, secure, and productive — built for Windows 10/11 and mobile. One subscription, one price, zero hassle.
+                    </p>
+                    <div className='trust-row'>
+                        <span className='trust-item'>🔒 Secure &amp; private</span>
+                        <span className='trust-item'>💳 Cancel anytime</span>
+                        <span className='trust-item'>🎁 First month FREE</span>
+                        <span className='trust-item'>🚀 Every future app included</span>
                     </div>
                 </div>
 
