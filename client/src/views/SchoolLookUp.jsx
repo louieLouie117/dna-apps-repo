@@ -42,6 +42,16 @@ export default function SchoolLookUp() {
     const [error, setError] = useState('');
     const [searched, setSearched] = useState(false);
     const [selected, setSelected] = useState(null);
+    const [fallbackEmail, setFallbackEmail] = useState('');
+    const [fallbackSubmitted, setFallbackSubmitted] = useState(false);
+
+    const handleFallbackSubmit = (e) => {
+        e.preventDefault();
+        if (!fallbackEmail.trim()) return;
+        navigate('/student-access-subscription', {
+            state: { school: { inst_name: fallbackEmail, fromEmail: true } },
+        });
+    };
 
     const handleSearch = async (e) => {
         e.preventDefault();
@@ -140,11 +150,28 @@ export default function SchoolLookUp() {
                 {searched && !loading && (
                     <div className="slu-results-section">
                         {results.length === 0 ? (
-                            <p className="slu-no-results">
-                                No colleges found in <strong>{stateFilter}</strong>
-                                {cityFilter ? ` near “${cityFilter}”` : ''}.
-                                Try removing the city or choosing a different state.
-                            </p>
+                            <div className="slu-no-results">
+                                <p className="slu-no-results-msg">
+                                    No colleges found in <strong>{stateFilter}</strong>
+                                    {cityFilter ? ` near "${cityFilter}"` : ''}.
+                                </p>
+                                <p className="slu-no-results-hint">
+                                    Don't see your school? Enter your school email below and we'll still get you access.
+                                </p>
+                                <form className="slu-fallback-form" onSubmit={handleFallbackSubmit}>
+                                    <input
+                                        className="slu-input slu-fallback-input"
+                                        type="email"
+                                        placeholder="yourname@university.edu"
+                                        value={fallbackEmail}
+                                        onChange={(e) => setFallbackEmail(e.target.value)}
+                                        required
+                                    />
+                                    <button className="slu-continue-btn" type="submit" disabled={!fallbackEmail.trim()}>
+                                        Continue with School Email →
+                                    </button>
+                                </form>
+                            </div>
                         ) : (
                             <>
                                 <p className="slu-results-count">
