@@ -206,42 +206,93 @@
     color: #4f46e5;
 }
 
-/* Confirm section */
-.slu-confirm {
-    background: white;
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.09);
-    border: 2px solid #6366f1;
-    text-align: center;
-}
-
-.slu-confirm-school {
+/* Modal overlay */
+.slu-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(3px);
     display: flex;
     align-items: center;
-    gap: 14px;
-    background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
-    border-radius: 12px;
-    padding: 16px 18px;
-    margin-bottom: 20px;
-    text-align: left;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    animation: slu-fade-in 0.18s ease;
+}
+
+@keyframes slu-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.slu-modal {
+    background: white;
+    border-radius: 20px;
+    padding: 36px 32px 28px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+    text-align: center;
+    position: relative;
+    animation: slu-slide-up 0.2s ease;
+}
+
+@keyframes slu-slide-up {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.slu-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: #f1f5f9;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 0.95rem;
+    color: #555;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+
+.slu-modal-close:hover {
+    background: #e2e8f0;
 }
 
 .slu-confirm-icon {
-    font-size: 2rem;
-    flex-shrink: 0;
+    font-size: 2.8rem;
+    margin-bottom: 8px;
+}
+
+.slu-confirm-heading {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #1e1b4b;
+    margin: 0 0 18px;
+}
+
+.slu-confirm-school {
+    background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 22px;
 }
 
 .slu-confirm-name {
     font-size: 1.05rem;
     font-weight: 700;
     color: #1e1b4b;
+    margin-bottom: 4px;
 }
 
 .slu-confirm-location {
     font-size: 0.85rem;
     color: #555;
-    margin-top: 2px;
 }
 
 .slu-continue-btn {
@@ -266,7 +317,18 @@
 .slu-confirm-note {
     font-size: 0.8rem;
     color: #888;
-    margin: 0;
+    margin: 10px 0 0;
+}
+
+.slu-modal-back {
+    background: none;
+    border: none;
+    color: #6366f1;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
 }
 
 /* Mobile */

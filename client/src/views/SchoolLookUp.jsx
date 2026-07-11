@@ -181,25 +181,27 @@ export default function SchoolLookUp() {
                     </div>
                 )}
 
-                {/* Confirm & continue */}
+                {/* Confirm modal */}
                 {selected && (
-                    <div className="slu-confirm">
-                        <div className="slu-confirm-school">
-                            <span className="slu-confirm-icon">🏫</span>
-                            <div>
-                                <div className="slu-confirm-name">{selected.institution_name}</div>
+                    <div className="slu-modal-overlay" onClick={() => setSelected(null)}>
+                        <div className="slu-modal" onClick={(e) => e.stopPropagation()}>
+                            <button className="slu-modal-close" onClick={() => setSelected(null)} aria-label="Close">✕</button>
+                            <div className="slu-confirm-icon">🏫</div>
+                            <h2 className="slu-confirm-heading">Is this your school?</h2>
+                            <div className="slu-confirm-school">
+                                <div className="slu-confirm-name">{selected.inst_name}</div>
                                 <div className="slu-confirm-location">
-                                    {selected.city_location}
-                                    {selected.state_abbr ? `, ${selected.state_abbr}` : ''}
+                                    {selected.city}{selected.state_abbr ? `, ${selected.state_abbr}` : ''}
                                 </div>
                             </div>
+                            <button className="slu-continue-btn" onClick={handleContinue}>
+                                Yes, Continue to Student Subscription →
+                            </button>
+                            <p className="slu-confirm-note">
+                                Not your institution?{' '}
+                                <button className="slu-modal-back" onClick={() => setSelected(null)}>Pick a different one</button>
+                            </p>
                         </div>
-                        <button className="slu-continue-btn" onClick={handleContinue}>
-                            Continue to Student Subscription →
-                        </button>
-                        <p className="slu-confirm-note">
-                            Not your institution? Click a different result above.
-                        </p>
                     </div>
                 )}
 
