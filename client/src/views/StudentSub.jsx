@@ -1,254 +1,153 @@
-import {useState} from 'react';
-import Backgound from '../assets/img/AllAppAccess.png'; // Assuming this is the correct path to your image
+import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
-import StripePaymentCard from '../assets/img/StripePaymentCard.png'; // Adjust the path as needed
-
+import StripePaymentCard from '../assets/img/StripePaymentCard.png';
+import './StudentSub.css';
 
 const StudentSub = () => {
-const [selectedApp, setSelectedApp] = useState('');
+    const { state } = useLocation();
+    const school = state?.school;
 
-    // Mapping of apps to their Stripe subscription URLs
- const appSubscriptionUrls = {
-        'MyBudgetMonthly': 'https://buy.stripe.com/9B6dR862oh0W3Hj4BSeIw07', // ready for production
-        'MyLockedPasswords': 'https://buy.stripe.com/aFa6oG76sdOKgu57O4eIw09', // ready for production
-        'MyFlashcards': 'https://buy.stripe.com/aFa8wOfCY9yub9L8S8eIw0a', // ready for production
-        'MyTodoList': 'https://buy.stripe.com/4gMdR80I4262a5H9WceIw0b' // ready for production
-    };
-   
+    const [selectedApp, setSelectedApp] = useState('');
 
-    const handleAppSelection = (event) => {
-        setSelectedApp(event.target.value);
-        console.log('Selected app:', event.target.value);
+    const appSubscriptionUrls = {
+        'MyBudgetMonthly':   'https://buy.stripe.com/9B6dR862oh0W3Hj4BSeIw07',
+        'MyLockedPasswords': 'https://buy.stripe.com/aFa6oG76sdOKgu57O4eIw09',
+        'MyFlashcards':      'https://buy.stripe.com/aFa8wOfCY9yub9L8S8eIw0a',
+        'MyTodoList':        'https://buy.stripe.com/4gMdR80I4262a5H9WceIw0b',
     };
 
     return (
-         <div className='student-sub-page'>
-            <header>
-            <PageHeader />
+        <div className="ss-root">
+            <header><PageHeader /></header>
 
-            </header>
-            <main>
-                <img src={Backgound} alt="Description of image" />
-                <div>
-                     <h2>App Access for Students</h2>
-                
+            <main className="ss-main">
+
+                {/* Hero */}
+                <div className="ss-hero">
+                    <span className="ss-hero-icon">🎓</span>
+                    <h1 className="ss-title">Student Access</h1>
+                    <p className="ss-subtitle">
+                        Special pricing for students — all the tools you need to stay organised and productive.
+                    </p>
+                    {school && (
+                        <span className="ss-school-badge">
+                            🏫 {school.school_name}
+                            {school.city_location ? `, ${school.city_location}` : ''}
+                            {school.state_location ? `, ${school.state_location}` : ''}
+                        </span>
+                    )}
                 </div>
-               
+
+                {/* Plans */}
+                <div className="ss-plans">
+
+                    {/* ── Single App ── */}
+                    <div className="ss-card">
+                        <h2 className="ss-card-title">Single App</h2>
+
+                        <div className="ss-price-block">
+                            <div className="ss-price-row">
+                                <span className="ss-price">$3.99</span>
+                                <span className="ss-period">/month</span>
+                            </div>
+                            <p className="ss-original-price">Standard $3.99/mo</p>
+                        </div>
+
+                        <div className="ss-app-selector">
+                            <label htmlFor="app-select">Choose your app</label>
+                            <select
+                                id="app-select"
+                                className="ss-dropdown"
+                                value={selectedApp}
+                                onChange={(e) => setSelectedApp(e.target.value)}
+                            >
+                                <option value="">Select an app…</option>
+                                <option value="MyBudgetMonthly">My Budget Monthly</option>
+                                <option value="MyLockedPasswords">My Locked Passwords</option>
+                                <option value="MyFlashcards">My Flashcards</option>
+                                <option value="MyTodoList">My Todo List</option>
+                            </select>
+                        </div>
+
+                        <ul className="ss-features">
+                            <li className="ss-feature"><span className="ss-feature-icon">✅</span>Full access to one app</li>
+                            <li className="ss-feature"><span className="ss-feature-icon">🔄</span>All updates included</li>
+                            <li className="ss-feature"><span className="ss-feature-icon">💳</span>Cancel anytime</li>
+                        </ul>
+
+                        <a
+                            href={selectedApp ? appSubscriptionUrls[selectedApp] : '#'}
+                            onClick={(e) => { if (!selectedApp) e.preventDefault(); }}
+                        >
+                            <button
+                                className="ss-btn ss-btn-primary"
+                                disabled={!selectedApp}
+                            >
+                                {selectedApp ? 'Subscribe Now →' : 'Select an App First'}
+                            </button>
+                        </a>
+                        <p className="ss-cancel-note">No commitment · Cancel anytime</p>
+                        <div className="ss-stripe">
+                            <a href="https://stripe.com/" target="_blank" rel="noopener noreferrer">
+                                <img src={StripePaymentCard} alt="Secure payment with Stripe" />
+                            </a>
+                        </div>
+                    </div>
+
+                    {/* ── All Apps (Student) ── */}
+                    <div className="ss-card ss-card-popular">
+                        <div className="ss-popular-banner">⭐ BEST VALUE FOR STUDENTS</div>
+
+                        <h2 className="ss-card-title">All App Access</h2>
+
+                        <div className="ss-price-block">
+                            <div className="ss-price-row">
+                                <span className="ss-price">$4.99</span>
+                                <span className="ss-period">/month</span>
+                            </div>
+                            <p className="ss-original-price">Standard $7.99/mo</p>
+                            <span className="ss-discount-badge">🎓 STUDENT DISCOUNT — SAVE 37%</span>
+                        </div>
+
+                        <ul className="ss-features">
+                            <li className="ss-feature"><span className="ss-feature-icon">✅</span>My Budget Monthly</li>
+                            <li className="ss-feature"><span className="ss-feature-icon">✅</span>My Locked Passwords</li>
+                            <li className="ss-feature"><span className="ss-feature-icon">✅</span>My Flashcards</li>
+                            <li className="ss-feature"><span className="ss-feature-icon">✅</span>My Todo List</li>
+                            <li className="ss-feature ss-feature-special">
+                                <span className="ss-feature-icon">🚀</span>
+                                Every future app — automatically included
+                            </li>
+                        </ul>
+
+                        <a href="https://buy.stripe.com/dRm7sK4YkdOK91Db0geIw06?prefilled_promo_code=Student24MonthsOff">
+                            <button className="ss-btn ss-btn-highlight">
+                                Get Student Access →
+                            </button>
+                        </a>
+                        <p className="ss-cancel-note">No commitment · Cancel anytime</p>
+                        <div className="ss-stripe">
+                            <a href="https://stripe.com/" target="_blank" rel="noopener noreferrer">
+                                <img src={StripePaymentCard} alt="Secure payment with Stripe" />
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                {/* Reassurance */}
+                <div className="ss-reassurance">
+                    <span className="ss-reassurance-item">🔒 Secure &amp; private</span>
+                    <span className="ss-reassurance-item">💳 Cancel anytime</span>
+                    <span className="ss-reassurance-item">⚡ Instant access</span>
+                    <span className="ss-reassurance-item">🔄 Always up to date</span>
+                </div>
 
             </main>
-            <div>
-                <aside>
-                <h3>Single App Access</h3>
-
-                <div>
-                    <select 
-                        value={selectedApp}
-                        onChange={handleAppSelection}
-                        style={{
-                        width: '100%',
-                        padding: '10px',
-                        fontSize: '16px',
-                        borderRadius: '5px',
-                        border: '2px solid #ddd',
-                        backgroundColor: '#f9f9f9',
-                        marginBottom: '20px'
-                    }}>
-                        <option value="">Select an app</option>
-                        <option value="MyBudgetMonthly">My Budget Monthly - $3.99/month</option>
-                        <option value="MyLockedPasswords">My Locked Passwords - $3.99/month</option>
-                        <option value="MyFlashcards">My Flashcards - $3.99/month</option>
-                        <option value="MyTodoList">My Todo List - $3.99/month</option>
-                    </select>
-                    <footer>
-                            <a href={selectedApp ? appSubscriptionUrls[selectedApp] : '#'} 
-                               onClick={(e) => {
-                                   if (!selectedApp) {
-                                       e.preventDefault();
-                                       alert('Subscribe');
-                                   }
-                               }}>
-                        <button 
-                            className='main-btn' 
-                            disabled={!selectedApp}
-                            style={{
-                                backgroundColor: selectedApp ? '#007bff' : '#ccc',
-                                cursor: selectedApp ? 'pointer' : 'not-allowed',
-                                opacity: selectedApp ? 1 : 0.6,
-                                transition: 'all 0.3s ease'
-                            }}
-                        >
-                            {selectedApp ? `Subscribe` : 'Subscribe'}
-                        </button>
-                        </a>
-                        
-                        <a href="https://stripe.com/" target='_blank' rel="noopener noreferrer">
-                        <img src={StripePaymentCard} alt="" />
-                        </a>
-                    <p>{selectedApp ? '$3.99/month' : ''}</p>
-
-
-                </footer>
-                       
-                </div>
-
-              
-
-            </aside>
-             <aside>
-                <h3 className='mainSale'>All App Access</h3>
-                <div>
-                    <ul>
-                        <li>My To-do List</li>
-                        <li>My Flashcards</li>
-                        <li>My Monthly Budget</li>
-                        <li>My Locked Passwords​</li>
-                        <li>My PenCal</li>
-                        <li>+Any future app released</li>
-                    </ul>
-
-                    <footer>
-                      <a href="https://buy.stripe.com/dRm7sK4YkdOK91Db0geIw06?prefilled_promo_code=Student24MonthsOff">
-                <button className='main-btn'>Subscribe</button>
-                </a>
-                
-                <a href="https://stripe.com/" target='_blank' rel="noopener noreferrer">
-                <img src={StripePaymentCard} alt="" />
-
-                </a>
-                <div style={{
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                    borderRadius: '12px',
-                    padding: '20px',
-                    margin: '15px 0',
-                    color: 'white',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    boxShadow: '0 8px 25px rgba(102, 126, 234, 0.3)'
-                }}>
-                    {/* Student Badge */}
-                    <div style={{
-                        position: 'absolute',
-                        top: '7px',
-                        right: '-5px',
-                        background: '#ff6b6b',
-                        color: 'white',
-                        padding: '8px 16px',
-                        borderRadius: '20px',
-                        fontSize: '12px',
-                        fontWeight: 'bold',
-                        transform: 'rotate(15deg)',
-                        boxShadow: '0 4px 12px rgba(255, 107, 107, 0.4)'
-                    }}>
-                        🎓 STUDENT
-                    </div>
-                    
-                    {/* Pricing Content */}
-                    <div style={{ position: 'relative', zIndex: 2 }}>
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            marginBottom: '8px'
-                        }}>
-                            <span style={{
-                                fontSize: '28px',
-                                fontWeight: 'bold',
-                                color: '#ffd700'
-                            }}>$4.99</span>
-                            <span style={{
-                                fontSize: '16px',
-                                opacity: 0.9
-                            }}>/month</span>
-                            <span style={{
-                                fontSize: '18px',
-                                textDecoration: 'line-through',
-                                opacity: 0.7,
-                                color: '#ffcccb'
-                            }}>$7.99</span>
-                        </div>
-                        
-                        <div style={{
-                            background: 'rgba(255, 255, 255, 0.15)',
-                            borderRadius: '8px',
-                            padding: '12px',
-                            backdropFilter: 'blur(10px)',
-                            border: '1px solid rgba(255, 255, 255, 0.2)'
-                        }}>
-                            <p style={{
-                                margin: 0,
-                                fontSize: '14px',
-                                fontWeight: '500',
-                                lineHeight: '1.4'
-                            }}>
-                                🎯 <strong>Student Discount:</strong> Save 37% for 24 months<br/>
-                                {/* 💝 Use code: <code style={{
-                                    background: 'rgba(255, 255, 255, 0.2)',
-                                    padding: '2px 6px',
-                                    borderRadius: '4px',
-                                    fontWeight: 'bold'
-                                }}>Student24MonthsOff</code> */}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                
-
-        </footer>
-                        
-
-
-                </div>
-              
-
-            </aside>
-            
-           
-
-
-            </div>
-              {/* <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '-100px', columnGap: '10px', marginBottom: '20px' }}>
-                   <p>
-            {isOn
-                ? "Current payment method: Stripe — switch to PayPal"
-                : "Current payment method: PayPal — switch to Stripe"}
-            </p>
-
-
-                <button
-                    onClick={handleToggle}
-                    style={{
-                        width: '40px',
-                        height: '24px',
-                        borderRadius: '12px',
-                        background: isOn ? '#FFC439' : '#0074D4',
-                        border: 'none',
-                        position: 'relative',
-                        cursor: 'pointer',
-                        outline: 'none',
-                        display: 'inline-block',
-                        verticalAlign: 'middle',
-                        transition: 'background 0.2s'
-                    }}
-                    aria-label="Toggle switch"
-                >
-                    <span
-                        style={{
-                            display: 'block',
-                            width: '18px',
-                            height: '18px',
-                            borderRadius: '50%',
-                            background: '#fff',
-                            position: 'absolute',
-                            top: '3px',
-                            left: isOn ? '19px' : '3px',
-                            transition: 'left 0.2s'
-                        }}
-                    />
-                </button>
-            </div> */}
-            
         </div>
     );
 };
 
 export default StudentSub;
+
