@@ -98,7 +98,13 @@ const StudentSub = () => {
 
                         <a
                             href={selectedApp ? appSubscriptionUrls[selectedApp] : '#'}
-                            onClick={(e) => { if (!selectedApp) e.preventDefault(); }}
+                            onClick={(e) => {
+                                if (!selectedApp) {
+                                    e.preventDefault();
+                                } else {
+                                    window.gtag?.('event', 'button_click', { button_name: `Student Single App - ${selectedApp}` });
+                                }
+                            }}
                         >
                             <button
                                 className="ss-btn ss-btn-primary"
@@ -143,7 +149,10 @@ const StudentSub = () => {
                             </li>
                         </ul>
 
-                        <a href="https://buy.stripe.com/dRm7sK4YkdOK91Db0geIw06?prefilled_promo_code=Student24MonthsOff">
+                        <a
+                            href="https://buy.stripe.com/dRm7sK4YkdOK91Db0geIw06?prefilled_promo_code=Student24MonthsOff"
+                            onClick={() => window.gtag?.('event', 'button_click', { button_name: 'Get Student Access - All Apps' })}
+                        >
                             <button className="ss-btn ss-btn-highlight">
                                 Get Student Access →
                             </button>

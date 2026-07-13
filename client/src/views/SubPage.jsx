@@ -133,7 +133,11 @@ const SubPage = () => {
                             
 
                             <div className='card-footer'>
-                                <a href="https://buy.stripe.com/dRm7sK4YkdOK91Db0geIw06" className='subscribe-link'>
+                                <a
+                                    href="https://buy.stripe.com/dRm7sK4YkdOK91Db0geIw06"
+                                    className='subscribe-link'
+                                    onClick={() => window.gtag?.('event', 'button_click', { button_name: 'Start My Free Month - All Apps' })}
+                                >
                                     <button className='subscribe-btn primary'>
                                         Start My Free Month
                                         <span className='btn-icon'>→</span>
@@ -200,6 +204,8 @@ const SubPage = () => {
                                         if (!selectedApp) {
                                             e.preventDefault();
                                             alert('Please select an app first');
+                                        } else {
+                                            window.gtag?.('event', 'button_click', { button_name: `Subscribe Now - ${selectedApp}` });
                                         }
                                     }}
                                 >
