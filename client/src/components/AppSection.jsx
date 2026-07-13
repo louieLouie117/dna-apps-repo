@@ -28,11 +28,11 @@ const appItems = [
         alt: "Budget App",
         url: "https://apps.microsoft.com/detail/9pmzc1nvwk02?hl=en-US&gl=US",
     },
-    {
-        src: PenCal,
-        alt: "Pen Cal App",
-        url: "https://apps.microsoft.com/detail/9nblggh2kbbk?hl=en-US&gl=US",
-    },
+    // {
+    //     src: PenCal,
+    //     alt: "Pen Cal App",
+    //     url: "https://apps.microsoft.com/detail/9nblggh2kbbk?hl=en-US&gl=US",
+    // },
     // {
     //     src: ReceitTracker,
     //     alt: "Receipt Tracker App",
