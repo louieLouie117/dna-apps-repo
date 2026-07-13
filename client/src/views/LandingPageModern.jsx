@@ -88,7 +88,7 @@ export default function LandingPageModern() {
                     {/* Right: access cards */}
                     <div className="lpm-hero-right">
                         <div className="lpm-access-container">
-                            <h2 className="lpm-access-title">Get Access</h2>
+                            <h2 className="lpm-access-title">App Access</h2>
                             <div className="lpm-plans">
 
                                 {/* Student */}
@@ -98,7 +98,7 @@ export default function LandingPageModern() {
                                         <h3 className="lpm-plan-name">Student</h3>
                                         <p className="lpm-plan-desc">Special rate for students</p>
                                     </div>
-                                    <a href="/school-lookup" className="lpm-plan-link">
+                                    <a href="/school-lookup" className="lpm-plan-link" onClick={() => window.gtag?.('event', 'button_click', { button_name: 'Get Student Access' })}>
                                         <button className="lpm-plan-btn lpm-btn-student">Get Student Access</button>
                                     </a>
                                 </div>
@@ -113,7 +113,7 @@ export default function LandingPageModern() {
                                         {/* <div className="lpm-plan-price">$7.99<span>/mo</span></div> */}
                                         <p className="lpm-plan-note">First month FREE</p>
                                     </div>
-                                    <a href="/all-app-access-subscription" className="lpm-plan-link">
+                                    <a href="/all-app-access-subscription" className="lpm-plan-link" onClick={() => window.gtag?.('event', 'button_click', { button_name: 'View All App Access' })}>
                                         <button className="lpm-plan-btn lpm-btn-premium">View All App Access</button>
                                     </a>
                                 </div>
@@ -127,7 +127,10 @@ export default function LandingPageModern() {
                                     </div>
                                     <button
                                         className="lpm-plan-btn lpm-btn-single"
-                                        onClick={() => document.getElementById('apps-section').scrollIntoView({ behavior: 'smooth' })}
+                                        onClick={() => {
+                                            window.gtag?.('event', 'button_click', { button_name: 'Single App - Browse Apps' });
+                                            document.getElementById('apps-section').scrollIntoView({ behavior: 'smooth' });
+                                        }}
                                     >
                                         Browse Apps
                                     </button>
