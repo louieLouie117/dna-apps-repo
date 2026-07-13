@@ -21,6 +21,7 @@ const apps = [
         qrCode: QrMybudget,
         className: 'app-budget',
         stripeUrl: 'https://buy.stripe.com/9B6dR862oh0W3Hj4BSeIw07',
+        storeUrl: 'https://apps.microsoft.com/detail/9pmzc1nvwk02?hl=en-US&gl=US',
     },
     {
         id: 1,
@@ -29,6 +30,7 @@ const apps = [
         qrCode: QrTodoList,
         className: 'app-todo-list',
         stripeUrl: 'https://buy.stripe.com/4gMdR80I4262a5H9WceIw0b',
+        storeUrl: 'https://apps.microsoft.com/detail/9nblggh318dq?hl=en-US&gl=US',
     },
     {
         id: 2,
@@ -37,6 +39,7 @@ const apps = [
         qrCode: QrFlashcards,
         className: 'app-flashcards',
         stripeUrl: 'https://buy.stripe.com/aFa8wOfCY9yub9L8S8eIw0a',
+        storeUrl: 'https://apps.microsoft.com/detail/9wzdncrdsnzk?hl=en-US&gl=US',
     },
     {
         id: 3,
@@ -45,6 +48,7 @@ const apps = [
         qrCode: QrLockedPassword,
         className: 'app-lockedPasswords',
         stripeUrl: 'https://buy.stripe.com/aFa6oG76sdOKgu57O4eIw09',
+        storeUrl: 'https://apps.microsoft.com/detail/9nblggh3tktw?hl=en-US&gl=US',
     },
 ];
 
@@ -74,6 +78,15 @@ const SingleAppAccess = () => {
                                         className="saa-get-btn-link"
                                     >
                                         <button className="saa-get-btn">Get This App</button>
+                                    </a>
+                                    <a
+                                        href={app.storeUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="saa-details-btn-link"
+                                        onClick={() => window.gtag?.('event', 'button_click', { button_name: `View App Details - ${app.name}` })}
+                                    >
+                                        <button className="saa-details-btn">View App Details</button>
                                     </a>
                                 </div>
 
